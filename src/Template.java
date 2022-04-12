@@ -7,7 +7,7 @@ public class Template extends JFrame implements ActionListener, Runnable {
     public static final int WIDTH = 300;
     public static final int HEIGHT = 200;
 
-
+//GitCommit Test
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Template("Hello world!"));
     }
