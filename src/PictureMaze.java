@@ -1,0 +1,2 @@
+public class PictureMaze {
+}
