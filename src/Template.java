@@ -17,13 +17,6 @@ public class Template extends JFrame implements ActionListener, Runnable {
     }
 
     private void createGUI() {
-        try {
-            UIManager.setLookAndFeel(
-                    UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            // ignore
-        }
-
         setSize(WIDTH, HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -78,6 +71,13 @@ public class Template extends JFrame implements ActionListener, Runnable {
 
     @Override
     public void run() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException ex) {
+            ex.printStackTrace();
+        }
+
         createGUI();
     }
 
