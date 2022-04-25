@@ -7,20 +7,38 @@ import java.awt.event.KeyEvent;
 
 public class OptionsPanel extends JPanel {
 
-    private JLabel nameLabel;
-    private JLabel occupationLabel;
-    private JTextField nameField;
-    private JTextField occupationField;
-    private JButton okbtn;
-    private JList ageList;
-    private JLabel ageLabel;
-    private JComboBox empCombo;
-    private JCheckBox checkCitizen;
-    private JLabel UIDLabel;
-    private JTextField UIDField;
-    private JRadioButton maleRadio;
-    private JRadioButton femaleRadio;
-    private ButtonGroup genderGroup;
+    //Display
+    private JLabel solutionLabel;
+    private JCheckBox showSolution;
+    private JLabel gridLabel;
+    private JCheckBox showGrid;
+
+    //Regenerate
+    private JLabel sizeLabel;
+    private JTextField sizeX;
+    private JTextField sizeY;
+    private JLabel generateLabel;
+    private JLabel borderWall;
+    private JLabel seedLabel;
+    private JCheckBox seedCheck;
+    private JTextField seedInput;
+
+    //Solve status
+    private JLabel deadendLabel;
+    private JLabel deadendStatus;
+    private JLabel explorationLabel;
+    private JLabel explorationStatus;
+    private JLabel solveLabel;
+    private JLabel solveStatus;
+    private JButton solve;
+
+    //Save
+    private JLabel titleLabel;
+    private JTextField titleField;
+    private JLabel authorLabel;
+    private JTextField authorField;
+    private JLabel descriptionLabel;
+    private JTextField descriptionField;
 
 
     public OptionsPanel(){
@@ -28,70 +46,42 @@ public class OptionsPanel extends JPanel {
         dim.width = 300;
         setPreferredSize(dim);
 
-        nameLabel = new JLabel("Name");
-        occupationLabel = new JLabel("Occupation");
-        nameField = new JTextField(10);
-        occupationField = new JTextField(10);
-        ageList = new JList();
-        ageLabel = new JLabel("Age");
-        empCombo = new JComboBox();
-        checkCitizen = new JCheckBox();
-        UIDField = new JTextField(10);
-        UIDLabel = new JLabel("UID No");
+        //display
+        solutionLabel = new JLabel("Show Solution");
+        showSolution = new JCheckBox();
+        gridLabel = new JLabel("Show Grid");
+        showGrid = new JCheckBox();
+
+        //regenerate
+        sizeLabel = new JLabel("Size");
+        sizeX = new JTextField("0");
+        sizeY = new JTextField("0");
+        generateLabel = new JLabel("Generate");
+        borderWall = new JLabel("Border wall");
+        seedLabel = new JLabel("Seed");
+        seedCheck = new JCheckBox();
+        seedInput = new JTextField("");
+
+        //solve status
+        //The status labels will need to be reactive in later stages of the project
+        deadendLabel = new JLabel("Dead end %");
+        deadendStatus = new JLabel("0");
+        explorationLabel = new JLabel("Solution %");
+        explorationStatus = new JLabel("0");
+        solveLabel = new JLabel("Solve status");
+        solveStatus = new JLabel("Not solved");
+        solve = new JButton("Solve");
 
 
-        nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
-        nameLabel.setLabelFor(nameField);
-        //Radio Button
-        maleRadio = new JRadioButton("Male");
-        femaleRadio = new JRadioButton("Female");
-        genderGroup = new ButtonGroup();
+        //save
+        titleLabel = new JLabel("Title");
+        titleField = new JTextField("");
+        authorLabel = new JLabel("Author");
+        authorField = new JTextField("");
+        descriptionLabel = new JLabel("Description");
+        descriptionField = new JTextField("");
 
-        maleRadio.setActionCommand("male");
-        femaleRadio.setActionCommand("female");
-        maleRadio.setSelected(true);
-
-        genderGroup.add(maleRadio);
-        genderGroup.add(femaleRadio);
-
-
-
-        // UID number
-        UIDLabel.setEnabled(false);
-        UIDField.setEnabled(false);
-
-        checkCitizen.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                boolean isSelected = checkCitizen.isSelected();
-                UIDField.setText("");
-                UIDField.setEnabled(isSelected);
-                UIDLabel.setEnabled(isSelected);
-            }
-        });
-
-
-        // model for List
-        DefaultListModel ageModel = new DefaultListModel();
-
-        ageList.setModel(ageModel);
-
-        dim = ageList.getPreferredSize();
-        dim.width=110;
-        ageList.setPreferredSize(dim);
-        ageList.setSelectedIndex(1);
-
-        //model for ComboBox
-
-        DefaultComboBoxModel empModel = new DefaultComboBoxModel();
-        empModel.addElement("employed");
-        empModel.addElement("self-employed");
-        empModel.addElement("unemployed");
-        empCombo.setModel(empModel);
-
-        okbtn = new JButton("OK");
-
-        Border innerBorder = BorderFactory.createTitledBorder(" Add Person ");
+        Border innerBorder = BorderFactory.createTitledBorder(" Display ");
         Border outerBorder = BorderFactory.createEmptyBorder(5,10,10,10);
         setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
 
@@ -115,12 +105,12 @@ public class OptionsPanel extends JPanel {
         gc.gridx = 0;
         gc.anchor = GridBagConstraints.LINE_END;
         gc.insets = new Insets(0,0,0,5);
-        add(nameLabel,gc);
+        add(solutionLabel,gc);
 
         gc.gridx = 1;
         gc.anchor = GridBagConstraints.LINE_START;
         gc.insets = new Insets(0,5,0,0);
-        add(nameField,gc);
+        add(showSolution,gc);
 
 
         // Second Row
@@ -129,101 +119,13 @@ public class OptionsPanel extends JPanel {
         gc.gridx = 0;
         gc.anchor = GridBagConstraints.LINE_END;
         gc.insets = new Insets(0,0,0,5);
-        add(occupationLabel,gc);
+        add(gridLabel,gc);
 
         gc.gridx = 1;
         gc.anchor = GridBagConstraints.LINE_START;
         gc.insets = new Insets(0,5,0,0);
-        add(occupationField,gc);
+        add(showGrid,gc);
 
-
-
-        // Third Row
-        gc.gridy++;
-
-        gc.gridx=0;
-        gc.anchor = GridBagConstraints.LINE_END;
-        gc.insets = new Insets(0,0,0,5);
-        add(ageLabel,gc);
-
-        gc.gridx =1;
-        gc.anchor = GridBagConstraints.LINE_START;
-        gc.insets = new Insets(0,5,0,0);
-        add(ageList,gc);
-
-
-        //Forth Row
-        gc.gridy++;
-
-        gc.gridx=0;
-        gc.anchor = GridBagConstraints.LINE_END;
-        gc.insets = new Insets(0,0,0,5);
-        add(new JLabel("Employment : "),gc);
-
-        gc.gridx =1;
-        gc.anchor = GridBagConstraints.LINE_START;
-        gc.insets = new Insets(0,5,0,0);
-        add(empCombo,gc);
-
-        //Fifth Row
-        gc.gridy++;
-
-        gc.gridx=0;
-        gc.anchor = GridBagConstraints.LINE_END;
-        gc.insets = new Insets(0,0,0,5);
-        add(new JLabel("Indian : "),gc);
-
-        gc.gridx =1;
-        gc.anchor = GridBagConstraints.LINE_START;
-        gc.insets = new Insets(0,5,0,0);
-        add(checkCitizen,gc);
-
-
-        //Sixth Row
-        gc.gridy++;
-
-        gc.gridx=0;
-        gc.anchor = GridBagConstraints.LINE_END;
-        gc.insets = new Insets(0,0,0,5);
-        add(UIDLabel,gc);
-
-        gc.gridx =1;
-        gc.anchor = GridBagConstraints.LINE_START;
-        gc.insets = new Insets(0,5,0,0);
-        add(UIDField,gc);
-
-
-        //Seventh Row
-        gc.gridy++;
-        gc.weighty = 0.05;
-
-        gc.gridx=0;
-        gc.anchor = GridBagConstraints.LINE_END;
-        gc.insets = new Insets(0,0,0,5);
-        add(new JLabel("Gender : "),gc);
-
-        gc.gridx =1;
-        gc.anchor = GridBagConstraints.LINE_START;
-        gc.insets = new Insets(0,5,0,0);
-        add(maleRadio,gc);
-        //Eighth Row
-        gc.gridy++;
-        gc.weighty = 0.1;
-
-        gc.gridx =1;
-        gc.anchor = GridBagConstraints.LINE_START;
-        gc.insets = new Insets(0,5,0,0);
-        add(femaleRadio,gc);
-        //Nineth Row
-        gc.gridy++;
-
-        gc.weightx = 1;
-        gc.weighty = 1;
-        gc.gridx = 1;
-
-        gc.insets = new Insets(0,5,0,0);
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
-        add(okbtn,gc);
     }
 
     private void addToPanel(JPanel jp,Component c, GridBagConstraints
