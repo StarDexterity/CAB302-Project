@@ -22,7 +22,7 @@ public class SolveStatus extends JPanel {
         solve = new JButton("Solve");
 
         Border innerBorder = BorderFactory.createTitledBorder("Solve status");
-        Border outerBorder = BorderFactory.createEmptyBorder(5,10,10,10);
+        Border outerBorder = BorderFactory.createEmptyBorder(5,10,5,10);
         setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
 
         layoutComponents();
@@ -32,6 +32,7 @@ public class SolveStatus extends JPanel {
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = GridBagHelper.createDefaultGBC();
+        gbc.insets = new Insets(0, 0, 5, 5);
         int y = 0;
 
         // row 1

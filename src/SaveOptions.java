@@ -8,7 +8,8 @@ public class SaveOptions extends JPanel {
     private JLabel authorLabel;
     private JTextField authorField;
     private JLabel descriptionLabel;
-    private JTextField descriptionField;
+    private JTextArea descriptionField;
+    private JScrollPane descriptionFieldScroller;
     private JButton saveButton;
     private JButton exportButton;
     private JButton deleteButton;
@@ -20,7 +21,9 @@ public class SaveOptions extends JPanel {
         authorLabel = new JLabel("Author");
         authorField = new JTextField("");
         descriptionLabel = new JLabel("Description");
-        descriptionField = new JTextField("");
+        descriptionField = new JTextArea("");
+        descriptionFieldScroller = new JScrollPane(descriptionField);
+        descriptionField.setRows(3);
         saveButton = new JButton("Save");
         exportButton = new JButton("Export");
         deleteButton = new JButton("Delete");
@@ -36,6 +39,7 @@ public class SaveOptions extends JPanel {
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = GridBagHelper.createDefaultGBC();
+        gbc.insets = new Insets(0, 0, 5, 5);
         int y = 0;
 
         // row 1
@@ -50,7 +54,7 @@ public class SaveOptions extends JPanel {
         // row 3
         y++;
         GridBagHelper.addToPanel(this, descriptionLabel, gbc, 0, y, 1, 1);
-        GridBagHelper.addToPanel(this, descriptionField, gbc, 1, y, 2, 1);
+        GridBagHelper.addToPanel(this, descriptionFieldScroller, gbc, 1, y, 2, 1);
 
 
         // row 4

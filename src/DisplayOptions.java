@@ -7,11 +7,11 @@ public class DisplayOptions extends JPanel {
     private JCheckBox showGrid;
 
     public DisplayOptions() {
-        showSolution = new JCheckBox("Show Solution");
-        showGrid = new JCheckBox("Show Grid");
+        showSolution = UIHelper.createCheckBox("Show Solution");
+        showGrid = UIHelper.createCheckBox("Show Grid");
 
         Border innerBorder = BorderFactory.createTitledBorder("Display options");
-        Border outerBorder = BorderFactory.createEmptyBorder(5,10,10,10);
+        Border outerBorder = BorderFactory.createEmptyBorder(5,10,5,10);
         setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
 
         layoutComponents();

@@ -8,9 +8,8 @@ public class GridBagHelper {
     public static GridBagConstraints createDefaultGBC() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1;
-        gbc.weighty = 0.1;
+        gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(0, 0, 5, 5);
         return gbc;
     }
 
@@ -22,7 +21,7 @@ public class GridBagHelper {
      * @param anchor
      * @return
      */
-    public static GridBagConstraints createGBC(int weightx, int weighty, int fill, int anchor) {
+    public static GridBagConstraints createGBC(double weightx, double weighty, int fill, int anchor) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = weightx;
         gbc.weighty = weighty;
@@ -48,7 +47,7 @@ public class GridBagHelper {
 
     public static void addToPanel(JPanel jp,Component c, GridBagConstraints
             constraints,int x, int y, int w, int h, Insets i, int anchor) {
-        // don't want to change the underlying object
+        // I don't want to change the underlying object, so I cloned it
         GridBagConstraints gbc = (GridBagConstraints)constraints.clone();
         gbc.gridx = x;
         gbc.gridy = y;
