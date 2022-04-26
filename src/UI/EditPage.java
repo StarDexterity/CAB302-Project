@@ -1,46 +1,26 @@
+package UI;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class MazeFrame extends JFrame {
-    public static final int WIDTH = 1200;
-    public static final int HEIGHT = 700;
-
-    public static final int MIN_WIDTH = 1000;
-    public static final int MIN_HEIGHT = 500;
-
-    // may change in the future
-    public static final boolean RESIZEABLE = false;
-
+public class EditPage extends JPanel {
+    private App app;
     private OptionsPanel optionsPanel;
 
-    public MazeFrame(String s) {
-        super(s);
-
+    public EditPage(App app) {
+        super();
+        this.app = app;
         createGUI();
     }
 
     private void createGUI() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-
-        Container c = this.getContentPane();
         optionsPanel = new OptionsPanel();
 
-
-
         // layout code
-        c.add(optionsPanel, BorderLayout.WEST);
-        c.add(placeHolder(), BorderLayout.CENTER);
-
-
-        setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
-        setResizable(RESIZEABLE);
-        setSize(WIDTH,HEIGHT);
+        add(optionsPanel, BorderLayout.WEST);
+        add(placeHolder(), BorderLayout.CENTER);
     }
 
     /**
