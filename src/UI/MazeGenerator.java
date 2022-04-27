@@ -11,6 +11,13 @@ import java.util.LinkedList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * This maze generator and solver was taken from:
+ * https://rosettacode.org/wiki/Maze_solving#Animated_version
+ * This is currently more of a placeholder for the algorithm
+ * for the purposes of displaying the prototype properly.
+ */
+
 public class MazeGenerator extends JPanel {
     enum Dir {
         N(1, 0, -1), S(2, 0, 1), E(4, 1, 0), W(8, -1, 0);
