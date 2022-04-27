@@ -1,12 +1,24 @@
 package UI;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class HomePage extends JPanel {
     private App app;
+
+    private JScrollPane scrollPane;
+    private JTable table;
+    private MazeTableModel mazeTableModel;
+    private JPopupMenu popupMenu;
 
     public HomePage(App app) {
         super();
@@ -17,14 +29,97 @@ public class HomePage extends JPanel {
     private void createGUI() {
         setLayout(new BorderLayout());
 
-        JButton btn = new JButton("Press me!");
-        btn.addActionListener(new ActionListener() {
+        mazeTableModel = new MazeTableModel();
+        table = new JTable(mazeTableModel);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
+        table.setFocusable(false);
+        table.setRowHeight(32);
+
+        // double click event that opens up the maze for editing
+        table.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table =(JTable) mouseEvent.getSource();
+                //Point point = mouseEvent.getPoint(); // this code seems redundant
+                //int row = table.rowAtPoint(point);
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                    // your valueChanged overridden method
+                    app.lastPage();
+                }
+            }
+        });
+
+        // manually set column size
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(170);
+        columnModel.getColumn(1).setPreferredWidth(170);
+        columnModel.getColumn(2).setPreferredWidth(170);
+        columnModel.getColumn(3).setPreferredWidth(1);
+
+
+        scrollPane = new JScrollPane(table);
+        table.setFillsViewportHeight(true);
+        table.setDefaultEditor(Object.class, null);
+
+
+        popupMenu = createPopupMenu(table);
+        table.setComponentPopupMenu(popupMenu);
+
+        // border code
+        Border innerBorder = BorderFactory.createBevelBorder(BevelBorder.LOWERED);
+        Border outerBorder = BorderFactory.createEmptyBorder(120,270,120,270);
+        setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
+
+        // layout code
+        add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private JPopupMenu createPopupMenu(JTable table) {
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem exportItem = new JMenuItem("Export");
+        JMenuItem editItem = new JMenuItem("Edit");
+        JMenuItem deleteItem = new JMenuItem("Delete");
+
+        editItem.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 app.nextPage();
             }
         });
-        // layout code
-        add(btn);
+
+        popupMenu.add(exportItem);
+        popupMenu.add(editItem);
+        popupMenu.add(deleteItem);
+
+        // this code automatically selects row when popup menu is opened
+        popupMenu.addPopupMenuListener(new PopupMenuListener() {
+
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        int rowAtPoint = table.rowAtPoint(SwingUtilities.convertPoint(popupMenu, new Point(0, 0), table));
+                        if (rowAtPoint > -1) {
+                            table.setRowSelectionInterval(rowAtPoint, rowAtPoint);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        return popupMenu;
     }
 }
 
