@@ -3,6 +3,8 @@ package UI;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SolveStatus extends JPanel {
     private JLabel deadendLabel;
@@ -22,6 +24,16 @@ public class SolveStatus extends JPanel {
         solveLabel = new JLabel("Solve status");
         solveStatus = new JLabel("Not solved");
         solve = new JButton("Solve");
+
+        //MY ATTEMPT AT GETTING THE BUTTON TO WORK - Connor
+        solve.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Thread(() -> {
+                    EditPage.m.solve(0);
+                }).start();
+            }
+        });
 
         Border innerBorder = BorderFactory.createTitledBorder("Solve status");
         Border outerBorder = BorderFactory.createEmptyBorder(5,10,5,10);

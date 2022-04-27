@@ -6,6 +6,8 @@ import java.awt.*;
 public class EditPage extends JPanel {
     private App app;
     private OptionsPanel optionsPanel;
+    public static MazeGenerator m = new MazeGenerator(20);
+
 
     public EditPage(App app) {
         super();
@@ -20,7 +22,7 @@ public class EditPage extends JPanel {
 
         // layout code
         add(optionsPanel, BorderLayout.WEST);
-        add(placeHolder(), BorderLayout.CENTER);
+        add(m, BorderLayout.CENTER);
     }
 
     /**
