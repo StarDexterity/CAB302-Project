@@ -35,6 +35,7 @@ public class HomePage extends JPanel {
         table.getTableHeader().setResizingAllowed(false);
         table.setFocusable(false);
         table.setRowHeight(32);
+        table.setAutoCreateRowSorter(true);
 
         // double click event that opens up the maze for editing
         table.addMouseListener(new MouseAdapter() {
