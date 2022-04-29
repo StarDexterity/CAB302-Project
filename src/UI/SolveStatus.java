@@ -31,6 +31,7 @@ public class SolveStatus extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 new Thread(() -> {
                     EditPage.m.solve(0);
+                    solveStatus.setText("Solved");
                 }).start();
             }
         });
