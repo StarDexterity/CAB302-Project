@@ -1,1 +1,1 @@
-- Tick.png is for the checkboxes selected icon. Currently not implemented properly.
+Placeholder file

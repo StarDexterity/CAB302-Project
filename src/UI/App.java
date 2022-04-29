@@ -37,7 +37,7 @@ public class App extends JFrame {
 
     private void initialize() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new CardLayout());
+        setLayout(new BorderLayout());
 
         // create and set menubar
         menuBar = createMenu();
