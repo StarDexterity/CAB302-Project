@@ -6,7 +6,7 @@ import java.awt.*;
 public class EditPage extends JPanel {
     private App app;
     private OptionsPanel optionsPanel;
-    public static MazeGenerator m = new MazeGenerator(20);
+    public static MazeGenerator m = new MazeGenerator(30, 20);
 
 
     public EditPage(App app) {
@@ -26,7 +26,7 @@ public class EditPage extends JPanel {
     }
 
     /**
-     * Creates a placeholder panel for the center
+     * Creates a placeholder panel for the center, do not delete
      * @return
      */
     private JPanel placeHolder() {
