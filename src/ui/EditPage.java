@@ -1,4 +1,6 @@
-package UI;
+package ui;
+
+import maze.Maze;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +8,7 @@ import java.awt.*;
 public class EditPage extends JPanel {
     private App app;
     private OptionsPanel optionsPanel;
-    public static MazeGenerator m = new MazeGenerator(30, 20);
+    public static MazeDisplayer m = new MazeDisplayer(new Maze(30, 20));
 
 
     public EditPage(App app) {

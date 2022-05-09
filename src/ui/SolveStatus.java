@@ -1,4 +1,6 @@
-package UI;
+package ui;
+
+import maze.MazeSolver;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -30,7 +32,7 @@ public class SolveStatus extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new Thread(() -> {
-                    EditPage.m.solve(0);
+                    //EditPage.m.solve(0);
                     solveStatus.setText("Solved");
                 }).start();
             }

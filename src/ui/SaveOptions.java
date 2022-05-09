@@ -1,4 +1,4 @@
-package UI;
+package ui;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -27,7 +27,7 @@ public class SaveOptions extends JPanel {
         descriptionFieldScroller = new JScrollPane(descriptionField);
         descriptionField.setRows(3);
         saveButton = new JButton("Save");
-        exportButton = new JButton("Export");
+        exportButton = new JButton("Default.Export");
         deleteButton = new JButton("Delete");
 
         Border innerBorder = BorderFactory.createTitledBorder("Save options");

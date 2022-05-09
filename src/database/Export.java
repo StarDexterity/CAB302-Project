@@ -1,7 +1,12 @@
+package database;
+
+import maze.ImageType;
+import maze.Maze;
+
 import java.util.ArrayList;
 
 /**
- *  This static class can export one or more Maze objects in a number of image file formats.
+ *  This static class can export one or more Default.Maze objects in a number of image file formats.
  */
 public class Export {
     /**

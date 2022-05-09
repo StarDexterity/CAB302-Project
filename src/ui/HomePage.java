@@ -1,4 +1,4 @@
-package UI;
+package ui;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -77,7 +77,7 @@ public class HomePage extends JPanel {
 
     private JPopupMenu createPopupMenu(JTable table) {
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem exportItem = new JMenuItem("Export");
+        JMenuItem exportItem = new JMenuItem("Default.Export");
         JMenuItem editItem = new JMenuItem("Edit");
         JMenuItem deleteItem = new JMenuItem("Delete");
 
