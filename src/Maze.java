@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Date;
 
 /**
@@ -13,34 +14,58 @@ public class Maze {
     private Dimension dimension;
     private Date creationDate;
     private Date lastEditDate;
-    private int mazeRow;
-    private int mazeColumn;
+
+    private BitSet[] mazeRows;
+    private BitSet[] mazeColumns;
+
     private ArrayList<MazeImage> logos;
 
     // constructors
-    public Maze(Dimension dimension) {
+
+    //Minimum possible constructor
+    public Maze(Dimension dimension){
         this.dimension = dimension;
+        this.mazeRows = new BitSet[dimension.height + 1];
+        this.mazeColumns = new BitSet[dimension.width + 1];
     }
 
-    public Maze(int id,
+    /**
+     * For creating a new Maze
+     * @param title
+     * @param author
+     * @param description
+     * @param dimension
+     * @param creationDate
+     * @param lastEditDate
+     * @param mazeRows
+     * @param mazeColumns
+     * @param logos
+     */
+    //TODO: Make a better constructor that allows defaults.
+    // Choose when to create the maze object, whether once the maze is generated,
+    // created with a preview screen, or created immediately.
+    public Maze(
+                int id,
                 String title,
                 String author,
                 String description,
                 Dimension dimension,
                 Date creationDate,
                 Date lastEditDate,
-                int mazeRow,
-                int mazeColumn,
+                BitSet[] mazeRows,
+                BitSet[] mazeColumns,
                 ArrayList<MazeImage> logos) {
-        this.id = id;
         this.title = title;
         this.author = author;
         this.description = description;
         this.dimension = dimension;
         this.creationDate = creationDate;
         this.lastEditDate = lastEditDate;
-        this.mazeRow = mazeRow;
-        this.mazeColumn = mazeColumn;
+        // Create BitSet to store maze walls with enough room to store all the walls in the maze + 1 for the borders
+        // <MazeRows, MazeColumns init here (e.g. all 1 or all 0)>
+        this.mazeRows = mazeRows;
+        this.mazeColumns = mazeColumns;
+
         this.logos = logos;
     }
 
@@ -109,6 +134,12 @@ public class Maze {
         this.logos = logos;
     }
 
+    //TODO: Remove
+    public void devSetMazeData(BitSet[] mazeRows, BitSet[] mazeColumns) {
+        this.mazeRows = mazeRows;
+        this.mazeColumns = mazeColumns;
+    }
+
     // public methods
 
     /**
@@ -118,11 +149,25 @@ public class Maze {
 
     }
 
-    /**
+     /**
      * Randomly generates the maze object. Is called from the constructor as well as on subsequent regenerations as required.
      */
     public void randomlyGenerate() {
 
+    }
+
+    /**
+     *
+     * @return
+     */
+    //Why can't I use Pair! Foolish corretto
+    public boolean canPass(Dimension position, Direction direction) {
+        return !(switch (direction){
+            case NORTH -> mazeRows[position.height + 1].get(dimension.width);
+            case SOUTH -> mazeRows[position.height].get(dimension.width);
+            case EAST -> mazeColumns[position.width + 1].get(dimension.height);
+            case WEST -> mazeColumns[position.width].get(dimension.height);
+        });
     }
 
     /**

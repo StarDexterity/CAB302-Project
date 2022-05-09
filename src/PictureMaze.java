@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Date;
 
 /**
@@ -17,12 +18,12 @@ public class PictureMaze extends Maze {
                        Dimension dimension,
                        Date creationDate,
                        Date lastEditDate,
-                       int mazeRow,
-                       int mazeColumn,
+                       BitSet[] mazeRows,
+                       BitSet[] mazeColumns,
                        ArrayList<MazeImage> logos,
                        MazeImage startImage,
                        MazeImage endImage) {
-        super(id, title, author, description, dimension, creationDate, lastEditDate, mazeRow, mazeColumn, logos);
+        super(id, title, author, description, dimension, creationDate, lastEditDate, mazeRows, mazeColumns, logos);
         this.startImage = startImage;
         this.endImage = endImage;
     }
