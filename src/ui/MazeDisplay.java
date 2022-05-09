@@ -1,9 +1,14 @@
 package ui;
 
 import maze.Maze;
+import maze.MazeSolver;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
 import java.util.LinkedList;
 
@@ -14,7 +19,7 @@ import java.util.LinkedList;
  * for the purposes of displaying the prototype properly.
  */
 
-public class MazeDisplayer extends JPanel {
+public class MazeDisplay extends JPanel {
     /**
      * Indicates the direction of one or more neighboring vertices a vertex connects with (shares an edge)
      * Can be used like bits aka
@@ -45,26 +50,20 @@ public class MazeDisplayer extends JPanel {
      */
     LinkedList<Integer> solution;
 
-    public MazeDisplayer(Maze maze) {
+    public boolean showSolution;
+
+    public MazeDisplay(Maze maze, boolean showSolution) {
         // graphics code
         setPreferredSize(new Dimension(650, 650));
         setBackground(Color.white);
 
+        MazeSolver.solve(0, maze);
+        solution = maze.solution;
+
         mazeGrid = maze.mazeGrid;
+        this.showSolution = showSolution;
         nCols = maze.nCols;
         nRows = maze.nRows;
-
-
- /*       addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                new Thread(() -> {
-                    solve(0);
-                }).start();
-            }
-        });*/
-
-
     }
 
     /**
@@ -108,11 +107,15 @@ public class MazeDisplayer extends JPanel {
         Path2D path = new Path2D.Float();
         path.moveTo(offset, offset);
 
-        for (int pos : solution) {
-            int x = pos % nCols * cellSize + offset;
-            int y = pos / nCols * cellSize + offset;
-            path.lineTo(x, y);
+        // draws the solution if showSolution is true
+        if (showSolution) {
+            for (int pos : solution) {
+                int x = pos % nCols * cellSize + offset;
+                int y = pos / nCols * cellSize + offset;
+                path.lineTo(x, y);
+            }
         }
+
 
         g.setColor(Color.orange);
         g.draw(path);
@@ -135,19 +138,4 @@ public class MazeDisplayer extends JPanel {
         }
         repaint();
     }
-
-    /* // we don't need this
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame f = new JFrame();
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            f.setTitle("Default.Maze Generator");
-            f.setResizable(true);
-            f.add(new MazeGenerator(20, ), BorderLayout.CENTER);
-            f.pack();
-            f.setLocationRelativeTo(null);
-            f.setVisible(true);
-        });
-    }
-     */
 }

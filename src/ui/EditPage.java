@@ -8,7 +8,7 @@ import java.awt.*;
 public class EditPage extends JPanel {
     private App app;
     private OptionsPanel optionsPanel;
-    public static MazeDisplayer m = new MazeDisplayer(new Maze(30, 20));
+    public static MazeDisplay m = new MazeDisplay(new Maze(30, 20), false);
 
 
     public EditPage(App app) {
