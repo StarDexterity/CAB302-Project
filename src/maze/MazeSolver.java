@@ -10,12 +10,15 @@ import java.util.LinkedList;
 public class MazeSolver {
     /**
      * For a given maze, validates if the maze has a solution
-     * @param maze A @{@link Maze} object
-     * @return
+     * @param maze A @{@link Maze} object. The solution to the maze is stored within this object
+     * @return A bool value indicating whether the maze was successfully solved.
      */
-    public static boolean isSolution(Maze maze, int pos) {
-        LinkedList<Integer> solution = new LinkedList<>();
+    public static boolean solve(int pos, Maze maze) {
+        maze.solution = new LinkedList<>();
+        return recursiveSolve(pos, maze);
+    }
 
+    private static boolean recursiveSolve(int pos, Maze maze) {
         if (pos == maze.nCols * maze.nRows - 1)
             return true;
 
@@ -30,17 +33,17 @@ public class MazeSolver {
 
                 int newPos = nr * maze.nCols + nc;
 
-                solution.add(newPos);
+                maze.solution.add(newPos);
                 maze.mazeGrid[nr][nc] |= 16;
 
                 //animate();
 
-                if (isSolution(maze, newPos))
+                if (MazeSolver.recursiveSolve(newPos, maze))
                     return true;
 
                 //animate();
 
-                solution.removeLast();
+                maze.solution.removeLast();
                 maze.mazeGrid[nr][nc] &= ~16;
             }
         }
@@ -50,18 +53,16 @@ public class MazeSolver {
 
     /**
      * For a given maze, finds the total cells with dead ends
-     * @param maze A @{@link Maze} object
      * @return
      */
-    public static int TotalDeadEnds(Maze maze) {
+    public static int TotalDeadEnds() {
         return 0;
     }
 
     /**
      * For a given maze, finds the total cells required to pass through, for the optimal solution
-     * @param maze A @{@link Maze} object
      */
-    public static int TotalPassThrough(Maze maze) {
+    public static int TotalPassThrough() {
         return 0;
     }
     /**
