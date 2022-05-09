@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Date;
+import java.util.LinkedList;
 
 /**
  *
@@ -19,6 +20,7 @@ public class Maze {
     public int[][] mazeGrid;
     public int nCols;
     public int nRows;
+    public LinkedList<Integer> solution;
 
     private ArrayList<MazeImage> logos;
 
@@ -32,6 +34,9 @@ public class Maze {
         // initialize the internal maze data structure
         mazeGrid = new int[nRows][nCols];
 
+        solution = new LinkedList<>();
+
+        // Generates the maze automatically (starting position is always 0, 0)
         MazeGenerator.generateMaze(this,0, 0);
     }
 
