@@ -1,5 +1,7 @@
 package ui;
 
+import maze.Maze;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +17,11 @@ public class App extends JFrame {
     public EditPage editPage;
     public HomePage homePage;
     public JMenuBar menuBar;
+
+    /**
+     *  Stores the current maze object
+     */
+    public Maze currentMaze;
 
     // may change in the future
     public static final boolean RESIZEABLE = false;
@@ -62,8 +69,25 @@ public class App extends JFrame {
     private JMenuBar createMenu() {
         JMenuBar mb = new JMenuBar();
         JMenu file = new JMenu("File");
+        JMenuItem newMaze = new JMenuItem("New maze");
         JMenuItem close = new JMenuItem("Close maze ");
         JMenuItem exit = new JMenuItem("Exit");
+
+        newMaze.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // create and display and new dialog window
+                NewMazeDialog nmd = new NewMazeDialog(new JFrame());
+                nmd.setLocationRelativeTo(getContentPane());
+                nmd.setVisible(true);
+
+                // if maze is null, the dialog was canceled
+                if (nmd.maze != null) {
+                    currentMaze = nmd.maze;
+                    nextPage();
+                }
+            }
+        });
 
         close.addActionListener(new ActionListener() {
             @Override
@@ -80,6 +104,7 @@ public class App extends JFrame {
         });
 
         mb.add(file);
+        file.add(newMaze);
         file.add(close);
         file.addSeparator();
         file.add(exit);
