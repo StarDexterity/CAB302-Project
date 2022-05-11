@@ -14,6 +14,9 @@ public class App extends JFrame {
     public static final int MIN_WIDTH = 1000;
     public static final int MIN_HEIGHT = 500;
 
+    public static final String editPageString = "EditPage";
+
+
     public EditPage editPage;
     public HomePage homePage;
     public JMenuBar menuBar;
@@ -81,9 +84,9 @@ public class App extends JFrame {
                 nmd.setVisible(true);
 
                 // if maze is null, the dialog was canceled
-                if (nmd.maze != null) {
-                    currentMaze = nmd.maze;
-                    nextPage();
+                Maze m = nmd.getGeneratedMaze();
+                if (m != null) {
+                    showEditPage(m);
                 }
             }
         });
@@ -115,6 +118,7 @@ public class App extends JFrame {
     }
 
     public void lastPage() {
+
         Container c = getContentPane();
         CardLayout cl = (CardLayout)c.getLayout();
         cl.last(c);
@@ -124,5 +128,13 @@ public class App extends JFrame {
         Container c = getContentPane();
         CardLayout cl = (CardLayout)c.getLayout();
         cl.first(c);
+    }
+    public void showEditPage(Maze maze) {
+        Container c = getContentPane();
+        CardLayout cl = (CardLayout)c.getLayout();
+
+        editPage.setMaze(maze);
+        cl.next(c);
+        // cl.show(c, editPageString);
     }
 }

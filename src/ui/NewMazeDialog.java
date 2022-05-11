@@ -26,7 +26,7 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
     /**
      * The maze object instantiated by this pop up
      */
-    public Maze maze;
+    public Maze generatedMaze;
 
 
     private String GenerateString = "Generate";
@@ -155,12 +155,16 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
             if (GenerateString.equals(value)) {
                 int cols = (int)sizeX.getValue();
                 int rows = (int)sizeY.getValue();
-                maze = new Maze(cols, rows);
+                generatedMaze = new Maze(cols, rows);
                 clearAndHide();
             } else { //user closed dialog or clicked cancel
                 clearAndHide();
             }
         }
+    }
+
+    public Maze getGeneratedMaze() {
+        return generatedMaze;
     }
 
 
