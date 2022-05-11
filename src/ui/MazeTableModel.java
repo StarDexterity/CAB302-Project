@@ -1,40 +1,41 @@
 package ui;
 
 import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 
 
 public class MazeTableModel extends AbstractTableModel {
     public MazeTableModel() {
         super();
     }
-    private String[] columnNames = {"Title", "Author", "Last edited", "select"};
+    private String[] columnNames = {"Title", "Author", "Last edited on", "Created on", "select"};
 
     // a lot of data to show the scroll bar
     private Object[][] data = {
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false},
-            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", false}
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false},
+            {"Best Default.Maze", "Mr Default.Maze", "22/04/2022", "20/04/2022", false}
     };
 
     public int getColumnCount() {

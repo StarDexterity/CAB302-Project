@@ -27,6 +27,8 @@ public class HomePage extends JPanel {
     }
 
     private void createGUI() {
+        new JLabel("testing");
+
         setLayout(new BorderLayout());
 
         mazeTableModel = new MazeTableModel();
@@ -54,8 +56,9 @@ public class HomePage extends JPanel {
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(170);
         columnModel.getColumn(1).setPreferredWidth(170);
-        columnModel.getColumn(2).setPreferredWidth(170);
-        columnModel.getColumn(3).setPreferredWidth(1);
+        columnModel.getColumn(2).setPreferredWidth(100);
+        columnModel.getColumn(3).setPreferredWidth(100);
+        columnModel.getColumn(4).setPreferredWidth(1);
 
 
         scrollPane = new JScrollPane(table);
@@ -68,7 +71,7 @@ public class HomePage extends JPanel {
 
         // border code
         Border innerBorder = BorderFactory.createBevelBorder(BevelBorder.LOWERED);
-        Border outerBorder = BorderFactory.createEmptyBorder(120,270,120,270);
+        Border outerBorder = BorderFactory.createEmptyBorder(120,100,100,100);
         setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
 
         // layout code

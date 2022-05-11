@@ -63,14 +63,13 @@ public class App extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
         setResizable(RESIZEABLE);
-        setSize(WIDTH,HEIGHT);
+        setSize(WIDTH, HEIGHT);
     }
 
     private JMenuBar createMenu() {
         JMenuBar mb = new JMenuBar();
-        JMenu file = new JMenu("File");
-        JMenuItem newMaze = new JMenuItem("New maze");
-        JMenuItem close = new JMenuItem("Close maze ");
+        JMenuItem newMaze = new JMenuItem("New Maze");
+        JMenuItem close = new JMenuItem("Home");
         JMenuItem exit = new JMenuItem("Exit");
 
         newMaze.addActionListener(new ActionListener() {
@@ -102,12 +101,10 @@ public class App extends JFrame {
                 System.exit(69);
             }
         });
-
-        mb.add(file);
-        file.add(newMaze);
-        file.add(close);
-        file.addSeparator();
-        file.add(exit);
+        mb.add(newMaze);
+        mb.add(close);
+        //mb.add( Box.createHorizontalStrut( 10 ) );  //this will add a 10 pixel space
+        mb.add(exit);
         return mb;
     }
 
