@@ -8,7 +8,12 @@ import java.awt.*;
 public class EditPage extends JPanel {
     private App app;
     private OptionsPanel optionsPanel;
-    private MazeDisplay currentMaze;
+    private MazeDisplay mazeDisplay;
+
+    /**
+     * Stores the current maze object being edited
+     */
+    public Maze currentMaze;
 
 
     public EditPage(App app) {
@@ -27,9 +32,14 @@ public class EditPage extends JPanel {
     }
 
     public void setMaze(Maze maze) {
-        if(currentMaze != null) remove(currentMaze);
-        currentMaze = new MazeDisplay(maze, false);
-        add(currentMaze, BorderLayout.CENTER);
+        if (mazeDisplay != null) remove(mazeDisplay);
+        currentMaze = maze;
+        mazeDisplay = new MazeDisplay(maze, false);
+        add(mazeDisplay, BorderLayout.CENTER);
+
+        // It just works ;)
+        revalidate();
+        repaint();
     }
 }
 

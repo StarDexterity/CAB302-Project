@@ -21,6 +21,9 @@ public class App extends JFrame {
     public HomePage homePage;
     public JMenuBar menuBar;
 
+    private String editPageID = "EditPage";
+    private String homePageID = "HomePage";
+
     /**
      *  Stores the current maze object
      */
@@ -58,8 +61,8 @@ public class App extends JFrame {
         editPage = new EditPage(this);
         homePage = new HomePage(this);
 
-        add(homePage);
-        add(editPage);
+        add(homePage, homePageID);
+        add(editPage, editPageID);
 
 
         setVisible(true);
@@ -111,30 +114,44 @@ public class App extends JFrame {
         return mb;
     }
 
+    /**
+     * @deprecated
+     */
     public void nextPage() {
         Container c = getContentPane();
         CardLayout cl = (CardLayout)c.getLayout();
         cl.next(c);
     }
 
+    /**
+     * @deprecated
+     */
     public void lastPage() {
-
         Container c = getContentPane();
         CardLayout cl = (CardLayout)c.getLayout();
         cl.last(c);
     }
 
+    /**
+     * @deprecated
+     */
     public void firstPage() {
         Container c = getContentPane();
         CardLayout cl = (CardLayout)c.getLayout();
         cl.first(c);
     }
+
+    public void showHomePage() {
+        Container c = getContentPane();
+        CardLayout cardLayout = (CardLayout)c.getLayout();
+        cardLayout.show(c, homePageID);
+    }
+
     public void showEditPage(Maze maze) {
         Container c = getContentPane();
-        CardLayout cl = (CardLayout)c.getLayout();
+        CardLayout cardLayout = (CardLayout)c.getLayout();
 
         editPage.setMaze(maze);
-        cl.next(c);
-        // cl.show(c, editPageString);
+        cardLayout.show(c, editPageID);
     }
 }
