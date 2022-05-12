@@ -29,6 +29,16 @@ public class EditPage extends JPanel {
 
         // layout code
         add(optionsPanel, BorderLayout.WEST);
+
+        // placeholder code to test grid and solution options
+        JButton toggleGridTemp = new JButton("Toggle grid");
+        toggleGridTemp.addActionListener(e -> mazeDisplay.setShowGrid(!mazeDisplay.isShowGrid()));
+
+        JButton toggleSolutionTemp = new JButton("Toggle solution");
+        toggleSolutionTemp.addActionListener(e -> mazeDisplay.setShowSolution(!mazeDisplay.isShowSolution()));
+
+        add(toggleGridTemp, BorderLayout.SOUTH);
+        add(toggleSolutionTemp, BorderLayout.EAST);
     }
 
     public void setMaze(Maze maze) {
