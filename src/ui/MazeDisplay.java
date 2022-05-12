@@ -50,7 +50,8 @@ public class MazeDisplay extends JPanel {
      */
     LinkedList<Integer> solution;
 
-    public boolean showSolution;
+    private boolean showSolution;
+    private boolean showGrid;
 
     public MazeDisplay(Maze maze, boolean showSolution) {
         // graphics code
@@ -64,6 +65,24 @@ public class MazeDisplay extends JPanel {
         this.showSolution = showSolution;
         nCols = maze.nCols;
         nRows = maze.nRows;
+    }
+
+    public boolean isShowSolution() {
+        return showSolution;
+    }
+
+    public boolean isShowGrid() {
+        return showGrid;
+    }
+
+    public void setShowSolution(boolean showSolution) {
+        this.showSolution = showSolution;
+        repaint();
+    }
+
+    public void setShowGrid(boolean showGrid) {
+        this.showGrid = showGrid;
+        repaint();
     }
 
     /**
@@ -128,17 +147,19 @@ public class MazeDisplay extends JPanel {
         int y = offset + (nRows - 1) * cellSize;
         g.fillOval(x - 5, y - 5, 10, 10);
 
-        // draw grid
-        g.setStroke(new BasicStroke(1));
-        g.setColor(Color.lightGray);
+        // draws the grid if showGrid grid option is enabled
+        if (showGrid) {
+            g.setStroke(new BasicStroke(1));
+            g.setColor(Color.lightGray);
 
-        for (int i = 0; i<nRows+1;i++){
-            int rowHt = cellSize;
-            g.drawLine(0+margin, (i*rowHt)+margin, (cellSize*nCols)+margin, (i*rowHt)+margin);
-        }
-        for (int i = 0; i<nCols+1;i++){
-            int rowWid = cellSize;
-            g.drawLine((i*rowWid)+margin, 0+margin, (i*rowWid)+margin, (cellSize*nRows)+margin);
+            for (int i = 0; i < nRows + 1; i++) {
+                int rowHt = cellSize;
+                g.drawLine(0 + margin, (i * rowHt) + margin, (cellSize * nCols) + margin, (i * rowHt) + margin);
+            }
+            for (int i = 0; i < nCols + 1; i++) {
+                int rowWid = cellSize;
+                g.drawLine((i * rowWid) + margin, 0 + margin, (i * rowWid) + margin, (cellSize * nRows) + margin);
+            }
         }
     }
 
