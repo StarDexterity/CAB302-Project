@@ -8,6 +8,7 @@ import java.awt.*;
 public class EditPage extends JPanel {
     private App app;
     private OptionsPanel optionsPanel;
+    private JScrollPane scrollPane;
     private MazeDisplay mazeDisplay;
 
     /**
@@ -26,9 +27,11 @@ public class EditPage extends JPanel {
         setLayout(new BorderLayout());
 
         optionsPanel = new OptionsPanel();
+        scrollPane = new JScrollPane();
 
         // layout code
         add(optionsPanel, BorderLayout.WEST);
+        add(scrollPane, BorderLayout.CENTER);
 
         // placeholder code to test grid and solution options
         JButton toggleGridTemp = new JButton("Toggle grid");
@@ -45,11 +48,11 @@ public class EditPage extends JPanel {
         if (mazeDisplay != null) remove(mazeDisplay);
         currentMaze = maze;
         mazeDisplay = new MazeDisplay(maze, false);
-        add(mazeDisplay, BorderLayout.CENTER);
+        scrollPane.setViewportView(mazeDisplay);
 
         // It just works ;)
-        revalidate();
-        repaint();
+        scrollPane.revalidate();
+        scrollPane.repaint();
     }
 }
 

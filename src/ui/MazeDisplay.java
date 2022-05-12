@@ -5,10 +5,7 @@ import maze.MazeSolver;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.Path2D;
 import java.util.LinkedList;
 
@@ -19,7 +16,7 @@ import java.util.LinkedList;
  * for the purposes of displaying the prototype properly.
  */
 
-public class MazeDisplay extends JPanel {
+public class MazeDisplay extends JPanel implements Scrollable {
     /**
      * Indicates the direction of one or more neighboring vertices a vertex connects with (shares an edge)
      * Can be used like bits aka
@@ -40,6 +37,8 @@ public class MazeDisplay extends JPanel {
     final int cellSize = 25;
     final int margin = 25;
 
+    private final MazeDisplay ref = this;
+
     /**
      * The internal representation of the maze, represented as a matrix of vertices connected by the direction enumerable
      */
@@ -55,7 +54,6 @@ public class MazeDisplay extends JPanel {
 
     public MazeDisplay(Maze maze, boolean showSolution) {
         // graphics code
-        setPreferredSize(new Dimension(650, 650));
         setBackground(Color.white);
 
         MazeSolver.solve(0, maze);
@@ -65,6 +63,55 @@ public class MazeDisplay extends JPanel {
         this.showSolution = showSolution;
         nCols = maze.nCols;
         nRows = maze.nRows;
+
+
+        // adapted from https://stackoverflow.com/questions/31171502/scroll-jscrollpane-by-dragging-mouse-java-swing
+        MouseAdapter ma = new MouseAdapter() {
+
+            private Point origin;
+            private boolean isDrag;
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                isDrag = e.getButton() == MouseEvent.BUTTON3;
+                if (isDrag) {
+                    origin = new Point(e.getPoint());
+                    setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (isDrag){
+                    isDrag = false;
+                    setCursor(Cursor.getDefaultCursor());
+                }
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (origin != null) {
+                    if (isDrag) {
+                        JViewport viewPort = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, ref);
+                        if (viewPort != null) {
+                            int deltaX = origin.x - e.getX();
+                            int deltaY = origin.y - e.getY();
+
+                            Rectangle view = viewPort.getViewRect();
+                            view.x += deltaX;
+                            view.y += deltaY;
+
+                            scrollRectToVisible(view);
+                        }
+                    }
+                }
+            }
+
+        };
+
+        addMouseListener(ma);
+
+        addMouseMotionListener(ma);
     }
 
     public boolean isShowSolution() {
@@ -85,8 +132,14 @@ public class MazeDisplay extends JPanel {
         repaint();
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(nCols * cellSize + margin * 2, nRows * cellSize + margin * 2);
+    }
+
     /**
      * Draws the maze to the screen
+     *
      * @param gg
      */
     @Override
@@ -164,12 +217,37 @@ public class MazeDisplay extends JPanel {
     }
 
 
-
     void animate() {
         try {
             Thread.sleep(50L);
         } catch (InterruptedException ignored) {
         }
         repaint();
+    }
+
+
+    @Override
+    public Dimension getPreferredScrollableViewportSize() {
+        return null;
+    }
+
+    @Override
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 25;
+    }
+
+    @Override
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 25;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+        return false;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportHeight() {
+        return false;
     }
 }
