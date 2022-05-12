@@ -153,10 +153,18 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
                     JOptionPane.UNINITIALIZED_VALUE);
 
             if (GenerateString.equals(value)) {
-                int cols = (int)sizeX.getValue();
-                int rows = (int)sizeY.getValue();
-                generatedMaze = new Maze(cols, rows);
-                clearAndHide();
+                if (generationCBox.getSelectedItem()=="Automatic") {
+                    int cols = (int) sizeX.getValue();
+                    int rows = (int) sizeY.getValue();
+                    generatedMaze = new Maze(cols, rows);
+                    clearAndHide();
+                }
+                else{
+                    int cols = (int) sizeX.getValue();
+                    int rows = (int) sizeY.getValue();
+                    generatedMaze = new Maze(cols,rows);
+                    clearAndHide();
+                }
             } else { //user closed dialog or clicked cancel
                 clearAndHide();
             }
