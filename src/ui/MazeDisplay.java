@@ -128,7 +128,20 @@ public class MazeDisplay extends JPanel {
         int y = offset + (nRows - 1) * cellSize;
         g.fillOval(x - 5, y - 5, 10, 10);
 
+        // draw grid
+        g.setStroke(new BasicStroke(1));
+        g.setColor(Color.lightGray);
+
+        for (int i = 0; i<nRows+1;i++){
+            int rowHt = cellSize;
+            g.drawLine(0+margin, (i*rowHt)+margin, (cellSize*nCols)+margin, (i*rowHt)+margin);
+        }
+        for (int i = 0; i<nCols+1;i++){
+            int rowWid = cellSize;
+            g.drawLine((i*rowWid)+margin, 0+margin, (i*rowWid)+margin, (cellSize*nRows)+margin);
+        }
     }
+
 
 
     void animate() {
