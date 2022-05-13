@@ -51,6 +51,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     private boolean showSolution;
     private boolean showGrid;
+    private boolean manual;
 
     public MazeDisplay(Maze maze, boolean showSolution) {
         // graphics code
@@ -122,6 +123,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
         return showGrid;
     }
 
+    public boolean isManual() {return manual;}
+
     public void setShowSolution(boolean showSolution) {
         this.showSolution = showSolution;
         repaint();
@@ -129,6 +132,10 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     public void setShowGrid(boolean showGrid) {
         this.showGrid = showGrid;
+        repaint();
+    }
+    public void setManual(boolean manual){
+        this.manual = manual;
         repaint();
     }
 
@@ -152,24 +159,38 @@ public class MazeDisplay extends JPanel implements Scrollable {
         g.setStroke(new BasicStroke(5));
         g.setColor(Color.black);
 
+        //draw manual maze
+        if(manual) {
+            for (int i = 0; i < nRows + 1; i++) {
+                int rowHt = cellSize;
+                g.drawLine(0 + margin, (i * rowHt) + margin, (cellSize * nCols) + margin, (i * rowHt) + margin);
+            }
+            for (int i = 0; i < nCols + 1; i++) {
+                int rowWid = cellSize;
+                g.drawLine((i * rowWid) + margin, 0 + margin, (i * rowWid) + margin, (cellSize * nRows) + margin);
+            }
+        }
+
         // draw maze
-        for (int r = 0; r < nRows; r++) {
-            for (int c = 0; c < nCols; c++) {
+        if (!manual) {
+            for (int r = 0; r < nRows; r++) {
+                for (int c = 0; c < nCols; c++) {
 
-                int x = margin + c * cellSize;
-                int y = margin + r * cellSize;
+                    int x = margin + c * cellSize;
+                    int y = margin + r * cellSize;
 
-                if ((mazeGrid[r][c] & 1) == 0) // N
-                    g.drawLine(x, y, x + cellSize, y);
+                    if ((mazeGrid[r][c] & 1) == 0) // N
+                        g.drawLine(x, y, x + cellSize, y);
 
-                if ((mazeGrid[r][c] & 2) == 0) // S
-                    g.drawLine(x, y + cellSize, x + cellSize, y + cellSize);
+                    if ((mazeGrid[r][c] & 2) == 0) // S
+                        g.drawLine(x, y + cellSize, x + cellSize, y + cellSize);
 
-                if ((mazeGrid[r][c] & 4) == 0) // E
-                    g.drawLine(x + cellSize, y, x + cellSize, y + cellSize);
+                    if ((mazeGrid[r][c] & 4) == 0) // E
+                        g.drawLine(x + cellSize, y, x + cellSize, y + cellSize);
 
-                if ((mazeGrid[r][c] & 8) == 0) // W
-                    g.drawLine(x, y, x, y + cellSize);
+                    if ((mazeGrid[r][c] & 8) == 0) // W
+                        g.drawLine(x, y, x, y + cellSize);
+                }
             }
         }
 
