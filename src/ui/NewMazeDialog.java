@@ -22,6 +22,7 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
     private JSpinner sizeY;
     private JLabel generateLabel;
     private JComboBox generationCBox;
+    private EditPage editPage;
 
     /**
      * The maze object instantiated by this pop up
@@ -156,13 +157,13 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
                 if (generationCBox.getSelectedItem()=="Automatic") {
                     int cols = (int) sizeX.getValue();
                     int rows = (int) sizeY.getValue();
-                    generatedMaze = new Maze(cols, rows);
+                    generatedMaze = new Maze(cols, rows, true);
                     clearAndHide();
                 }
                 else{
                     int cols = (int) sizeX.getValue();
                     int rows = (int) sizeY.getValue();
-                    generatedMaze = new Maze(cols,rows);
+                    generatedMaze = new Maze(cols,rows, false);
                     clearAndHide();
                 }
             } else { //user closed dialog or clicked cancel

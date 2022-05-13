@@ -27,7 +27,7 @@ public class Maze {
     // constructors
 
     //Minimum possible constructor
-    public Maze(int nCols, int nRows) {
+    public Maze(int nCols, int nRows, boolean automatic) {
         this.nCols = nCols;
         this.nRows = nRows;
 
@@ -37,7 +37,9 @@ public class Maze {
         solution = new LinkedList<>();
 
         // Generates the maze automatically (starting position is always 0, 0)
-        MazeGenerator.generateMaze(this,0, 0);
+        if(automatic == true) {
+            MazeGenerator.generateMaze(this, 0, 0);
+        }
     }
 
     /**
