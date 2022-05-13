@@ -36,7 +36,7 @@ public class Maze {
 
         solution = new LinkedList<>();
 
-        // Generates the maze automatically (starting position is always 0, 0)
+        // Generates the maze automatically if wanted (starting position is always 0, 0)
         if(automatic == true) {
             MazeGenerator.generateMaze(this, 0, 0);
         }
