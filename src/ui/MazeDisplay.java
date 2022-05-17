@@ -27,11 +27,11 @@ public class MazeDisplay extends JPanel implements Scrollable {
     /**
      * Number of columns in the maze
      */
-    final int nCols;
+    private int nCols;
     /**
      * Number of rows in the maze
      */
-    final int nRows;
+    private int nRows;
 
     // These two values are for rendering
     final int cellSize = 25;
@@ -42,7 +42,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
     /**
      * The internal representation of the maze, represented as a matrix of vertices connected by the direction enumerable
      */
-    final int[][] mazeGrid;
+    private int[][] mazeGrid;
 
     /**
      * Stores the solution to the maze. This is empty until solve is called.
@@ -51,71 +51,77 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     private boolean showSolution;
     private boolean showGrid;
-    private boolean manual;
 
-    public MazeDisplay(Maze maze, boolean showSolution) {
+    // selected cell coordinates
+    private int cellX = -1;
+    private int cellY = -1;
+
+    public MazeDisplay() {
         // graphics code
         setBackground(Color.white);
 
-        MazeSolver.solve(0, maze);
-        solution = maze.solution;
-
-        mazeGrid = maze.mazeGrid;
-        this.showSolution = showSolution;
-        nCols = maze.nCols;
-        nRows = maze.nRows;
 
 
         // adapted from https://stackoverflow.com/questions/31171502/scroll-jscrollpane-by-dragging-mouse-java-swing
         MouseAdapter ma = new MouseAdapter() {
 
             private Point origin;
-            private boolean isDrag;
 
             @Override
             public void mousePressed(MouseEvent e) {
-                isDrag = e.getButton() == MouseEvent.BUTTON3;
-                if (isDrag) {
+                origin = null;
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     origin = new Point(e.getPoint());
                     setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                }
+
+                // below code gets selected cell if any
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    int x = e.getX();
+                    int y = e.getY();
+
+                    // checking for change
+                    int oldX = cellX;
+                    int oldY = cellY;
+
+                    cellX = -1;
+                    cellY = -1;
+
+                    if ((x > margin && x < margin + cellSize * nCols) && (y > margin && y < margin + cellSize * nRows)) {
+                        cellX = (int)Math.round((x - margin) / cellSize);
+                        cellY = (int)Math.round((y - margin) / cellSize);
+                    }
+
+
+                    if (cellX != -1) {
+                        System.out.println("You have clicked cell " + cellX + ", " + cellY);
+                    }
+
+                    // only repaint if a new cell is selected
+                    if (cellX != oldX || cellY != oldY) {
+                        repaint();
+                    }
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (isDrag){
-                    isDrag = false;
-                    setCursor(Cursor.getDefaultCursor());
-                }
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e){
-                int x = e.getX();
-                int y = e.getY();
-                int cellX=Math.round((x-25)/25);
-                int cellY=Math.round((y-25)/25);
-                System.out.println(cellX);
-                System.out.println(cellY);
-                System.out.println("You have clicked cell "+cellX+", "+cellY);
-
+                setCursor(Cursor.getDefaultCursor());
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (origin != null) {
-                    if (isDrag) {
-                        JViewport viewPort = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, ref);
-                        if (viewPort != null) {
-                            int deltaX = origin.x - e.getX();
-                            int deltaY = origin.y - e.getY();
+                    JViewport viewPort = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, ref);
+                    if (viewPort != null) {
+                        int deltaX = origin.x - e.getX();
+                        int deltaY = origin.y - e.getY();
 
-                            Rectangle view = viewPort.getViewRect();
-                            view.x += deltaX;
-                            view.y += deltaY;
+                        Rectangle view = viewPort.getViewRect();
+                        view.x += deltaX;
+                        view.y += deltaY;
 
-                            scrollRectToVisible(view);
-                        }
+                        scrollRectToVisible(view);
                     }
                 }
             }
@@ -135,7 +141,6 @@ public class MazeDisplay extends JPanel implements Scrollable {
         return showGrid;
     }
 
-    public boolean isManual() {return manual;}
 
     public void setShowSolution(boolean showSolution) {
         this.showSolution = showSolution;
@@ -146,8 +151,14 @@ public class MazeDisplay extends JPanel implements Scrollable {
         this.showGrid = showGrid;
         repaint();
     }
-    public void setManual(boolean manual){
-        this.manual = manual;
+
+    public void setMaze(Maze maze) {
+        MazeSolver.solve(0, maze);
+        solution = maze.solution;
+
+        mazeGrid = maze.mazeGrid;
+        nCols = maze.nCols;
+        nRows = maze.nRows;
         repaint();
     }
 
@@ -168,11 +179,12 @@ public class MazeDisplay extends JPanel implements Scrollable {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g.setStroke(new BasicStroke(5));
-        g.setColor(Color.black);
 
-        //draw manual maze
-        if(manual) {
+        // draws the grid if showGrid grid option is enabled
+        if (showGrid) {
+            g.setStroke(new BasicStroke(2));
+            g.setColor(new Color(192, 192, 192, 200));
+
             for (int i = 0; i < nRows + 1; i++) {
                 int rowHt = cellSize;
                 g.drawLine(0 + margin, (i * rowHt) + margin, (cellSize * nCols) + margin, (i * rowHt) + margin);
@@ -183,26 +195,27 @@ public class MazeDisplay extends JPanel implements Scrollable {
             }
         }
 
+        g.setStroke(new BasicStroke(2));
+        g.setColor(Color.black);
+
         // draw maze
-        if (!manual) {
-            for (int r = 0; r < nRows; r++) {
-                for (int c = 0; c < nCols; c++) {
+        for (int r = 0; r < nRows; r++) {
+            for (int c = 0; c < nCols; c++) {
 
-                    int x = margin + c * cellSize;
-                    int y = margin + r * cellSize;
+                int x = margin + c * cellSize;
+                int y = margin + r * cellSize;
 
-                    if ((mazeGrid[r][c] & 1) == 0) // N
-                        g.drawLine(x, y, x + cellSize, y);
+                if ((mazeGrid[r][c] & 1) == 0) // N
+                    g.drawLine(x, y, x + cellSize, y);
 
-                    if ((mazeGrid[r][c] & 2) == 0) // S
-                        g.drawLine(x, y + cellSize, x + cellSize, y + cellSize);
+                if ((mazeGrid[r][c] & 2) == 0) // S
+                    g.drawLine(x, y + cellSize, x + cellSize, y + cellSize);
 
-                    if ((mazeGrid[r][c] & 4) == 0) // E
-                        g.drawLine(x + cellSize, y, x + cellSize, y + cellSize);
+                if ((mazeGrid[r][c] & 4) == 0) // E
+                    g.drawLine(x + cellSize, y, x + cellSize, y + cellSize);
 
-                    if ((mazeGrid[r][c] & 8) == 0) // W
-                        g.drawLine(x, y, x, y + cellSize);
-                }
+                if ((mazeGrid[r][c] & 8) == 0) // W
+                    g.drawLine(x, y, x, y + cellSize);
             }
         }
 
@@ -233,20 +246,13 @@ public class MazeDisplay extends JPanel implements Scrollable {
         int y = offset + (nRows - 1) * cellSize;
         g.fillOval(x - 5, y - 5, 10, 10);
 
-        // draws the grid if showGrid grid option is enabled
-        if (showGrid) {
-            g.setStroke(new BasicStroke(1));
-            g.setColor(Color.lightGray);
-
-            for (int i = 0; i < nRows + 1; i++) {
-                int rowHt = cellSize;
-                g.drawLine(0 + margin, (i * rowHt) + margin, (cellSize * nCols) + margin, (i * rowHt) + margin);
-            }
-            for (int i = 0; i < nCols + 1; i++) {
-                int rowWid = cellSize;
-                g.drawLine((i * rowWid) + margin, 0 + margin, (i * rowWid) + margin, (cellSize * nRows) + margin);
-            }
+        // draws selected cell if any
+        if (cellX != -1) {
+            g.setColor(new Color(0, 128, 128, 128));
+            g.fillRect(cellX * cellSize + margin, cellY * cellSize + margin, cellSize, cellSize);
         }
+
+        g.dispose();
     }
 
 
