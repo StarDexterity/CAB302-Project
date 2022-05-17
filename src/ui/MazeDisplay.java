@@ -90,6 +90,18 @@ public class MazeDisplay extends JPanel implements Scrollable {
             }
 
             @Override
+            public void mouseClicked(MouseEvent e){
+                int x = e.getX();
+                int y = e.getY();
+                int cellX=Math.round((x-25)/25);
+                int cellY=Math.round((y-25)/25);
+                System.out.println(cellX);
+                System.out.println(cellY);
+                System.out.println("You have clicked cell "+cellX+", "+cellY);
+
+            }
+
+            @Override
             public void mouseDragged(MouseEvent e) {
                 if (origin != null) {
                     if (isDrag) {
