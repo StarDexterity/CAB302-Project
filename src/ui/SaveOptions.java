@@ -16,7 +16,11 @@ public class SaveOptions extends JPanel {
     private JButton exportButton;
     private JButton deleteButton;
 
-    public SaveOptions() {
+    private EditPage editPage;
+
+    public SaveOptions(EditPage editPage) {
+        this.editPage = editPage;
+
         //The status labels will need to be reactive in later stages of the project
         titleLabel = new JLabel("Title");
         titleField = new JTextField("");
@@ -27,7 +31,7 @@ public class SaveOptions extends JPanel {
         descriptionFieldScroller = new JScrollPane(descriptionField);
         descriptionField.setRows(3);
         saveButton = new JButton("Save");
-        exportButton = new JButton("Default.Export");
+        exportButton = new JButton("Export");
         deleteButton = new JButton("Delete");
 
         Border innerBorder = BorderFactory.createTitledBorder("Save options");

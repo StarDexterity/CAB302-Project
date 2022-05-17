@@ -17,7 +17,11 @@ public class SolveStatus extends JPanel {
     private JLabel solveStatus;
     private JButton solve;
 
-    public SolveStatus() {
+    private EditPage editPage;
+
+    public SolveStatus(EditPage editPage) {
+        this.editPage = editPage;
+
         //The status labels will need to be reactive in later stages of the project
         deadendLabel = new JLabel("Dead end %");
         deadendStatus = new JLabel("0");

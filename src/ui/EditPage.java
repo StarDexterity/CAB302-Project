@@ -26,33 +26,32 @@ public class EditPage extends JPanel {
     private void createGUI() {
         setLayout(new BorderLayout());
 
-        optionsPanel = new OptionsPanel();
+        optionsPanel = new OptionsPanel(this);
         scrollPane = new JScrollPane();
+        mazeDisplay = new MazeDisplay();
+        scrollPane.setViewportView(mazeDisplay);
 
         // layout code
         add(optionsPanel, BorderLayout.WEST);
         add(scrollPane, BorderLayout.CENTER);
-
-        // placeholder code to test grid and solution options
-        JButton toggleGridTemp = new JButton("Toggle grid");
-        toggleGridTemp.addActionListener(e -> mazeDisplay.setShowGrid(!mazeDisplay.isShowGrid()));
-
-        JButton toggleSolutionTemp = new JButton("Toggle solution");
-        toggleSolutionTemp.addActionListener(e -> mazeDisplay.setShowSolution(!mazeDisplay.isShowSolution()));
-
-        add(toggleGridTemp, BorderLayout.SOUTH);
-        add(toggleSolutionTemp, BorderLayout.EAST);
     }
 
     public void setMaze(Maze maze) {
-        if (mazeDisplay != null) remove(mazeDisplay);
         currentMaze = maze;
-        mazeDisplay = new MazeDisplay(maze, false);
-        scrollPane.setViewportView(mazeDisplay);
+        mazeDisplay.setMaze(maze);
 
         // It just works ;)
         scrollPane.revalidate();
         scrollPane.repaint();
     }
+
+    public void setShowGrid(boolean value) {
+        mazeDisplay.setShowGrid(value);
+    }
+
+    public void setShowSolution(boolean value) {
+        mazeDisplay.setShowSolution(value);
+    }
+
 }
 

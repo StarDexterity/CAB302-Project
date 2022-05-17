@@ -12,16 +12,19 @@ public class OptionsPanel extends JPanel {
     SolveStatus solveStatus;
     SaveOptions saveOptions;
 
+    public EditPage editPage;
 
-    public OptionsPanel(){
+
+    public OptionsPanel(EditPage editPage){
+        this.editPage = editPage;
+
         Dimension dim  = getPreferredSize();
         dim.width = 300;
         setPreferredSize(dim);
 
-        displayOptions = new DisplayOptions();
-        regenerateOptions = new RegenerateOptions();
-        solveStatus = new SolveStatus();
-        saveOptions = new SaveOptions();
+        displayOptions = new DisplayOptions(editPage);
+        solveStatus = new SolveStatus(editPage);
+        saveOptions = new SaveOptions(editPage);
 
         Border innerBorder = BorderFactory.createTitledBorder("Options");
         Border outerBorder = BorderFactory.createEmptyBorder(5,10,10,10);
@@ -42,7 +45,7 @@ public class OptionsPanel extends JPanel {
 
         // row 2
         y++;
-        GridBagHelper.addToPanel(this, regenerateOptions, gbc, 0, y, 1, 1);
+        //GridBagHelper.addToPanel(this, regenerateOptions, gbc, 0, y, 1, 1);
 
         // row 3
         y++;

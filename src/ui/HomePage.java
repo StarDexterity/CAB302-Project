@@ -1,5 +1,7 @@
 package ui;
 
+import maze.Maze;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
@@ -43,11 +45,12 @@ public class HomePage extends JPanel {
         table.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent mouseEvent) {
                 JTable table =(JTable) mouseEvent.getSource();
-                //Point point = mouseEvent.getPoint(); // this code seems redundant
+                // Point point = mouseEvent.getPoint(); // this code seems redundant
                 //int row = table.rowAtPoint(point);
                 if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
-                    // your valueChanged overridden method
-                    app.lastPage();
+                    // placeholder maze gets displayed to user
+                    // TODO: Pass in maze linked to the selected row
+                    app.showEditPage(new Maze(50, 50, true));
                 }
             }
         });
