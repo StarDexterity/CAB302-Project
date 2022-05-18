@@ -55,15 +55,27 @@ public class MazeSolver {
      * For a given maze, finds the total cells with dead ends
      * @return
      */
-    public static int TotalDeadEnds() {
-        return 0;
+    public static String TotalDeadEnds(int nCols, int nRows, LinkedList solution) {
+        int count = 0;
+        for (Object o : solution) {
+            count++;
+        }
+        String deadEnd =Integer.toString((100-(nRows*nCols)/count)*100);
+        return deadEnd;
     }
 
     /**
      * For a given maze, finds the total cells required to pass through, for the optimal solution
      */
-    public static int TotalPassThrough() {
-        return 0;
+    public static String TotalPassThrough(int nCols, int nRows, LinkedList solution) {
+        int count = 0;
+        for (Object o : solution) {
+            count++;
+        }
+
+        String passThrough = Integer.toString(((nRows*nCols)/count)*100);
+        System.out.println(passThrough);
+        return passThrough;
     }
     /**
      * Solves the maze, please add a more helpful description later
