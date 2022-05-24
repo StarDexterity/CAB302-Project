@@ -235,7 +235,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         }
 
 
-        g.setColor(Color.orange);
+        g.setColor(DisplayOptions.selectedColor);
         g.draw(path);
 
         g.setColor(Color.blue);

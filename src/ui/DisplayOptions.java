@@ -13,6 +13,7 @@ public class DisplayOptions extends JPanel {
     private JCheckBox showGrid;
 
     private JButton colorButton;
+    public static Color selectedColor = Color.ORANGE;
 
     private EditPage editPage;
 
@@ -32,8 +33,7 @@ public class DisplayOptions extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 Color changeColor = JColorChooser.showDialog(null, "Change Color",Color.RED);
                 if (changeColor != null){
-                    //TESTING..
-                    colorButton.setBackground(changeColor);
+                    selectedColor = changeColor;
                 }
             }
         });
