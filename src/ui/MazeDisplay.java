@@ -52,6 +52,13 @@ public class MazeDisplay extends JPanel implements Scrollable {
     private boolean showSolution;
     private boolean showGrid;
 
+    // color settings
+    // TODO: Hook these up below
+    private Color solutionLineColor = Color.ORANGE;
+    private Color gridColor = new Color(192, 192, 192, 200);
+    private Color mazeColor = Color.BLACK;
+    private Color background = Color.WHITE;
+
     // selected cell coordinates
     private int cellX = -1;
     private int cellY = -1;
