@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class DisplayOptions extends JPanel {
-    private JCheckBox showSolution;
+    public static JCheckBox showSolution;
     private JCheckBox showGrid;
 
     private JButton colorButton;
@@ -22,6 +22,7 @@ public class DisplayOptions extends JPanel {
 
         // create show solution check box and bind event
         showSolution = UIHelper.createCheckBox("Show Solution");
+        showSolution.setEnabled(false);
         showSolution.addActionListener(e -> {
             JCheckBox src = (JCheckBox) e.getSource();
             editPage.setShowSolution(src.isSelected());

@@ -38,6 +38,7 @@ public class SolveStatus extends JPanel {
                 new Thread(() -> {
                     //EditPage.m.solve(0);
                     solveStatus.setText("Solved");
+                    DisplayOptions.showSolution.setEnabled(true);
                 }).start();
             }
         });
