@@ -27,7 +27,7 @@ public class App extends JFrame {
     /**
      *  Stores the current maze object
      */
-    public Maze currentMaze;
+    public static Maze currentMaze;
 
     // may change in the future
     public static final boolean RESIZEABLE = false;

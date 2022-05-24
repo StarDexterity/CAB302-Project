@@ -38,6 +38,7 @@ public class EditPage extends JPanel {
 
     public void setMaze(Maze maze) {
         currentMaze = maze;
+        App.currentMaze = currentMaze;
         mazeDisplay.setMaze(maze);
 
         // It just works ;)

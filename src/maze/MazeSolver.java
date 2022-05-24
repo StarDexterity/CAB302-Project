@@ -20,6 +20,7 @@ public class MazeSolver {
 
     private static boolean recursiveSolve(int pos, Maze maze) {
         if (pos == maze.nCols * maze.nRows - 1)
+
             return true;
 
         int c = pos % maze.nCols;
@@ -55,25 +56,27 @@ public class MazeSolver {
      * For a given maze, finds the total cells with dead ends
      * @return
      */
-    public static String TotalDeadEnds(int nCols, int nRows, LinkedList solution) {
-        int count = 0;
+    public static String TotalDeadEnds(Maze maze) {
+        LinkedList solution = maze.solution;
+        double count = 0;
         for (Object o : solution) {
             count++;
         }
-        String deadEnd =Integer.toString((100-(nRows*nCols)/count)*100);
+        String deadEnd =Double.toString((100-(count/(maze.nRows*maze.nCols))*100));
         return deadEnd;
     }
 
     /**
      * For a given maze, finds the total cells required to pass through, for the optimal solution
      */
-    public static String TotalPassThrough(int nCols, int nRows, LinkedList solution) {
-        int count = 0;
+    public static String TotalPassThrough(Maze maze) {
+        LinkedList solution = maze.solution;
+        double count = 0;
         for (Object o : solution) {
             count++;
         }
 
-        String passThrough = Integer.toString(((nRows*nCols)/count)*100);
+        String passThrough = Double.toString((count/(maze.nRows*maze.nCols))*100);
         System.out.println(passThrough);
         return passThrough;
     }
