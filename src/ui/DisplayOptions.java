@@ -2,11 +2,17 @@ package ui;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class DisplayOptions extends JPanel {
     private JCheckBox showSolution;
     private JCheckBox showGrid;
+
+    private JButton colorButton;
 
     private EditPage editPage;
 
@@ -18,6 +24,18 @@ public class DisplayOptions extends JPanel {
         showSolution.addActionListener(e -> {
             JCheckBox src = (JCheckBox) e.getSource();
             editPage.setShowSolution(src.isSelected());
+        });
+
+        colorButton = new JButton("Choose Color");
+        colorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color changeColor = JColorChooser.showDialog(null, "Change Color",Color.RED);
+                if (changeColor != null){
+                    //TESTING..
+                    colorButton.setBackground(changeColor);
+                }
+            }
         });
 
         // create show grid check box and bind event
@@ -41,5 +59,6 @@ public class DisplayOptions extends JPanel {
 
         GridBagHelper.addToPanel(this, showSolution, gbc, 0, 0, 1, 1);
         GridBagHelper.addToPanel(this, showGrid, gbc, 0, 1, 1, 1);
+        GridBagHelper.addToPanel(this, colorButton, gbc, 0,2,1,1);
     }
 }
