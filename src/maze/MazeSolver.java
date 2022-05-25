@@ -62,7 +62,7 @@ public class MazeSolver {
         for (Object o : solution) {
             count++;
         }
-        String deadEnd =Double.toString((100-(count/(maze.nRows*maze.nCols))*100));
+        String deadEnd =Double.toString((100-((count+1)/(maze.nRows*maze.nCols))*100));
         return deadEnd;
     }
 
@@ -76,8 +76,8 @@ public class MazeSolver {
             count++;
         }
 
-        String passThrough = Double.toString((count/(maze.nRows*maze.nCols))*100);
-        System.out.println(passThrough);
+        String passThrough = Double.toString(((count+1)/(maze.nRows*maze.nCols))*100);
+        System.out.println(count+","+ maze.nCols* maze.nRows);
         return passThrough;
     }
     /**
