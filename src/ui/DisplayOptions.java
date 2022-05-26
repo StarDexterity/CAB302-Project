@@ -41,7 +41,6 @@ public class DisplayOptions extends JPanel {
 
         // create show grid check box and bind event
         showGrid = UIHelper.createCheckBox("Show Grid");
-        showGrid.setEnabled(false);
         showGrid.addActionListener(e -> {
             JCheckBox src = (JCheckBox) e.getSource();
             editPage.setShowGrid(src.isSelected());

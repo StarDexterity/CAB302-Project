@@ -39,7 +39,6 @@ public class SolveStatus extends JPanel {
                     //EditPage.m.solve(0);
                     solveStatus.setText("Solved");
                     DisplayOptions.showSolution.setEnabled(true);
-                    DisplayOptions.showGrid.setEnabled(true);
                     DisplayOptions.colorButton.setEnabled(true);
                     explorationStatus.setText(MazeSolver.TotalPassThrough(editPage.currentMaze));
                     deadendStatus.setText(MazeSolver.TotalDeadEnds(editPage.currentMaze));
