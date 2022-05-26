@@ -10,9 +10,9 @@ import java.awt.event.ActionListener;
 
 public class DisplayOptions extends JPanel {
     public static JCheckBox showSolution;
-    private JCheckBox showGrid;
+    public static JCheckBox showGrid;
 
-    private JButton colorButton;
+    public static JButton colorButton;
 
     private EditPage editPage;
 
@@ -28,6 +28,7 @@ public class DisplayOptions extends JPanel {
         });
 
         colorButton = new JButton("Choose Color");
+        colorButton.setEnabled(false);
         colorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -40,6 +41,7 @@ public class DisplayOptions extends JPanel {
 
         // create show grid check box and bind event
         showGrid = UIHelper.createCheckBox("Show Grid");
+        showGrid.setEnabled(false);
         showGrid.addActionListener(e -> {
             JCheckBox src = (JCheckBox) e.getSource();
             editPage.setShowGrid(src.isSelected());
