@@ -9,7 +9,7 @@ public class EditPage extends JPanel {
     private App app;
     private OptionsPanel optionsPanel;
     private JScrollPane scrollPane;
-    private MazeDisplay mazeDisplay;
+    public MazeDisplay mazeDisplay;
 
     /**
      * Stores the current maze object being edited
