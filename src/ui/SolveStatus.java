@@ -39,8 +39,8 @@ public class SolveStatus extends JPanel {
                     //EditPage.m.solve(0);
                     solveStatus.setText("Solved");
                     DisplayOptions.showSolution.setEnabled(true);
-                    explorationStatus.setText(MazeSolver.TotalPassThrough(App.currentMaze));
-                    deadendStatus.setText(MazeSolver.TotalDeadEnds(App.currentMaze));
+                    explorationStatus.setText(MazeSolver.TotalPassThrough(editPage.currentMaze));
+                    deadendStatus.setText(MazeSolver.TotalDeadEnds(editPage.currentMaze));
                 }).start();
             }
         });
