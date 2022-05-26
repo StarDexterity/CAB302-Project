@@ -18,37 +18,54 @@ public class MazeSolver {
         return recursiveSolve(pos, maze);
     }
 
+    /**
+     * Recursive depth first search solving algorithm, using black magic
+     * @param pos
+     * @param maze
+     * @return
+     */
     private static boolean recursiveSolve(int pos, Maze maze) {
         if (pos == maze.nCols * maze.nRows - 1)
 
             return true;
 
-        int c = pos % maze.nCols;
-        int r = pos / maze.nCols;
+        // x position is the remainder after the position is divided by the number of columns
+        int x = pos % maze.nCols;
+        // y position is the position divided by the number of rows
+        int y = pos / maze.nCols;
 
+        // Directions in order of search (N, S, E, W)
         for (Direction dir : Direction.values()) {
-            int nc = c + dir.dx;
-            int nr = r + dir.dy;
-            if (maze.withinBounds(nc, nr) && (maze.mazeGrid[r][c] & dir.bit) != 0
-                    && (maze.mazeGrid[nr][nc] & 16) == 0) {
+            // next x pos is x plus dx
+            int nx = x + dir.dx;
+            // next y pos is y plus dy
+            int ny = y + dir.dy;
 
-                int newPos = nr * maze.nCols + nc;
+            // If the next cell is within bounds of maze,
+            // is connected to this cell
+            // and hasn't been visited, visit it
+            if (maze.withinBounds(nx, ny) && (maze.mazeGrid[y][x] & dir.bit) != 0
+                    && (maze.mazeGrid[ny][nx] & 16) == 0) {
+
+                // condensing coordinate
+                int newPos = ny * maze.nCols + nx;
 
                 maze.solution.add(newPos);
-                maze.mazeGrid[nr][nc] |= 16;
 
-                //animate();
+                // sets the 5th bit to mark visit
+                maze.mazeGrid[ny][nx] |= 16;
 
+                // if maze is solved, halt and return true
                 if (MazeSolver.recursiveSolve(newPos, maze))
                     return true;
 
-                //animate();
 
+                // backtracks from current cell to the last one
                 maze.solution.removeLast();
-                maze.mazeGrid[nr][nc] &= ~16;
+                maze.mazeGrid[ny][nx] &= ~16;
             }
         }
-
+        // All cells have been visited and a solution hasn't been found
         return false;
     }
 
@@ -80,10 +97,5 @@ public class MazeSolver {
         System.out.println(count+","+ maze.nCols* maze.nRows);
         return passThrough;
     }
-    /**
-     * Solves the maze, please add a more helpful description later
-     * @param pos
-     * @return
-     */
 
 }

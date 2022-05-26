@@ -6,24 +6,46 @@ import java.awt.*;
 
 public class CellEditor extends JPanel {
 
-    EditPage editPage;
-    JLabel title;
-    CellDisplay cellDisplay;
-    JButton toggleRight;
-    JButton toggleLeft;
-    JButton toggleTop;
-    JButton toggleBottom;
-    JButton toggleAll;
-    JButton insertImage;
+    private EditPage editPage;
+
+    private JLabel title;
+    private CellDisplay cellDisplay;
+
+    // TODO: Pending deletion of these 5 buttons
+    private JButton toggleRight;
+    private JButton toggleLeft;
+    private JButton toggleTop;
+    private JButton toggleBottom;
+    private JButton insertImage;
+
+    private JButton setAll;
+    private JButton clearAll;
+
+
+    /**
+     * Stores the position of the currently selected cell
+     */
+    public int cellX = 3;
+    public int cellY = 2;
+
+    /**
+     * Is a cell currently selected
+     */
+    public boolean isCellSelected;
 
 
     public CellEditor(EditPage editPage) {
         this.editPage = editPage;
 
         // create components
-        title = new JLabel("Cell editor [F3]");
+        title = new JLabel("Cell Editor [%s, %s]".formatted(cellX, cellY));
         title.setFont(new Font("Tahoma", Font.PLAIN,  18));
+
+        // cell display component and custom listener
         cellDisplay = new CellDisplay();
+        cellDisplay.AddListener(() -> {
+            // do stuff
+        });
 
         toggleTop = new JButton("Toggle top");
         toggleTop.addActionListener(e -> {
@@ -49,7 +71,16 @@ public class CellEditor extends JPanel {
             cellDisplay.setRightWallEnabled(!rightWallEnabled);
         });
 
-        toggleAll = new JButton("Toggle all");
+        setAll = new JButton("Set all");
+        setAll.addActionListener(e -> {
+            cellDisplay.setAllWalls(true);
+        });
+
+        clearAll = new JButton("Clear all");
+        clearAll.addActionListener(e -> {
+           cellDisplay.setAllWalls(false);
+        });
+
         insertImage = new JButton("Insert image");
 
 
@@ -76,29 +107,21 @@ public class CellEditor extends JPanel {
         y++;
         GridBagHelper.addToPanel(this, cellDisplay, gbc, 0, y, 1, 1);
 
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(0, 50, 0, 50);
+
         // row 3
         y++;
-        GridBagHelper.addToPanel(this, toggleTop, gbc, 0, y, 1, 1);
+        GridBagHelper.addToPanel(this, setAll, gbc, 0, y, 1, 1);
+
+        gbc.insets.top = 5;
+        gbc.insets.bottom = 10;
 
         // row 4
         y++;
-        GridBagHelper.addToPanel(this, toggleLeft, gbc, 0, y, 1, 1);
+        GridBagHelper.addToPanel(this, clearAll, gbc, 0, y, 1, 1);
 
-        // row 5
-        y++;
-        GridBagHelper.addToPanel(this, toggleBottom, gbc, 0, y, 1, 1);
 
-        // row 6
-        y++;
-        GridBagHelper.addToPanel(this, toggleRight, gbc, 0, y, 1, 1);
-
-        // row 7
-        y++;
-        GridBagHelper.addToPanel(this, toggleAll, gbc, 0, y, 1, 1);
-
-        // row 8
-        y++;
-        GridBagHelper.addToPanel(this, insertImage, gbc, 0, y, 1, 1);
 
     }
 }
