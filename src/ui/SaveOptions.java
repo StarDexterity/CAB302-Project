@@ -5,6 +5,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 
 import static maze.Export.exportMaze;
@@ -21,6 +22,7 @@ public class SaveOptions extends JPanel {
     private JButton saveButton;
     private JButton exportButton;
     private JButton deleteButton;
+
 
     public SaveOptions() {
         //The status labels will need to be reactive in later stages of the project
@@ -76,6 +78,12 @@ public class SaveOptions extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("testing button");
+                try {
+                    exportMaze("export maze");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
 
             }
         });
