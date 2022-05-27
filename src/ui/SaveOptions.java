@@ -3,6 +3,12 @@ package ui;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
+import static maze.Export.exportMaze;
+
 
 public class SaveOptions extends JPanel {
     private JLabel titleLabel;
@@ -27,7 +33,7 @@ public class SaveOptions extends JPanel {
         descriptionFieldScroller = new JScrollPane(descriptionField);
         descriptionField.setRows(3);
         saveButton = new JButton("Save");
-        exportButton = new JButton("Default.Export");
+        exportButton = new JButton("Export");
         deleteButton = new JButton("Delete");
 
         Border innerBorder = BorderFactory.createTitledBorder("Save options");
@@ -64,6 +70,19 @@ public class SaveOptions extends JPanel {
         GridBagHelper.addToPanel(this, saveButton, gbc, 0, y, 1, 1);
         GridBagHelper.addToPanel(this, exportButton, gbc, 1, y, 1, 1);
         GridBagHelper.addToPanel(this, deleteButton, gbc, 2, y, 1, 1);
+
+
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("testing button");
+
+            }
+        });
+
+        //if (exportButton) {
+
+       // }
 
     }
 }
