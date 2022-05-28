@@ -172,6 +172,11 @@ public class MazeDisplay extends JPanel implements Scrollable {
         mazeGrid = maze.mazeGrid;
         nCols = maze.nCols;
         nRows = maze.nRows;
+        // when maze is altered in any way this component is repainted
+        maze.addListener(() -> {
+            repaint();
+        });
+
         repaint();
     }
 

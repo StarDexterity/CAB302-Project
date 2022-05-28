@@ -1,8 +1,6 @@
 package maze;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -87,7 +85,7 @@ public class Maze {
      * @param image
      */
     public void placeImage(MazeImage image) {
-
+        notifyListeners();
     }
 
     /**
@@ -133,6 +131,24 @@ public class Maze {
                 mazeGrid[y][x] &= ~(d.bit);
                 mazeGrid[nY][nX] &= ~(d.opposite.bit);
             }
+        }
+        notifyListeners();
+    }
+
+    // Observer design pattern
+    public interface MazeListener {
+        void mazeAltered();
+    }
+
+    private ArrayList<MazeListener> listeners = new ArrayList<MazeListener>();
+
+    public void addListener(MazeListener ml) {
+        listeners.add(ml);
+    }
+
+    private void notifyListeners() {
+        for (MazeListener l : listeners) {
+            l.mazeAltered();
         }
     }
 
