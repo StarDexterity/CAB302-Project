@@ -26,9 +26,9 @@ public class EditPage extends JPanel {
     private void createGUI() {
         setLayout(new BorderLayout());
 
+        mazeDisplay = new MazeDisplay();
         optionsPanel = new OptionsPanel(this);
         scrollPane = new JScrollPane();
-        mazeDisplay = new MazeDisplay();
         scrollPane.setViewportView(mazeDisplay);
 
         // layout code

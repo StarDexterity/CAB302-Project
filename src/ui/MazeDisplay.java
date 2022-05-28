@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Path2D;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -60,8 +61,10 @@ public class MazeDisplay extends JPanel implements Scrollable {
     private Color background = Color.WHITE;
 
     // selected cell coordinates
-    private int cellX = -1;
-    private int cellY = -1;
+    private int cellX = 0;
+    private int cellY = 0;
+
+    private boolean isCellSelected = false;
 
     public void changeSolutionColor(Color color){
         solutionLineColor = color;
@@ -103,16 +106,16 @@ public class MazeDisplay extends JPanel implements Scrollable {
                     if ((x > margin && x < margin + cellSize * nCols) && (y > margin && y < margin + cellSize * nRows)) {
                         cellX = (int)Math.round((x - margin) / cellSize);
                         cellY = (int)Math.round((y - margin) / cellSize);
+                        isCellSelected = true;
                     }
-
-
-                    if (cellX != -1) {
-                        System.out.println("You have clicked cell " + cellX + ", " + cellY);
+                    else {
+                        isCellSelected = false;
                     }
 
                     // only repaint if a new cell is selected
                     if (cellX != oldX || cellY != oldY) {
                         repaint();
+                        selectedCellChanged();
                     }
                 }
             }
@@ -265,7 +268,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         g.fillOval(x - 5, y - 5, 10, 10);
 
         // draws selected cell if any
-        if (cellX != -1) {
+        if (isCellSelected) {
             g.setColor(new Color(0, 128, 128, 128));
             g.fillRect(cellX * cellSize + margin, cellY * cellSize + margin, cellSize, cellSize);
         }
@@ -280,6 +283,39 @@ public class MazeDisplay extends JPanel implements Scrollable {
         } catch (InterruptedException ignored) {
         }
         repaint();
+    }
+
+    // Observer design pattern
+    public interface MazeDisplayListener {
+        void selectedCellChanged(CellChangeEvent cce);
+    }
+
+    public class CellChangeEvent {
+        public int cellX;
+        public int cellY;
+        public boolean cellSelected;
+
+        public CellChangeEvent(int cellX, int cellY, boolean cellSelected) {
+            this.cellX = cellX;
+            this.cellY = cellY;
+            this.cellSelected = cellSelected;
+        }
+    }
+
+    private ArrayList<MazeDisplayListener> listeners = new ArrayList<MazeDisplayListener>();
+
+    public void addListener(MazeDisplayListener ml) {
+        listeners.add(ml);
+    }
+
+    private void selectedCellChanged() {
+        for (MazeDisplayListener l : listeners) {
+            l.selectedCellChanged(new CellChangeEvent(
+                    cellX,
+                    cellY,
+                    isCellSelected
+            ));
+        }
     }
 
 

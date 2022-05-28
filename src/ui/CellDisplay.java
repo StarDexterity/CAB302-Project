@@ -49,10 +49,10 @@ public class CellDisplay extends JComponent {
     private Rectangle selectBottomWall;
 
     // at the moment, these four booleans control the walls that are 'on' and 'off'
-    private boolean leftWallEnabled = true;
+    private boolean leftWallEnabled = false;
     private boolean topWallEnabled = false;
-    private boolean rightWallEnabled = true;
-    private boolean bottomWallEnabled = true;
+    private boolean rightWallEnabled = false;
+    private boolean bottomWallEnabled = false;
 
     // TODO: Pending deletion
     private boolean hoverTopWall;

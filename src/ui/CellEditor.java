@@ -1,5 +1,7 @@
 package ui;
 
+import maze.Direction;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -31,14 +33,14 @@ public class CellEditor extends JPanel {
     /**
      * Is a cell currently selected
      */
-    public boolean isCellSelected = true;
+    public boolean isCellSelected = false;
 
 
     public CellEditor(EditPage editPage) {
         this.editPage = editPage;
 
         // create components
-        title = new JLabel("Cell Editor [%s, %s]".formatted(cellX, cellY));
+        title = new JLabel("Cell Editor [None]");
         title.setFont(new Font("Tahoma", Font.PLAIN,  18));
 
         // cell display component and custom listener
@@ -81,6 +83,26 @@ public class CellEditor extends JPanel {
         clearAll = new JButton("Clear all");
         clearAll.addActionListener(e -> {
            cellDisplay.setAllWalls(false);
+        });
+
+        // if the mazeDisplays selected cell is altered, this listener is called
+        editPage.mazeDisplay.addListener(e -> {
+            isCellSelected = e.cellSelected;
+            cellX = e.cellX;
+            cellY = e.cellY;
+
+            if (isCellSelected) {
+                title.setText("Cell Editor [%s, %s]".formatted(cellX, cellY));
+                // update the display with new walls
+                cellDisplay.setTopWall(!editPage.currentMaze.isWall(cellX, cellY, Direction.N));
+                cellDisplay.setLeftWall(!editPage.currentMaze.isWall(cellX, cellY, Direction.W));
+                cellDisplay.setBottomWall(!editPage.currentMaze.isWall(cellX, cellY, Direction.S));
+                cellDisplay.setRightWall(!editPage.currentMaze.isWall(cellX, cellY, Direction.E));
+            }
+            else {
+                cellDisplay.setAllWalls(false);
+                title.setText("Cell Editor [None]");
+            }
         });
 
         insertImage = new JButton("Insert image");
