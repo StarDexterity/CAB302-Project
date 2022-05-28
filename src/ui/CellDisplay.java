@@ -1,5 +1,7 @@
 package ui;
 
+import maze.Direction;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -105,16 +107,16 @@ public class CellDisplay extends JComponent {
                 Point p = e.getPoint();
 
                 if (contains(topWall, p, hoverPadding)) {
-                    topWallEnabled = !topWallEnabled;
+                    setTopWall(!isTopWall());
                 }
                 else if (contains(leftWall, p, hoverPadding)) {
-                    leftWallEnabled = !leftWallEnabled;
+                    setLeftWall(!isLeftWall());
                 }
                 else if (contains(bottomWall, p, hoverPadding)) {
-                    bottomWallEnabled = !bottomWallEnabled;
+                    setBottomWall(!isBottomWall());
                 }
                 else if (contains(rightWall, p, hoverPadding)) {
-                    rightWallEnabled = !rightWallEnabled;
+                    setRightWall(!isRightWall());
                 }
 
                 repaint();
@@ -176,43 +178,78 @@ public class CellDisplay extends JComponent {
         addKeyListener(keyAdapter);
     }
 
-    public boolean isLeftWallEnabled() {
+    public boolean isLeftWall() {
         return leftWallEnabled;
     }
 
-    public boolean isTopWallEnabled() {
+    public boolean isTopWall() {
         return topWallEnabled;
     }
 
-    public boolean isRightWallEnabled() {
+    public boolean isRightWall() {
         return rightWallEnabled;
     }
 
-    public boolean isBottomWallEnabled() {
+    public boolean isBottomWall() {
         return bottomWallEnabled;
     }
 
+    public boolean isWall(Direction dir) {
+        switch (dir) {
+            case N:
+                return isTopWall();
+            case W:
+                return isLeftWall();
+            case S:
+                return isBottomWall();
+            case E:
+                return isRightWall();
+            default:
+                return false;
+        }
+    }
+
+    public void setWall(Direction dir, boolean value) {
+        switch (dir) {
+            case N:
+                setTopWall(value);
+                break;
+            case W:
+                setLeftWall(value);
+                break;
+            case S:
+                setBottomWall(value);
+                break;
+            case E:
+                setRightWall(value);
+                break;
+            default:
+                break;
+        }
+    }
+
     // these four setters are needed to make sure that the walls are repainted
-    public void setLeftWallEnabled(boolean leftWallEnabled) {
+    public void setLeftWall(boolean leftWallEnabled) {
         this.leftWallEnabled = leftWallEnabled;
+        notifyListeners(Direction.W);
         repaint();
     }
 
-    public void setTopWallEnabled(boolean topWallEnabled) {
-        this.topWallEnabled = topWallEnabled;
-        notifyListeners();
+    public void setTopWall(boolean value) {
+        this.topWallEnabled = value;
+        notifyListeners(Direction.N);
         repaint();
     }
 
-    public void setRightWallEnabled(boolean rightWallEnabled) {
-        this.rightWallEnabled = rightWallEnabled;
-        notifyListeners();
+    public void setRightWall(boolean value) {
+        this.rightWallEnabled = value;
+        notifyListeners(Direction.E);
         repaint();
     }
 
-    public void setBottomWallEnabled(boolean bottomWallEnabled) {
-        this.bottomWallEnabled = bottomWallEnabled;
-        notifyListeners();
+    public void setBottomWall(boolean value) {
+        this.bottomWallEnabled = value;
+        notifyListeners(Direction.S);
         repaint();
     }
     public boolean isAllWallsEnabled() {
@@ -223,13 +260,11 @@ public class CellDisplay extends JComponent {
         return !topWallEnabled && !leftWallEnabled && !bottomWallEnabled && !rightWallEnabled;
     }
 
-    public void setAllWalls(boolean isEnabled) {
-        topWallEnabled = isEnabled;
-        rightWallEnabled = isEnabled;
-        bottomWallEnabled = isEnabled;
-        leftWallEnabled = isEnabled;
-        notifyListeners();
-        repaint();
+    public void setAllWalls(boolean value) {
+        setRightWall(value);
+        setTopWall(value);
+        setBottomWall(value);
+        setLeftWall(value);
     }
 
 
@@ -275,7 +310,7 @@ public class CellDisplay extends JComponent {
     // observer methods
     // customer listener interface so other classes can keep track of this one without tight coupling
     public interface CellListener {
-        void wallChanged();
+        void wallChanged(Direction dir);
     }
 
     private ArrayList<CellListener> listeners = new ArrayList<CellListener>();
@@ -284,9 +319,9 @@ public class CellDisplay extends JComponent {
         listeners.add(cellListener);
     }
 
-    private void notifyListeners() {
+    private void notifyListeners(Direction dir) {
         for (CellListener l : listeners) {
-            l.wallChanged();
+            l.wallChanged(dir);
         }
     }
 

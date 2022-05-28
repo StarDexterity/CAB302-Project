@@ -25,13 +25,13 @@ public class CellEditor extends JPanel {
     /**
      * Stores the position of the currently selected cell
      */
-    public int cellX = 3;
-    public int cellY = 2;
+    public int cellX = 0;
+    public int cellY = 0;
 
     /**
      * Is a cell currently selected
      */
-    public boolean isCellSelected;
+    public boolean isCellSelected = true;
 
 
     public CellEditor(EditPage editPage) {
@@ -43,32 +43,34 @@ public class CellEditor extends JPanel {
 
         // cell display component and custom listener
         cellDisplay = new CellDisplay();
-        cellDisplay.AddListener(() -> {
-            // do stuff
+        cellDisplay.AddListener((dir) -> {
+            if (isCellSelected) {
+                editPage.currentMaze.setWall(cellX, cellY, dir, !cellDisplay.isWall(dir));
+            }
         });
 
         toggleTop = new JButton("Toggle top");
         toggleTop.addActionListener(e -> {
-            boolean topWallEnabled = cellDisplay.isTopWallEnabled();
-            cellDisplay.setTopWallEnabled(!topWallEnabled);
+            boolean topWall = cellDisplay.isTopWall();
+            cellDisplay.setTopWall(!topWall);
         });
 
         toggleLeft = new JButton("Toggle left");
         toggleLeft.addActionListener(e -> {
-            boolean leftWallEnabled = cellDisplay.isLeftWallEnabled();
-            cellDisplay.setLeftWallEnabled(!leftWallEnabled);
+            boolean leftWall = cellDisplay.isLeftWall();
+            cellDisplay.setLeftWall(!leftWall);
         });
 
         toggleBottom = new JButton("Toggle bottom");
         toggleBottom.addActionListener(e -> {
-            boolean bottomWallEnabled = cellDisplay.isBottomWallEnabled();
-            cellDisplay.setBottomWallEnabled(!bottomWallEnabled);
+            boolean bottomWall = cellDisplay.isBottomWall();
+            cellDisplay.setBottomWall(!bottomWall);
         });
 
         toggleRight = new JButton("Toggle Right");
         toggleRight.addActionListener(e -> {
-            boolean rightWallEnabled = cellDisplay.isRightWallEnabled();
-            cellDisplay.setRightWallEnabled(!rightWallEnabled);
+            boolean rightWall = cellDisplay.isRightWall();
+            cellDisplay.setRightWall(!rightWall);
         });
 
         setAll = new JButton("Set all");
@@ -120,8 +122,6 @@ public class CellEditor extends JPanel {
         // row 4
         y++;
         GridBagHelper.addToPanel(this, clearAll, gbc, 0, y, 1, 1);
-
-
 
     }
 }
