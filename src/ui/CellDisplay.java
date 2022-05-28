@@ -108,14 +108,11 @@ public class CellDisplay extends JComponent {
 
                 if (contains(topWall, p, hoverPadding)) {
                     setTopWall(!isTopWall());
-                }
-                else if (contains(leftWall, p, hoverPadding)) {
+                } else if (contains(leftWall, p, hoverPadding)) {
                     setLeftWall(!isLeftWall());
-                }
-                else if (contains(bottomWall, p, hoverPadding)) {
+                } else if (contains(bottomWall, p, hoverPadding)) {
                     setBottomWall(!isBottomWall());
-                }
-                else if (contains(rightWall, p, hoverPadding)) {
+                } else if (contains(rightWall, p, hoverPadding)) {
                     setRightWall(!isRightWall());
                 }
 
@@ -136,20 +133,16 @@ public class CellDisplay extends JComponent {
                 if (contains(topWall, p, hoverPadding)) {
                     hoverTopWall = true;
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                }
-                else if (contains(leftWall, p, hoverPadding)) {
+                } else if (contains(leftWall, p, hoverPadding)) {
                     hoverLeftWall = true;
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                }
-                else if (contains(bottomWall, p, hoverPadding)) {
+                } else if (contains(bottomWall, p, hoverPadding)) {
                     hoverBottomWall = true;
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                }
-                else if (contains(rightWall, p, hoverPadding)) {
+                } else if (contains(rightWall, p, hoverPadding)) {
                     hoverRightWall = true;
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                }
-                else {
+                } else {
                     setCursor(Cursor.getDefaultCursor());
                 }
 
@@ -161,22 +154,79 @@ public class CellDisplay extends JComponent {
         addMouseListener(ma);
         addMouseMotionListener(ma);
 
-
-        // key bindings, non functional
-        // TODO: make this work
-        KeyAdapter keyAdapter = new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                System.out.println(e.getKeyChar());
-                if (e.getKeyChar() == 'w') {
-                    System.out.println("W");
-                }
-            }
-        };
-
-        addKeyListener(keyAdapter);
+        addKeyBindings();
     }
+
+    private void addKeyBindings() {
+        // key bindings
+        InputMap inputMap = getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke('w'),"ToggleNorthWall");
+        inputMap.put(KeyStroke.getKeyStroke('s'),"ToggleSouthWall");
+        inputMap.put(KeyStroke.getKeyStroke('a'),"ToggleWestWall");
+        inputMap.put(KeyStroke.getKeyStroke('d'),"ToggleEastWall");
+
+
+        inputMap.put(KeyStroke.getKeyStroke('c'),"ClearAllWalls");
+        inputMap.put(KeyStroke.getKeyStroke('f'),"FillAllWalls");
+
+        actionMap.put("ToggleNorthWall",
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        setTopWall(!isTopWall());
+                    }
+                }
+        );
+
+        actionMap.put("ToggleSouthWall",
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        setBottomWall(!isBottomWall());
+                    }
+                }
+        );
+
+        actionMap.put("ToggleWestWall",
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        setLeftWall(!isLeftWall());
+                    }
+                }
+        );
+
+        actionMap.put("ToggleEastWall",
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        setRightWall(!isRightWall());
+                    }
+                }
+        );
+
+        actionMap.put("ClearAllWalls",
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        setAllWalls(false);
+                    }
+                }
+        );
+
+        actionMap.put("FillAllWalls",
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        setAllWalls(true);
+                    }
+                }
+        );
+
+    }
+
 
     public boolean isLeftWall() {
         return leftWallEnabled;
@@ -252,6 +302,7 @@ public class CellDisplay extends JComponent {
         notifyListeners(Direction.S);
         repaint();
     }
+
     public boolean isAllWallsEnabled() {
         return topWallEnabled && leftWallEnabled && bottomWallEnabled && rightWallEnabled;
     }
@@ -266,7 +317,6 @@ public class CellDisplay extends JComponent {
         setBottomWall(value);
         setLeftWall(value);
     }
-
 
 
     @Override
@@ -306,7 +356,6 @@ public class CellDisplay extends JComponent {
     }
 
 
-
     // observer methods
     // customer listener interface so other classes can keep track of this one without tight coupling
     public interface CellListener {
@@ -329,6 +378,7 @@ public class CellDisplay extends JComponent {
      * Helper function checks if a point is contained within a rectangle + padding,
      * since there is no indication if the user is actually touching the wall
      * I figured a bit of leniency would be a good idea
+     *
      * @param r
      * @param p
      * @param pad
