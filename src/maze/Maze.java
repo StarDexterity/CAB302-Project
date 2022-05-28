@@ -80,22 +80,7 @@ public class Maze {
         this.logos = logos;
     }
 
-    // public methods
-
-    /**
-     * Generates the borders of the maze. Can be used for both manual and automatic maze generation.
-     */
-    public void generateBorders() {
-
-    }
-
-     /**
-     * Randomly generates the maze object. Is called from the constructor as well as on subsequent regenerations as required.
-     */
-    public void randomlyGenerate() {
-
-    }
-
+    // public methods (testable)
 
     /**
      * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
@@ -114,6 +99,43 @@ public class Maze {
     public boolean withinBounds(int x, int y) {
         return (x >= 0 && x < nCols) && (y >= 0 && y < nRows);
     }
+
+    /**
+     * Predicate function checks whether for a cell coordinate (x, y) if it can pass in the given direction
+     * @param x
+     * @param y
+     * @param d
+     * @return
+     */
+    public boolean isWall(int x, int y, Direction d) {
+        return ((mazeGrid[y][x] & d.bit) != 0);
+    }
+
+    /**
+     * Sets a single wall of the cell at the given cell coordinate (x, y) in the direction d, to the given value
+     * @param x
+     * @param y
+     * @param d
+     * @param value
+     */
+    public void setWall(int x, int y, Direction d, boolean value) {
+        // next x and y coordinates
+        int nX = x + d.dx;
+        int nY = y + d.dy;
+
+        // If the neighbor is within the bounds of the maze
+        if (withinBounds(nX, nY)) {
+            // depending on the value, set or clear this bit and the neighbours opposite bit
+            if (value) {
+                mazeGrid[y][x] |= d.bit;
+                mazeGrid[nY][nX] |= d.opposite.bit;
+            } else {
+                mazeGrid[y][x] &= ~(d.bit);
+                mazeGrid[nY][nX] &= ~(d.opposite.bit);
+            }
+        }
+    }
+
 
     // private methods
 
