@@ -181,6 +181,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         });
 
         repaint();
+        revalidate();
     }
 
     @Override
