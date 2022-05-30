@@ -15,6 +15,7 @@ public class Maze {
     private Date creationDate;
     private Date lastEditDate;
 
+    //TODO: Make private;
     public int[][] mazeGrid;
     public int nCols;
     public int nRows;
@@ -79,6 +80,15 @@ public class Maze {
     }
 
     // public methods (testable)
+
+    //TODO: Throw exception if data is not correct dimensions
+    public void setMazeGrid (int[][] mazeGrid) {
+        this.mazeGrid = mazeGrid;
+    }
+
+    public LinkedList<Integer> getSolution() {
+        return this.solution;
+    }
 
     /**
      * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
