@@ -1,0 +1,33 @@
+package maze;
+
+/**
+ * Holds a cartesian coordinate, representing the position in the internal maze grid of a cell.
+ * Used by some classes to better store coordinates intermediately for convenience.
+ * For example, by some maze generator functions within a queue
+ */
+public class Position {
+    private int x;
+    private int y;
+
+    public Position(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() { return x; }
+
+    public int getY() { return y; }
+
+    public void setX(int value) { x = value; }
+
+    public void setY(int value) { y = value; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Position) {
+            Position p = ((Position) obj);
+            return (this.x == p.x && this.y == p.y);
+        }
+        return false;
+    }
+}
