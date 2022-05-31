@@ -2,6 +2,9 @@ package database;
 
 import maze.Maze;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * This static class provides functionality for interacting with the maze database,
  * including storing, retrieving, updating and deleting records from the maze table.
@@ -20,7 +23,7 @@ public class Database {
      * @param maze The @{@link Maze} object to be saved
      */
     public static void save(Maze maze){
-
+        maze.mazeData.assignId(1);
     }
 
     /**
@@ -29,6 +32,10 @@ public class Database {
      */
     public static void update(Maze maze) {
 
+    }
+
+    public static ArrayList<Maze> retrieve(MazeAttribute attribute, String searchTerm) {
+    return null;
     }
 
     /**

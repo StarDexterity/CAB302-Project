@@ -7,7 +7,7 @@ import org.junit.jupiter.api.*;
 import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static tests.DummyMazeData.*;
+import static tests.DummyMazes.*;
 
 public class TestMazeSolver {
 

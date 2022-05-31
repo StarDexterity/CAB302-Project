@@ -1,10 +1,5 @@
 package maze;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Date;
-
 /**
  * This child class is a Default.Maze class with images for the start and end positions of the maze. It extends @{@link Maze}
  */
@@ -15,8 +10,8 @@ public class PictureMaze extends Maze {
     // constructor
 
 
-    public PictureMaze(int id, String title, String author, String description, int nRows, int nCols, Date creationDate, Date lastEditDate, ArrayList<MazeImage> logos, MazeImage startImage, MazeImage endImage) {
-        super(id, title, author, description, nRows, nCols, creationDate, lastEditDate, logos);
+    public PictureMaze(int nCols, int nRows, boolean automatic, MazeImage startImage, MazeImage endImage) {
+        super(nRows, nCols, automatic);
         this.startImage = startImage;
         this.endImage = endImage;
     }

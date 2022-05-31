@@ -8,12 +8,6 @@ import java.util.LinkedList;
  *
  */
 public class Maze {
-    private int id;
-    private String title;
-    private String author;
-    private String description;
-    private Date creationDate;
-    private Date lastEditDate;
 
     //TODO: Make private;
     public int[][] mazeGrid;
@@ -21,11 +15,11 @@ public class Maze {
     public int nRows;
     public LinkedList<Integer> solution;
 
+    public MazeData mazeData;
+
     private ArrayList<MazeImage> logos;
 
     // constructors
-
-    //Minimum possible constructor
     public Maze(int nCols, int nRows, boolean automatic) {
         this.nCols = nCols;
         this.nRows = nRows;
@@ -39,43 +33,16 @@ public class Maze {
         if(automatic == true) {
             MazeGenerator.generateMaze(this, 0, 0);
         }
+
+        mazeData = new MazeData();
     }
 
-    /**
-     * For creating a new Default.Maze
-     * @param title
-     * @param author
-     * @param description
-     * @param creationDate
-     * @param lastEditDate
-     * @param nRows
-     * @param nCols
-     * @param logos
-     */
-    //TODO: Make a better constructor that allows defaults.
-    // Choose when to create the maze object, whether once the maze is generated,
-    // created with a preview screen, or created immediately.
-    public Maze(
-                int id,
-                String title,
-                String author,
-                String description,
-                int nRows,
-                int nCols,
-                Date creationDate,
-                Date lastEditDate,
-                ArrayList<MazeImage> logos) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.description = description;
-        this.creationDate = creationDate;
-        this.lastEditDate = lastEditDate;
-        // Create BitSet to store maze walls with enough room to store all the walls in the maze + 1 for the borders
-        // <MazeRows, MazeColumns init here (e.g. all 1 or all 0)>
-        this.nRows = nRows;
+    // From database
+    public Maze(int nCols, int nRows, int[][] mazeGrid, MazeData mazeData, ArrayList<MazeImage> logos) {
         this.nCols = nCols;
-
+        this.nRows = nRows;
+        this.mazeGrid = mazeGrid;
+        this.mazeData = mazeData;
         this.logos = logos;
     }
 
@@ -145,6 +112,12 @@ public class Maze {
         notifyListeners();
     }
 
+    // Based on the Build Pattern. Have to use this method to edit maze data
+    public MazeData setData(String author) {
+        mazeData.updateData(author);
+        return this.mazeData;
+    }
+
     // Observer design pattern
     public interface MazeListener {
         void mazeAltered();
@@ -162,7 +135,6 @@ public class Maze {
         }
     }
 
-
     // private methods
 
     /**
@@ -173,4 +145,7 @@ public class Maze {
     private boolean validateImage(MazeImage image) {
         return false;
     }
+
 }
+
+

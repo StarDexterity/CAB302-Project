@@ -1,9 +1,9 @@
 package tests;
 
-public final class DummyMazeData {
+public final class DummyMazes {
 
     // Disable constructor
-    private DummyMazeData(){};
+    private DummyMazes(){};
 
     public static int[][] empty = new int[][] {{6, 14, 14, 10}, {7, 15, 15, 11}, {7, 15, 15, 11}, {5, 13, 13, 9}};
     public static int[][] full = new int[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
