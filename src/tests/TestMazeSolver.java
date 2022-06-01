@@ -1,5 +1,6 @@
 package tests;
 
+import maze.data.Direction;
 import maze.data.Maze;
 import maze.helper.MazeSolver;
 import maze.helper.Position;
@@ -62,5 +63,15 @@ public class TestMazeSolver {
     public void SolveYWide() {
         Maze maze = createAndSolve(6, 4, y_wide);
         assertNotEquals(maze.getSolution(), nullSolution);
+    }
+
+    @Test
+    public void MazeBecomesUnsolved() {
+        Maze maze = createAndSolve(4, 4, random);
+        assertEquals(maze.getSolveStatus(), SolveStatus.SOLVED);
+        maze.setPath(0, 0, Direction.N, false);
+        assertEquals(maze.getSolveStatus(), SolveStatus.UNSOLVED);
+        MazeSolver.solve(Position.ZERO, maze);
+        assertEquals(maze.getSolveStatus(), SolveStatus.SOLVED);
     }
 }
