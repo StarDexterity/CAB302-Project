@@ -1,122 +1,90 @@
 package ui.pages.editpage.options.cell;
 
+import maze.data.Maze;
+import maze.data.Position;
 import maze.enums.Direction;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class CellDisplay extends JComponent {
 
     /**
      * Margin between the border of the display and the walls
      */
-    private int margin = 20;
+    private final int margin = 20;
 
     /**
      * distance away from (either in the x or y coordinate) from the perpendicular wall,
      * without this the walls would be touching
      */
-    private int gap = 12;
+    private final int gap = 12;
 
     /**
      * The length of the wall (long side)
      */
-    private int wallLength = 100;
+    private final int wallLength = 100;
 
     /**
      * The thickness of the wall (short side)
      */
-    private int wallThickness = 8;
+    private final int wallThickness = 8;
 
     /**
      * Padding of the interaction rectangle
      */
-    private int hoverPadding = 10;
+    private final int hoverPadding = 10;
 
+    private Maze maze;
+    private Position selectedCell;
 
     // rectangle boxes of the four walls, helps for painting and checking for mouse events
-    private Rectangle topWall;
-    private Rectangle leftWall;
-    private Rectangle rightWall;
-    private Rectangle bottomWall;
-
-    // TODO: Pending deletion
-    private Rectangle selectTopWall;
-    private Rectangle selectLeftWall;
-    private Rectangle selectRightWall;
-    private Rectangle selectBottomWall;
-
-    // at the moment, these four booleans control the walls that are 'on' and 'off'
-    private boolean leftWallEnabled = false;
-    private boolean topWallEnabled = false;
-    private boolean rightWallEnabled = false;
-    private boolean bottomWallEnabled = false;
-
-    // TODO: Pending deletion
-    private boolean hoverTopWall;
-    private boolean hoverLeftWall;
-    private boolean hoverRightWall;
-    private boolean hoverBottomWall;
+    private final Rectangle northWall;
+    private final Rectangle westWall;
+    private final Rectangle eastWall;
+    private final Rectangle southWall;
 
     // color settings
-    private Color disabledColour = new Color(192, 192, 192, 200);
-    private Color enabledColour = Color.BLACK;
-    private Color background = Color.WHITE;
-    private Color hoverColour = new Color(106, 116, 173, 128);
+    private final Color disabledColour = new Color(192, 192, 192, 200);
+    private final Color enabledColour = Color.BLACK;
 
     public CellDisplay() {
         super();
 
-        // This part might not exactly make sense, but don't worry about that :)
-
         // top and bottom wall rectangle definitions
-        topWall = new Rectangle(margin + wallThickness + gap, margin, wallLength, wallThickness);
+        northWall = new Rectangle(margin + wallThickness + gap, margin, wallLength, wallThickness);
 
-        bottomWall = new Rectangle(margin + wallThickness + gap,
+        southWall = new Rectangle(margin + wallThickness + gap,
                 margin + gap * 2 + wallThickness + wallLength,
                 wallLength, wallThickness);
 
-
         // left and right wall rectangle definitions
-        leftWall = new Rectangle(margin, margin + gap + wallThickness, wallThickness, wallLength);
+        westWall = new Rectangle(margin, margin + gap + wallThickness, wallThickness, wallLength);
 
-        rightWall = new Rectangle(margin + gap * 2 + wallThickness + wallLength,
+        eastWall = new Rectangle(margin + gap * 2 + wallThickness + wallLength,
                 margin + gap + wallThickness,
                 wallThickness, wallLength);
-
-        selectTopWall = copyRect(topWall);
-        selectTopWall.grow(10, 10);
-
-        selectBottomWall = copyRect(bottomWall);
-        selectBottomWall.grow(10, 10);
-
-        selectLeftWall = copyRect(leftWall);
-        selectLeftWall.grow(10, 10);
-
-        selectRightWall = copyRect(rightWall);
-        selectRightWall.grow(10, 10);
 
         // set mouse events
         MouseAdapter ma = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-
                 Point p = e.getPoint();
 
-                if (contains(topWall, p, hoverPadding)) {
-                    setTopWall(!isTopWall());
-                } else if (contains(leftWall, p, hoverPadding)) {
-                    setLeftWall(!isLeftWall());
-                } else if (contains(bottomWall, p, hoverPadding)) {
-                    setBottomWall(!isBottomWall());
-                } else if (contains(rightWall, p, hoverPadding)) {
-                    setRightWall(!isRightWall());
+                if (contains(northWall, p, hoverPadding)) {
+                    togglePath(Direction.N);
+                } else if (contains(westWall, p, hoverPadding)) {
+                    togglePath(Direction.W);
+                } else if (contains(southWall, p, hoverPadding)) {
+                    togglePath(Direction.S);
+                } else if (contains(eastWall, p, hoverPadding)) {
+                    togglePath(Direction.E);
                 }
 
                 repaint();
+                revalidate();
             }
 
             @Override
@@ -125,22 +93,13 @@ public class CellDisplay extends JComponent {
                 // get mouse position
                 Point p = e.getPoint();
 
-                hoverTopWall = false;
-                hoverLeftWall = false;
-                hoverRightWall = false;
-                hoverBottomWall = false;
-
-                if (contains(topWall, p, hoverPadding)) {
-                    hoverTopWall = true;
+                if (contains(northWall, p, hoverPadding)) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                } else if (contains(leftWall, p, hoverPadding)) {
-                    hoverLeftWall = true;
+                } else if (contains(westWall, p, hoverPadding)) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                } else if (contains(bottomWall, p, hoverPadding)) {
-                    hoverBottomWall = true;
+                } else if (contains(southWall, p, hoverPadding)) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                } else if (contains(rightWall, p, hoverPadding)) {
-                    hoverRightWall = true;
+                } else if (contains(eastWall, p, hoverPadding)) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 } else {
                     setCursor(Cursor.getDefaultCursor());
@@ -149,7 +108,6 @@ public class CellDisplay extends JComponent {
                 repaint();
             }
         };
-
 
         addMouseListener(ma);
         addMouseMotionListener(ma);
@@ -162,12 +120,12 @@ public class CellDisplay extends JComponent {
         InputMap inputMap = getInputMap(WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = getActionMap();
 
+        // single actions
         inputMap.put(KeyStroke.getKeyStroke('w'),"ToggleNorthWall");
         inputMap.put(KeyStroke.getKeyStroke('s'),"ToggleSouthWall");
         inputMap.put(KeyStroke.getKeyStroke('a'),"ToggleWestWall");
         inputMap.put(KeyStroke.getKeyStroke('d'),"ToggleEastWall");
-
-
+        // bulk actions
         inputMap.put(KeyStroke.getKeyStroke('c'),"ClearAllWalls");
         inputMap.put(KeyStroke.getKeyStroke('f'),"FillAllWalls");
 
@@ -175,7 +133,7 @@ public class CellDisplay extends JComponent {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        setTopWall(!isTopWall());
+                        togglePath(Direction.N);
                     }
                 }
         );
@@ -184,7 +142,7 @@ public class CellDisplay extends JComponent {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        setBottomWall(!isBottomWall());
+                        togglePath(Direction.S);
                     }
                 }
         );
@@ -193,7 +151,7 @@ public class CellDisplay extends JComponent {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        setLeftWall(!isLeftWall());
+                        togglePath(Direction.W);
                     }
                 }
         );
@@ -202,7 +160,7 @@ public class CellDisplay extends JComponent {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        setRightWall(!isRightWall());
+                        togglePath(Direction.E);
                     }
                 }
         );
@@ -211,7 +169,7 @@ public class CellDisplay extends JComponent {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        setAllWalls(false);
+                        setAll(true);
                     }
                 }
         );
@@ -220,102 +178,26 @@ public class CellDisplay extends JComponent {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        setAllWalls(true);
+                        setAll(false);
                     }
                 }
         );
 
     }
 
+   public void setPath(Direction dir, boolean isPath) {
+        maze.setPath(selectedCell, dir, isPath);
+   }
 
-    public boolean isLeftWall() {
-        return leftWallEnabled;
-    }
+   public void togglePath(Direction dir) {
+        maze.setPath(selectedCell, dir, !maze.isPath(selectedCell, dir));
+   }
 
-    public boolean isTopWall() {
-        return topWallEnabled;
-    }
 
-    public boolean isRightWall() {
-        return rightWallEnabled;
-    }
-
-    public boolean isBottomWall() {
-        return bottomWallEnabled;
-    }
-
-    public boolean isWall(Direction dir) {
-        switch (dir) {
-            case N:
-                return isTopWall();
-            case W:
-                return isLeftWall();
-            case S:
-                return isBottomWall();
-            case E:
-                return isRightWall();
-            default:
-                return false;
+    public void setAll(boolean isPath) {
+        for (Direction dir : Direction.values()) {
+            setPath(dir, isPath);
         }
-    }
-
-    public void setWall(Direction dir, boolean value) {
-        switch (dir) {
-            case N:
-                setTopWall(value);
-                break;
-            case W:
-                setLeftWall(value);
-                break;
-            case S:
-                setBottomWall(value);
-                break;
-            case E:
-                setRightWall(value);
-                break;
-            default:
-                break;
-        }
-    }
-
-    // these four setters are needed to make sure that the walls are repainted
-    public void setLeftWall(boolean leftWallEnabled) {
-        this.leftWallEnabled = leftWallEnabled;
-        notifyListeners(Direction.W);
-        repaint();
-    }
-
-    public void setTopWall(boolean value) {
-        this.topWallEnabled = value;
-        notifyListeners(Direction.N);
-        repaint();
-    }
-
-    public void setRightWall(boolean value) {
-        this.rightWallEnabled = value;
-        notifyListeners(Direction.E);
-        repaint();
-    }
-
-    public void setBottomWall(boolean value) {
-        this.bottomWallEnabled = value;
-        notifyListeners(Direction.S);
-        repaint();
-    }
-
-    public boolean isAllWallsEnabled() {
-        return topWallEnabled && leftWallEnabled && bottomWallEnabled && rightWallEnabled;
-    }
-
-    public boolean isNoWallsEnabled() {
-        return !topWallEnabled && !leftWallEnabled && !bottomWallEnabled && !rightWallEnabled;
-    }
-
-    public void setAllWalls(boolean value) {
-        setRightWall(value);
-        setTopWall(value);
-        setBottomWall(value);
-        setLeftWall(value);
     }
 
 
@@ -328,7 +210,7 @@ public class CellDisplay extends JComponent {
     /**
      * Draws the maze to the screen
      *
-     * @param gg
+     * @param gg Used to paint
      */
     @Override
     public void paintComponent(Graphics gg) {
@@ -338,51 +220,37 @@ public class CellDisplay extends JComponent {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(getBackground());
 
-        // draw each walls select
+        // Draws each wall using maze
+        g.setColor(getWallColour(Direction.N));
+        g.fill(northWall);
 
-        // Draws each wall using its respective boolean,
-        // to determine whether to draw it enabled or disabled
-        g.setColor(getWallColour(topWallEnabled, hoverTopWall));
-        g.fill(topWall);
+        g.setColor(getWallColour(Direction.S));
+        g.fill(southWall);
 
-        g.setColor(getWallColour(bottomWallEnabled, hoverBottomWall));
-        g.fill(bottomWall);
+        g.setColor(getWallColour(Direction.W));
+        g.fill(westWall);
 
-        g.setColor(getWallColour(leftWallEnabled, hoverLeftWall));
-        g.fill(leftWall);
-
-        g.setColor(getWallColour(rightWallEnabled, hoverRightWall));
-        g.fill(rightWall);
+        g.setColor(getWallColour(Direction.E));
+        g.fill(eastWall);
     }
 
-
-    // observer methods
-    // customer listener interface so other classes can keep track of this one without tight coupling
-    public interface CellListener {
-        void wallChanged(Direction dir);
+    public void setMaze(Maze maze) {
+        this.maze = maze;
     }
 
-    private ArrayList<CellListener> listeners = new ArrayList<CellListener>();
-
-    public void AddListener(CellListener cellListener) {
-        listeners.add(cellListener);
-    }
-
-    private void notifyListeners(Direction dir) {
-        for (CellListener l : listeners) {
-            l.wallChanged(dir);
-        }
+    public void setSelectedCell(Position selectedCell) {
+        this.selectedCell = selectedCell;
+        repaint();
+        revalidate();
     }
 
     /**
      * Helper function checks if a point is contained within a rectangle + padding,
-     * since there is no indication if the user is actually touching the wall
-     * I figured a bit of leniency would be a good idea
      *
-     * @param r
-     * @param p
-     * @param pad
-     * @return
+     * @param r Rectangle to check in
+     * @param p Point to check for
+     * @param pad additional padding to the rectangle
+     * @return boolean value to indicate if the point is in the rectangle
      */
     private boolean contains(Rectangle r, Point p, int pad) {
         Rectangle t = new Rectangle(r.x, r.y, r.width, r.height);
@@ -390,12 +258,9 @@ public class CellDisplay extends JComponent {
         return t.contains(p);
     }
 
-    private Rectangle copyRect(Rectangle r) {
-        return new Rectangle(r.x, r.y, r.width, r.height);
-    }
-
-    private Color getWallColour(boolean isEnabled, boolean isHovered) {
-        Color c = (isEnabled) ? enabledColour : disabledColour;
-        return c;
+    private Color getWallColour(Direction dir) {
+        // if maze or selected cell is null return disabled colour
+        if (maze == null || selectedCell == null) return disabledColour;
+        return !maze.isPath(selectedCell, dir) ? enabledColour : disabledColour;
     }
 }
