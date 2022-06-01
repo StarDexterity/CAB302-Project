@@ -1,6 +1,8 @@
-package ui;
+package ui.pages.editpage.options;
 
 import maze.helper.MazeSolver;
+import ui.helper.GridBagHelper;
+import ui.pages.EditPage;
 
 import javax.swing.*;
 import javax.swing.border.Border;

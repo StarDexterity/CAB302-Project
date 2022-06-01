@@ -1,4 +1,10 @@
-package ui;
+package ui.pages.editpage;
+
+import ui.pages.editpage.options.DisplayOptions;
+import ui.pages.editpage.options.SolveStatus;
+import ui.pages.editpage.options.cell.CellEditor;
+import ui.helper.GridBagHelper;
+import ui.pages.EditPage;
 
 import javax.swing.*;
 import javax.swing.border.Border;

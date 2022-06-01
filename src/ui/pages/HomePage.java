@@ -1,7 +1,9 @@
-package ui;
+package ui.pages;
 
 import maze.helper.GenerationOption;
 import maze.data.Maze;
+import ui.App;
+import ui.pages.homepage.MazeTableModel;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;

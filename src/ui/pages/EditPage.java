@@ -1,6 +1,9 @@
-package ui;
+package ui.pages;
 
 import maze.data.Maze;
+import ui.App;
+import ui.pages.editpage.MazeDisplay;
+import ui.pages.editpage.OptionsPanel;
 
 import javax.swing.*;
 import java.awt.*;

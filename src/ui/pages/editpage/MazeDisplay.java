@@ -1,4 +1,4 @@
-package ui;
+package ui.pages.editpage;
 
 import maze.data.Maze;
 import maze.helper.MazeSolver;

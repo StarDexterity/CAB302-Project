@@ -1,9 +1,11 @@
-package ui;
+package ui.pages.editpage.options;
+
+import ui.helper.GridBagHelper;
+import ui.helper.UIHelper;
+import ui.pages.EditPage;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

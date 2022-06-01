@@ -1,4 +1,7 @@
-package ui;
+package ui.pages.editpage.options;
+
+import ui.helper.GridBagHelper;
+import ui.helper.UIHelper;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -31,7 +34,7 @@ public class RegenerateOptions extends JPanel {
         generationCBox.addItem("Automatic");
 
         seedLabel = new JLabel("Seed");
-        seedCheck = new UIHelper().createCheckBox("");
+        seedCheck =  UIHelper.createCheckBox("");
 
 
         seedInput = new JTextField("");

@@ -1,6 +1,8 @@
-package ui;
+package ui.pages.editpage.options.cell;
 
 import maze.data.Direction;
+import ui.helper.GridBagHelper;
+import ui.pages.EditPage;
 
 import javax.swing.*;
 import javax.swing.border.Border;

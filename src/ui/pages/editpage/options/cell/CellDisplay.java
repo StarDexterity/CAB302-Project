@@ -1,4 +1,4 @@
-package ui;
+package ui.pages.editpage.options.cell;
 
 import maze.data.Direction;
 

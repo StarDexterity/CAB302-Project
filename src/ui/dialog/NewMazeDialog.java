@@ -1,7 +1,8 @@
-package ui;
+package ui.dialog;
 
 import maze.helper.GenerationOption;
 import maze.data.Maze;
+import ui.pages.EditPage;
 
 import javax.swing.*;
 import java.awt.*;

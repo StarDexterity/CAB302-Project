@@ -1,7 +1,6 @@
-package ui;
+package ui.pages.homepage;
 
 import javax.swing.table.AbstractTableModel;
-import java.awt.*;
 
 
 public class MazeTableModel extends AbstractTableModel {

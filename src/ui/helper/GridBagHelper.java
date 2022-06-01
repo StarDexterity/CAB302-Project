@@ -1,9 +1,12 @@
-package ui;
+package ui.helper;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class GridBagHelper {
+public final class GridBagHelper {
+    // Disable constructor
+    private GridBagHelper(){}
+
     /**
      * Convenience method for quickly creating a new GridBagConstraint object with all default parameters
      */
