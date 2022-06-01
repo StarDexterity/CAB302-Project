@@ -2,6 +2,7 @@ package ui;
 
 import maze.Maze;
 import maze.MazeSolver;
+import maze.Position;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +49,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
     /**
      * Stores the solution to the maze. This is empty until solve is called.
      */
-    LinkedList<Integer> solution;
+    LinkedList<Position> solution;
 
     private boolean showSolution;
     private boolean showGrid;
@@ -169,12 +170,13 @@ public class MazeDisplay extends JPanel implements Scrollable {
     }
 
     public void setMaze(Maze maze) {
-        MazeSolver.solve(0, maze);
-        solution = maze.solution;
+        MazeSolver.solve(new Position(0, 0), maze);
+        solution = maze.getSolution();
 
-        mazeGrid = maze.mazeGrid;
-        nCols = maze.nCols;
-        nRows = maze.nRows;
+        mazeGrid = maze.getMazeGrid();
+        nCols = maze.getCols();
+        nRows = maze.getRows();
+
         // when maze is altered in any way this component is repainted
         maze.addListener(() -> {
             repaint();
@@ -249,9 +251,9 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
         // draws the solution if showSolution is true
         if (showSolution) {
-            for (int pos : solution) {
-                int x = pos % nCols * cellSize + offset;
-                int y = pos / nCols * cellSize + offset;
+            for (Position pos : solution) {
+                int x = pos.getX() * cellSize + offset;
+                int y = pos.getY() * cellSize + offset;
                 path.lineTo(x, y);
             }
         }

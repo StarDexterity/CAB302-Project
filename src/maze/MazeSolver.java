@@ -13,8 +13,8 @@ public class MazeSolver {
      * @param maze A @{@link Maze} object. The solution to the maze is stored within this object
      * @return A bool value indicating whether the maze was successfully solved.
      */
-    public static boolean solve(int pos, Maze maze) {
-        maze.solution = new LinkedList<>();
+    public static boolean solve(Position pos, Maze maze) {
+        maze.getSolution().clear();
         return recursiveSolve(pos, maze);
     }
 
@@ -24,15 +24,17 @@ public class MazeSolver {
      * @param maze
      * @return
      */
-    private static boolean recursiveSolve(int pos, Maze maze) {
-        if (pos == maze.nCols * maze.nRows - 1)
+    private static boolean recursiveSolve(Position pos, Maze maze) {
+        int[][] mazeGrid = maze.getMazeGrid();
+        int nRows = maze.getRows();
+        int nCols = maze.getCols();
+        LinkedList<Position> solution = maze.getSolution();
 
-            return true;
+        int x = pos.getX();
+        int y = pos.getY();
 
-        // x position is the remainder after the position is divided by the number of columns
-        int x = pos % maze.nCols;
-        // y position is the position divided by the number of rows
-        int y = pos / maze.nCols;
+        if (x == nCols - 1 && y == nRows - 1) return true;
+
 
         // Directions in order of search (N, S, E, W)
         for (Direction dir : Direction.values()) {
@@ -44,16 +46,16 @@ public class MazeSolver {
             // If the next cell is within bounds of maze,
             // is connected to this cell
             // and hasn't been visited, visit it
-            if (maze.withinBounds(nx, ny) && (maze.mazeGrid[y][x] & dir.bit) != 0
-                    && (maze.mazeGrid[ny][nx] & 16) == 0) {
+            if (maze.withinBounds(nx, ny) && (mazeGrid[y][x] & dir.bit) != 0
+                    && (mazeGrid[ny][nx] & 16) == 0) {
 
                 // condensing coordinate
-                int newPos = ny * maze.nCols + nx;
+                Position newPos = new Position(nx, ny);
 
-                maze.solution.add(newPos);
+                solution.add(newPos);
 
                 // sets the 5th bit to mark visit
-                maze.mazeGrid[ny][nx] |= 16;
+                mazeGrid[ny][nx] |= 16;
 
                 // if maze is solved, halt and return true
                 if (MazeSolver.recursiveSolve(newPos, maze))
@@ -61,8 +63,8 @@ public class MazeSolver {
 
 
                 // backtracks from current cell to the last one
-                maze.solution.removeLast();
-                maze.mazeGrid[ny][nx] &= ~16;
+                solution.removeLast();
+                mazeGrid[ny][nx] &= ~16;
             }
         }
         // All cells have been visited and a solution hasn't been found
@@ -74,28 +76,19 @@ public class MazeSolver {
      * @return
      */
     public static String TotalDeadEnds(Maze maze) {
-        LinkedList solution = maze.solution;
-        double count = 0;
-        for (Object o : solution) {
-            count++;
-        }
-        String deadEnd =Double.toString((100-((count+1)/(maze.nRows*maze.nCols))*100));
+        double count = maze.getSolution().size();
+
+        String deadEnd = Double.toString(( 100 - ((count + 1) / (maze.getRows() * maze.getCols())) * 100));
         return deadEnd;
     }
 
     /**
      * For a given maze, finds the total cells required to pass through, for the optimal solution
      */
-    public static String TotalPassThrough(Maze maze) {
-        LinkedList solution = maze.solution;
-        double count = 0;
-        for (Object o : solution) {
-            count++;
-        }
+    public static double TotalPassThrough(Maze maze) {
+        double count = maze.getSolution().size();
 
-        String passThrough = Double.toString(((count+1)/(maze.nRows*maze.nCols))*100);
-        System.out.println(count+","+ maze.nCols* maze.nRows);
+        double passThrough = ((count+1)/(maze.getRows() * maze.getCols())) * 100;
         return passThrough;
     }
-
 }

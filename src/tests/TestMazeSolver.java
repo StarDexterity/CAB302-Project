@@ -2,6 +2,7 @@ package tests;
 
 import maze.Maze;
 import maze.MazeSolver;
+import maze.Position;
 import org.junit.jupiter.api.*;
 
 import java.util.LinkedList;
@@ -17,7 +18,7 @@ public class TestMazeSolver {
         Maze maze = new Maze(nCols, nRows, false);
         maze.setMazeGrid(mazeGrid);
         //TODO: Try make the '0' default
-        MazeSolver.solve(0, maze);
+        MazeSolver.solve(Position.ZERO, maze);
         return maze;
     }
 

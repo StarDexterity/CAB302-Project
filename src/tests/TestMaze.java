@@ -3,6 +3,7 @@ package tests;
 import maze.Direction;
 import maze.Maze;
 import maze.MazeSolver;
+import maze.Position;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -65,9 +66,9 @@ public class TestMaze {
     @Test
     public void ReturnsSolutionWhenSolved() {
         Maze maze = new Maze(4, 4, true);
-        MazeSolver.solve(0, maze);
+        MazeSolver.solve(Position.ZERO, maze);
         assertDoesNotThrow( () -> {
-            LinkedList<Integer> solution = maze.getSolution();
+            LinkedList<Position> solution = maze.getSolution();
         });
     }
 

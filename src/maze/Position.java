@@ -9,6 +9,13 @@ public class Position {
     private int x;
     private int y;
 
+    public static final Position ZERO = new Position(0, 0);
+
+    public static Position getBottomRight(Maze maze) {
+        return new Position(maze.getCols() - 1, maze.getRows() - 1);
+    }
+
+
     public Position(int x, int y) {
         this.x = x;
         this.y = y;

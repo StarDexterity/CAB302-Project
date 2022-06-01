@@ -10,10 +10,11 @@ import java.util.LinkedList;
 public class Maze {
 
     //TODO: Make private;
-    public int[][] mazeGrid;
-    public int nCols;
-    public int nRows;
-    public LinkedList<Integer> solution;
+    private final int[][] mazeGrid;
+    private final int nCols;
+    private final int nRows;
+
+    private LinkedList<Position> solution;
 
     public MazeData mazeData;
 
@@ -36,7 +37,7 @@ public class Maze {
 
         mazeData = new MazeData();
 
-        // Generates the maze automatically if wanted (starting position is always 0, 0)
+        // Generates the maze using the given GenerationOption
         mazeGrid = MazeGenerator.generateMaze(nCols, nRows, option);
     }
 
@@ -73,17 +74,34 @@ public class Maze {
         this.logos = logos;
     }
 
-    // public methods (testable)
+    // getters and setters
+    public int[][] getMazeGrid() {
+        return mazeGrid;
+    }
 
     //TODO: Throw exception if data is not correct dimensions
-    public void setMazeGrid (int[][] mazeGrid) {
-        this.mazeGrid = mazeGrid;
+    public void setMazeGrid (int[][] mazeGrid) throws IndexOutOfBoundsException {
+        //this.mazeGrid = mazeGrid;
+        // cannot change mazeGrid, must scan through instead
     }
 
-    public LinkedList<Integer> getSolution() {
-        return this.solution;
+    public int getCols() {
+        return nCols;
     }
 
+    public int getRows() {
+        return nRows;
+    }
+
+    public LinkedList<Position> getSolution() {
+        return solution;
+    }
+
+    public void setSolution(LinkedList<Position> solution) {
+        this.solution = solution;
+    }
+
+    // public methods
     /**
      * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
      * @param image
