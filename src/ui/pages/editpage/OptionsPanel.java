@@ -1,7 +1,7 @@
 package ui.pages.editpage;
 
 import ui.pages.editpage.options.DisplayOptions;
-import ui.pages.editpage.options.SolveStatus;
+import ui.pages.editpage.options.SolveOptions;
 import ui.pages.editpage.options.cell.CellEditor;
 import ui.helper.GridBagHelper;
 import ui.pages.EditPage;
@@ -14,7 +14,7 @@ public class OptionsPanel extends JPanel {
 
 
     DisplayOptions displayOptions;
-    SolveStatus solveStatus;
+    SolveOptions solveStatus;
     CellEditor cellEditor;
 
     public EditPage editPage;
@@ -28,7 +28,7 @@ public class OptionsPanel extends JPanel {
         setPreferredSize(dim);
 
         displayOptions = new DisplayOptions(editPage);
-        solveStatus = new SolveStatus(editPage);
+        solveStatus = new SolveOptions(editPage);
         cellEditor = new CellEditor(editPage);
 
         Border innerBorder = BorderFactory.createTitledBorder("Options");

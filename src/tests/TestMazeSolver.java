@@ -1,7 +1,8 @@
 package tests;
 
-import maze.data.Direction;
 import maze.data.Maze;
+import maze.enums.Direction;
+import maze.enums.SolveStatus;
 import maze.helper.MazeSolver;
 import maze.helper.Position;
 import org.junit.jupiter.api.*;
@@ -13,7 +14,7 @@ import static tests.DummyMazes.*;
 
 public class TestMazeSolver {
 
-    private LinkedList<Integer> nullSolution = new LinkedList<>();
+    private LinkedList<Position> nullSolution = new LinkedList<>();
 
     private Maze createAndSolve(int nCols, int nRows, int[][] mazeGrid) {
         Maze maze = new Maze(nCols, nRows, false);

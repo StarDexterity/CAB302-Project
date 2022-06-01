@@ -1,9 +1,8 @@
 package maze.helper;
 
-import maze.data.Direction;
+import maze.enums.Direction;
 import maze.data.Maze;
-import maze.helper.GenerationOption;
-import maze.helper.Position;
+import maze.enums.GenerationOption;
 
 import java.util.*;
 

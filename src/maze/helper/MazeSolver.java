@@ -1,6 +1,6 @@
 package maze.helper;
 
-import maze.data.Direction;
+import maze.enums.Direction;
 import maze.data.Maze;
 
 import java.util.LinkedList;

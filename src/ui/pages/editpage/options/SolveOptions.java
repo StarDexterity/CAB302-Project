@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SolveStatus extends JPanel {
+public class SolveOptions extends JPanel {
     private JLabel deadendLabel;
     private JLabel deadendStatus;
     private JLabel explorationLabel;
@@ -21,7 +21,7 @@ public class SolveStatus extends JPanel {
 
     private EditPage editPage;
 
-    public SolveStatus(EditPage editPage) {
+    public SolveOptions(EditPage editPage) {
         this.editPage = editPage;
 
         //The status labels will need to be reactive in later stages of the project

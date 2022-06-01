@@ -1,12 +1,10 @@
 package tests;
 
-import maze.data.Direction;
+import maze.enums.Direction;
 import maze.data.Maze;
 import maze.helper.MazeSolver;
 import maze.helper.Position;
 import org.junit.jupiter.api.Test;
-
-import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static tests.DummyMazes.*;

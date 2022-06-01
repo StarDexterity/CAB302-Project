@@ -1,6 +1,6 @@
 package ui.pages.editpage.options.cell;
 
-import maze.data.Direction;
+import maze.enums.Direction;
 import ui.helper.GridBagHelper;
 import ui.pages.EditPage;
 
@@ -49,7 +49,7 @@ public class CellEditor extends JPanel {
         cellDisplay = new CellDisplay();
         cellDisplay.AddListener((dir) -> {
             if (isCellSelected) {
-                editPage.currentMaze.setWall(cellX, cellY, dir, !cellDisplay.isWall(dir));
+                editPage.currentMaze.setPath(cellX, cellY, dir, !cellDisplay.isWall(dir));
             }
         });
 
@@ -96,10 +96,10 @@ public class CellEditor extends JPanel {
             if (isCellSelected) {
                 title.setText("Cell Editor [%s, %s]".formatted(cellX, cellY));
                 // update the display with new walls
-                cellDisplay.setTopWall(!editPage.currentMaze.canPass(cellX, cellY, Direction.N));
-                cellDisplay.setLeftWall(!editPage.currentMaze.canPass(cellX, cellY, Direction.W));
-                cellDisplay.setBottomWall(!editPage.currentMaze.canPass(cellX, cellY, Direction.S));
-                cellDisplay.setRightWall(!editPage.currentMaze.canPass(cellX, cellY, Direction.E));
+                cellDisplay.setTopWall(!editPage.currentMaze.isPath(cellX, cellY, Direction.N));
+                cellDisplay.setLeftWall(!editPage.currentMaze.isPath(cellX, cellY, Direction.W));
+                cellDisplay.setBottomWall(!editPage.currentMaze.isPath(cellX, cellY, Direction.S));
+                cellDisplay.setRightWall(!editPage.currentMaze.isPath(cellX, cellY, Direction.E));
             }
             else {
                 cellDisplay.setAllWalls(false);

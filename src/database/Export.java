@@ -1,6 +1,6 @@
 package database;
 
-import maze.data.ImageType;
+import maze.enums.ImageType;
 import maze.data.Maze;
 
 import java.util.ArrayList;

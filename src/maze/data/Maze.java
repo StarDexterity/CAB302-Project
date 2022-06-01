@@ -1,6 +1,8 @@
 package maze.data;
 
-import maze.helper.GenerationOption;
+import maze.enums.Direction;
+import maze.enums.GenerationOption;
+import maze.enums.SolveStatus;
 import maze.helper.MazeGenerator;
 import maze.helper.Position;
 
@@ -16,6 +18,7 @@ public class Maze {
     private final int[][] mazeGrid;
     private final int nCols;
     private final int nRows;
+    private SolveStatus solveStatus;
 
     private LinkedList<Position> solution;
 
@@ -110,7 +113,7 @@ public class Maze {
      * @param image
      */
     public void placeImage(MazeImage image) {
-        notifyListeners();
+        mazeChanged();
     }
 
     /**
@@ -140,7 +143,7 @@ public class Maze {
      * @param d
      * @return
      */
-    public boolean canPass(int x, int y, Direction d) {
+    public boolean isPath(int x, int y, Direction d) {
         return ((mazeGrid[y][x] & d.bit) != 0);
     }
 
@@ -151,7 +154,7 @@ public class Maze {
      * @param d
      * @param value
      */
-    public void setWall(int x, int y, Direction d, boolean value) {
+    public void setPath(int x, int y, Direction d, boolean value) {
         // next x and y coordinates
         int nX = x + d.dx;
         int nY = y + d.dy;
@@ -167,7 +170,7 @@ public class Maze {
                 mazeGrid[nY][nX] &= ~(d.opposite.bit);
             }
         }
-        notifyListeners();
+        mazeChanged();
     }
 
     // Based on the Build Pattern. Have to use this method to edit maze data
@@ -176,9 +179,14 @@ public class Maze {
         return this.mazeData;
     }
 
+    public SolveStatus getSolveStatus() {
+        return solveStatus;
+    }
+
+
     // Observer design pattern
     public interface MazeListener {
-        void mazeAltered();
+        void mazeChanged();
     }
 
     private ArrayList<MazeListener> listeners = new ArrayList<MazeListener>();
@@ -187,9 +195,10 @@ public class Maze {
         listeners.add(ml);
     }
 
-    private void notifyListeners() {
+    private void mazeChanged() {
+        solveStatus = SolveStatus.UNSOLVED;
         for (MazeListener l : listeners) {
-            l.mazeAltered();
+            l.mazeChanged();
         }
     }
 
