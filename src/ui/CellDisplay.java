@@ -1,6 +1,6 @@
 package ui;
 
-import maze.Direction;
+import maze.data.Direction;
 
 import javax.swing.*;
 import java.awt.*;

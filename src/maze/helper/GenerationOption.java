@@ -1,4 +1,4 @@
-package maze;
+package maze.helper;
 
 public enum GenerationOption {
     DFS("DFS"),

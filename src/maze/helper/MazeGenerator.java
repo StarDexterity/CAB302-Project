@@ -1,4 +1,9 @@
-package maze;
+package maze.helper;
+
+import maze.data.Direction;
+import maze.data.Maze;
+import maze.helper.GenerationOption;
+import maze.helper.Position;
 
 import java.util.*;
 
@@ -9,7 +14,7 @@ import java.util.*;
  * a variety of private implementations of randomised graph traversal algorithms to produce
  * varying results of fun mazes.
  */
-public class MazeGenerator {
+public final class MazeGenerator {
     /**
      * Generates a maze of nCols and nRows using the algorithm specified by the @{@link GenerationOption} enum
      * @param nCols
@@ -17,6 +22,10 @@ public class MazeGenerator {
      * @param option
      * @return
      */
+
+    // Disable constructor
+    private MazeGenerator(){}
+
     public static int[][] generateMaze(int nCols, int nRows, GenerationOption option) {
         // generation algorithms return no values, but alter this variable
         int[][] mazeGrid = new int[nRows][nCols];

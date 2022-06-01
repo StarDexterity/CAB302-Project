@@ -1,9 +1,9 @@
 package tests;
 
-import maze.Direction;
-import maze.Maze;
-import maze.MazeSolver;
-import maze.Position;
+import maze.data.Direction;
+import maze.data.Maze;
+import maze.helper.MazeSolver;
+import maze.helper.Position;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;

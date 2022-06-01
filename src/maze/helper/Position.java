@@ -1,4 +1,6 @@
-package maze;
+package maze.helper;
+
+import maze.data.Maze;
 
 /**
  * Holds a cartesian coordinate, representing the position in the internal maze grid of a cell.

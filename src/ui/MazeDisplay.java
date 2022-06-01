@@ -1,8 +1,8 @@
 package ui;
 
-import maze.Maze;
-import maze.MazeSolver;
-import maze.Position;
+import maze.data.Maze;
+import maze.helper.MazeSolver;
+import maze.helper.Position;
 
 import javax.swing.*;
 import java.awt.*;

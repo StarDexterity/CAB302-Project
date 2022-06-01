@@ -1,6 +1,6 @@
 package ui;
 
-import maze.MazeSolver;
+import maze.helper.MazeSolver;
 
 import javax.swing.*;
 import javax.swing.border.Border;

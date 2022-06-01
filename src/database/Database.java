@@ -1,9 +1,8 @@
 package database;
 
-import maze.Maze;
+import maze.data.Maze;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * This static class provides functionality for interacting with the maze database,

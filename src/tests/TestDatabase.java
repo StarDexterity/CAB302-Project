@@ -1,12 +1,9 @@
 package tests;
 
 import database.MazeAttribute;
-import maze.Maze;
+import maze.data.Maze;
 
-import maze.MazeData;
 import org.junit.jupiter.api.*;
-
-import javax.xml.crypto.Data;
 
 import java.util.ArrayList;
 

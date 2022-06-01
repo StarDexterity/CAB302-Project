@@ -1,4 +1,4 @@
-package maze;
+package maze.data;
 
 /**
  * List of accepted image types for the purpose of printing a maze

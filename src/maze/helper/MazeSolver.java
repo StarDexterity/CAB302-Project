@@ -1,4 +1,7 @@
-package maze;
+package maze.helper;
+
+import maze.data.Direction;
+import maze.data.Maze;
 
 import java.util.LinkedList;
 
@@ -7,7 +10,11 @@ import java.util.LinkedList;
  * Its methods take a Default.Maze object as a parameter, and return a value that describes some property of the maze,
  * including, if it is solvable, percentage of dead ends, and percentage of path to solve.
  */
-public class MazeSolver {
+public final class MazeSolver {
+
+    // Disable constructor
+    private MazeSolver(){}
+
     /**
      * For a given maze, validates if the maze has a solution
      * @param maze A @{@link Maze} object. The solution to the maze is stored within this object

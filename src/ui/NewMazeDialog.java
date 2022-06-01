@@ -1,7 +1,7 @@
 package ui;
 
-import maze.GenerationOption;
-import maze.Maze;
+import maze.helper.GenerationOption;
+import maze.data.Maze;
 
 import javax.swing.*;
 import java.awt.*;

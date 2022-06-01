@@ -1,4 +1,4 @@
-package maze;
+package maze.data;
 
 /**
  * This class holds the information of an image to be placed within a maze, including its file path, coordinate within the maze, and its dimensions.

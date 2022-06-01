@@ -1,7 +1,7 @@
 package database;
 
-import maze.ImageType;
-import maze.Maze;
+import maze.data.ImageType;
+import maze.data.Maze;
 
 import java.util.ArrayList;
 

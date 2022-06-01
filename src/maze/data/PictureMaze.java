@@ -1,4 +1,4 @@
-package maze;
+package maze.data;
 
 /**
  * This child class is a Default.Maze class with images for the start and end positions of the maze. It extends @{@link Maze}

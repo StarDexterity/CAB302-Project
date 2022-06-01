@@ -1,4 +1,4 @@
-package maze;
+package maze.data;
 
 public enum Direction {
     N(1, 0, -1),

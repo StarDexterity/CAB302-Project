@@ -1,7 +1,10 @@
-package maze;
+package maze.data;
+
+import maze.helper.GenerationOption;
+import maze.helper.MazeGenerator;
+import maze.helper.Position;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 
 /**
