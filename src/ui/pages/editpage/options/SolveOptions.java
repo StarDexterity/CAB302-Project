@@ -1,5 +1,8 @@
 package ui.pages.editpage.options;
 
+import maze.data.Maze;
+import maze.data.Position;
+import maze.enums.SolveStatus;
 import maze.helper.MazeSolver;
 import ui.helper.GridBagHelper;
 import ui.pages.EditPage;
@@ -7,26 +10,23 @@ import ui.pages.EditPage;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class SolveOptions extends JPanel {
-    private JLabel deadendLabel;
-    private JLabel deadendStatus;
-    private JLabel explorationLabel;
-    private JLabel explorationStatus;
-    private JLabel solveLabel;
-    private JLabel solveStatus;
-    private JButton solve;
+    private final JLabel deadEndLabel;
+    private final JLabel deadEndStatus;
+    private final JLabel explorationLabel;
+    private final JLabel explorationStatus;
+    private final JLabel solveLabel;
+    private final JLabel solveStatus;
+    private final JButton solve;
 
-    private EditPage editPage;
+    private Maze maze;
 
     public SolveOptions(EditPage editPage) {
-        this.editPage = editPage;
 
         //The status labels will need to be reactive in later stages of the project
-        deadendLabel = new JLabel("Dead end %");
-        deadendStatus = new JLabel("0");
+        deadEndLabel = new JLabel("Dead end %");
+        deadEndStatus = new JLabel("0");
         explorationLabel = new JLabel("Solution %");
         explorationStatus = new JLabel("0");
         solveLabel = new JLabel("Solve status");
@@ -34,18 +34,12 @@ public class SolveOptions extends JPanel {
         solve = new JButton("Solve");
 
         //MY ATTEMPT AT GETTING THE BUTTON TO WORK - Connor
-        solve.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Thread(() -> {
-                    //EditPage.m.solve(0);
-                    solveStatus.setText("Solved");
-                    DisplayOptions.showSolution.setEnabled(true);
-                    DisplayOptions.colorButton.setEnabled(true);
-                    explorationStatus.setText(Double.toString(MazeSolver.TotalPassThrough(editPage.currentMaze)));
-                    deadendStatus.setText(MazeSolver.TotalDeadEnds(editPage.currentMaze));
-                }).start();
-            }
+        solve.addActionListener(e -> {
+            if (maze == null) return;
+
+            MazeSolver.solve(Position.ZERO, maze);
+            explorationStatus.setText(Double.toString(MazeSolver.TotalPassThrough(editPage.currentMaze)));
+            deadEndStatus.setText(MazeSolver.TotalDeadEnds(editPage.currentMaze));
         });
 
         Border innerBorder = BorderFactory.createTitledBorder("Solve status");
@@ -63,8 +57,8 @@ public class SolveOptions extends JPanel {
         int y = 0;
 
         // row 1
-        GridBagHelper.addToPanel(this, deadendLabel, gbc, 0, y, 1, 1);
-        GridBagHelper.addToPanel(this, deadendStatus, gbc, 2, y, 1, 1);
+        GridBagHelper.addToPanel(this, deadEndLabel, gbc, 0, y, 1, 1);
+        GridBagHelper.addToPanel(this, deadEndStatus, gbc, 2, y, 1, 1);
 
         // row 2
         y++;
@@ -79,5 +73,15 @@ public class SolveOptions extends JPanel {
         // row 4
         y++;
         GridBagHelper.addToPanel(this, solve, gbc, 2, y, 1, 1);
+    }
+
+    public void setMaze(Maze maze) {
+        this.maze = maze;
+        this.maze.addListener(new Maze.MazeListener() {
+            @Override
+            public void solveStatusChanged(SolveStatus status) {
+                solveStatus.setText(status.getName());
+            }
+        });
     }
 }

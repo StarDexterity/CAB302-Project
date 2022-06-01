@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class EditPage extends JPanel {
-    private App app;
     private OptionsPanel optionsPanel;
     private JScrollPane scrollPane;
     public MazeDisplay mazeDisplay;
@@ -20,9 +19,8 @@ public class EditPage extends JPanel {
     public Maze currentMaze;
 
 
-    public EditPage(App app) {
+    public EditPage() {
         super();
-        this.app = app;
         createGUI();
     }
 
@@ -42,6 +40,7 @@ public class EditPage extends JPanel {
     public void setMaze(Maze maze) {
         currentMaze = maze;
         mazeDisplay.setMaze(maze);
+        optionsPanel.setMaze(maze);
 
         // It just works ;)
         scrollPane.revalidate();

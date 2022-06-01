@@ -1,5 +1,7 @@
 package ui.pages.editpage.options;
 
+import maze.data.Maze;
+import maze.enums.SolveStatus;
 import ui.helper.GridBagHelper;
 import ui.helper.UIHelper;
 import ui.pages.EditPage;
@@ -7,19 +9,14 @@ import ui.pages.EditPage;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class DisplayOptions extends JPanel {
-    public static JCheckBox showSolution;
-    public static JCheckBox showGrid;
+    private final JCheckBox showSolution;
+    private final JCheckBox showGrid;
 
-    public static JButton colorButton;
-
-    private EditPage editPage;
+    public JButton colorButton;
 
     public DisplayOptions(EditPage editPage) {
-        this.editPage = editPage;
 
         // create show solution check box and bind event
         showSolution = UIHelper.createCheckBox("Show Solution");
@@ -31,13 +28,10 @@ public class DisplayOptions extends JPanel {
 
         colorButton = new JButton("Choose Color");
         colorButton.setEnabled(false);
-        colorButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Color changeColor = JColorChooser.showDialog(null, "Change Color",Color.RED);
-                if (changeColor != null){
-                    editPage.mazeDisplay.changeSolutionColor(changeColor);
-                }
+        colorButton.addActionListener(e -> {
+            Color changeColor = JColorChooser.showDialog(null, "Change Color",Color.RED);
+            if (changeColor != null){
+                editPage.mazeDisplay.changeSolutionColor(changeColor);
             }
         });
 
@@ -63,5 +57,24 @@ public class DisplayOptions extends JPanel {
         GridBagHelper.addToPanel(this, showSolution, gbc, 0, 0, 1, 1);
         GridBagHelper.addToPanel(this, showGrid, gbc, 0, 1, 1, 1);
         GridBagHelper.addToPanel(this, colorButton, gbc, 0,2,1,1);
+    }
+
+    public void setMaze(Maze maze) {
+        maze.addListener(new Maze.MazeListener() {
+            @Override
+            public void solveStatusChanged(SolveStatus status) {
+                switch (status) {
+                    case SOLVED -> {
+                        showSolution.setEnabled(true);
+                        colorButton.setEnabled(true);
+                    }
+                    case UNSOLVED, UNSOLVABLE -> {
+                        showSolution.doClick();
+                        showSolution.setEnabled(false);
+                        colorButton.setEnabled(false);
+                    }
+                }
+            }
+        });
     }
 }

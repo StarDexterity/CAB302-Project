@@ -1,5 +1,6 @@
 package ui.pages.editpage;
 
+import maze.data.Maze;
 import ui.pages.editpage.options.DisplayOptions;
 import ui.pages.editpage.options.SolveOptions;
 import ui.pages.editpage.options.cell.CellEditor;
@@ -17,11 +18,7 @@ public class OptionsPanel extends JPanel {
     SolveOptions solveStatus;
     CellEditor cellEditor;
 
-    public EditPage editPage;
-
-
     public OptionsPanel(EditPage editPage){
-        this.editPage = editPage;
 
         Dimension dim  = getPreferredSize();
         dim.width = 300;
@@ -57,5 +54,11 @@ public class OptionsPanel extends JPanel {
         y++;
         GridBagHelper.addToPanel(this, cellEditor, gbc, 0, y, 1, 1);
 
+    }
+
+    public void setMaze(Maze maze) {
+        displayOptions.setMaze(maze);
+        solveStatus.setMaze(maze);
+        cellEditor.setMaze(maze);
     }
 }
