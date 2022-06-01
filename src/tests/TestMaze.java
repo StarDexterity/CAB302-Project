@@ -91,30 +91,47 @@ public class TestMaze {
     // Testing isWall
 
     @Test
-    public void AlwaysCanPassFalse() {
+    public void AlwaysIsPathFalse() {
         Maze maze = new Maze(4, 4, true);
-        assertFalse(maze.canPass(0, 0, Direction.W));
+        assertFalse(maze.isPath(0, 0, Direction.W));
     }
 
     @Test
-    public void RandomCanPassFalse() {
+    public void IsPathFalse() {
         Maze maze = createAndPopulate(4, 4, random);
-        assertFalse(maze.canPass(0, 0, Direction.W));
+        assertFalse(maze.isPath(0, 0, Direction.W));
     }
 
     @Test
-    public void RandomCanPassTrue() {
+    public void IsPathTrue() {
         Maze maze = createAndPopulate(4, 4, random);
-        assertTrue(maze.canPass(1, 1, Direction.W));
+        assertTrue(maze.isPath(1, 1, Direction.W));
     }
 
     @Test
     public void ThrowsIsWallOutOfBounds() {
         Maze maze = new Maze(4, 4, true);
         assertThrows(Exception.class, () -> {
-            maze.canPass(999,999, Direction.N);
+            maze.isPath(999,999, Direction.N);
         });
     }
+
+    @Test
+    public void SetPathTrue() {
+        Maze maze = createAndPopulate(4, 4, random);
+        assertFalse(maze.isPath(1, 1, Direction.S));
+        maze.setPath(1, 1, Direction.S, true);
+        assertTrue(maze.isPath(1, 1, Direction.S));
+    }
+
+    @Test
+    public void SetPathFalse() {
+        Maze maze = createAndPopulate(4, 4, random);
+        assertTrue(maze.isPath(1, 1, Direction.W));
+        maze.setPath(1, 1, Direction.W, false);
+        assertFalse(maze.isPath(1, 1, Direction.W));
+    }
+
 
 
 }
