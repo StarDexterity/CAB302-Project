@@ -1,11 +1,15 @@
-package ui.pages.editpage.options;
-
-import ui.helper.GridBagHelper;
-import ui.pages.EditPage;
+package ui;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+
+import static maze.Export.exportMaze;
+
 
 public class SaveOptions extends JPanel {
     private JLabel titleLabel;
@@ -19,11 +23,7 @@ public class SaveOptions extends JPanel {
     private JButton exportButton;
     private JButton deleteButton;
 
-    private EditPage editPage;
-
-    public SaveOptions(EditPage editPage) {
-        this.editPage = editPage;
-
+    public SaveOptions() {
         //The status labels will need to be reactive in later stages of the project
         titleLabel = new JLabel("Title");
         titleField = new JTextField("");
@@ -71,6 +71,25 @@ public class SaveOptions extends JPanel {
         GridBagHelper.addToPanel(this, saveButton, gbc, 0, y, 1, 1);
         GridBagHelper.addToPanel(this, exportButton, gbc, 1, y, 1, 1);
         GridBagHelper.addToPanel(this, deleteButton, gbc, 2, y, 1, 1);
+
+
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("testing button");
+                try {
+                    exportMaze("export maze");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+
+            }
+        });
+
+        //if (exportButton) {
+
+       // }
 
     }
 }
