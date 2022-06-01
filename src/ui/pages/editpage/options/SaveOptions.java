@@ -1,4 +1,6 @@
-package ui;
+package ui.pages.editpage.options;
+
+import ui.helper.GridBagHelper;
 
 import javax.swing.*;
 import javax.swing.border.Border;
