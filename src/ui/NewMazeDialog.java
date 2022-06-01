@@ -1,5 +1,6 @@
 package ui;
 
+import maze.GenerationOption;
 import maze.Maze;
 
 import javax.swing.*;
@@ -41,17 +42,17 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
     public NewMazeDialog(JFrame frame) {
         super(frame);
 
-        SpinnerNumberModel xModel = new SpinnerNumberModel(50, 4, 100, 1);
-        SpinnerNumberModel yModel = new SpinnerNumberModel(50, 4, 100, 1);
+        SpinnerNumberModel xModel = new SpinnerNumberModel(25, 4, 100, 1);
+        SpinnerNumberModel yModel = new SpinnerNumberModel(25, 4, 100, 1);
 
         sizeX = new JSpinner(xModel);
         sizeY = new JSpinner(yModel);
 
         // create combobox and add options
         generationCBox = new JComboBox();
-        generationCBox.addItem("Automatic");
-        generationCBox.addItem("Manual");
-
+        for (GenerationOption option : GenerationOption.values()) {
+            generationCBox.addItem(option.getName());
+        }
 
         JPanel myPanel = new JPanel();
         myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
@@ -111,7 +112,6 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
         setResizable(false);
 
 
-
         // freeze application
         setModal(true);
 
@@ -138,7 +138,7 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
                 && (e.getSource() == optionPane)
                 && (JOptionPane.VALUE_PROPERTY.equals(prop) ||
                 JOptionPane.INPUT_VALUE_PROPERTY.equals(prop))) {
-                Object value = optionPane.getValue();
+            Object value = optionPane.getValue();
 
 
             if (value == JOptionPane.UNINITIALIZED_VALUE) {
@@ -154,22 +154,18 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
                     JOptionPane.UNINITIALIZED_VALUE);
 
             if (GenerateString.equals(value)) {
-                if (generationCBox.getSelectedItem()=="Automatic") {
-                    int cols = (int) sizeX.getValue();
-                    int rows = (int) sizeY.getValue();
-                    generatedMaze = new Maze(cols, rows, true);
-                    clearAndHide();
-                }
-                else{
-                    int cols = (int) sizeX.getValue();
-                    int rows = (int) sizeY.getValue();
-                    generatedMaze = new Maze(cols,rows, false);
-                    clearAndHide();
-                }
-            } else { //user closed dialog or clicked cancel
+                int cols = (int) sizeX.getValue();
+                int rows = (int) sizeY.getValue();
+                GenerationOption option = GenerationOption.getOption((String) generationCBox.getSelectedItem());
+
+                generatedMaze = new Maze(cols, rows, option);
+                clearAndHide();
+            }
+         else { //user closed dialog or clicked cancel
                 clearAndHide();
             }
         }
+
     }
 
     public Maze getGeneratedMaze() {
@@ -177,7 +173,9 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
     }
 
 
-    /** This method clears the dialog and hides it. */
+    /**
+     * This method clears the dialog and hides it.
+     */
     public void clearAndHide() {
         setVisible(false);
     }

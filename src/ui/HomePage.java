@@ -1,5 +1,6 @@
 package ui;
 
+import maze.GenerationOption;
 import maze.Maze;
 
 import javax.swing.*;
@@ -50,7 +51,7 @@ public class HomePage extends JPanel {
                 if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
                     // placeholder maze gets displayed to user
                     // TODO: Pass in maze linked to the selected row
-                    app.showEditPage(new Maze(50, 50, true));
+                    app.showEditPage(new Maze(10, 10, GenerationOption.DFS));
                 }
             }
         });
