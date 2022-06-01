@@ -96,10 +96,10 @@ public class CellEditor extends JPanel {
             if (isCellSelected) {
                 title.setText("Cell Editor [%s, %s]".formatted(cellX, cellY));
                 // update the display with new walls
-                cellDisplay.setTopWall(!editPage.currentMaze.isWall(cellX, cellY, Direction.N));
-                cellDisplay.setLeftWall(!editPage.currentMaze.isWall(cellX, cellY, Direction.W));
-                cellDisplay.setBottomWall(!editPage.currentMaze.isWall(cellX, cellY, Direction.S));
-                cellDisplay.setRightWall(!editPage.currentMaze.isWall(cellX, cellY, Direction.E));
+                cellDisplay.setTopWall(!editPage.currentMaze.canPass(cellX, cellY, Direction.N));
+                cellDisplay.setLeftWall(!editPage.currentMaze.canPass(cellX, cellY, Direction.W));
+                cellDisplay.setBottomWall(!editPage.currentMaze.canPass(cellX, cellY, Direction.S));
+                cellDisplay.setRightWall(!editPage.currentMaze.canPass(cellX, cellY, Direction.E));
             }
             else {
                 cellDisplay.setAllWalls(false);

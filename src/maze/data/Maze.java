@@ -140,7 +140,7 @@ public class Maze {
      * @param d
      * @return
      */
-    public boolean isWall(int x, int y, Direction d) {
+    public boolean canPass(int x, int y, Direction d) {
         return ((mazeGrid[y][x] & d.bit) != 0);
     }
 

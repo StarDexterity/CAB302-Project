@@ -56,20 +56,10 @@ public class TestMaze {
     // Testing getSolutions
 
     @Test
-    public void DoesNotReturnSolutionWhenUnsolved() {
-        Maze maze = new Maze(4, 4, true);
-        assertThrows(Exception.class, () -> {
-            maze.getSolution();
-        });
-    }
-
-    @Test
     public void ReturnsSolutionWhenSolved() {
         Maze maze = new Maze(4, 4, true);
         MazeSolver.solve(Position.ZERO, maze);
-        assertDoesNotThrow( () -> {
-            LinkedList<Position> solution = maze.getSolution();
-        });
+        assertNotEquals(maze.getSolution().size(), 0);
     }
 
     // Testing withinBounds
@@ -101,28 +91,28 @@ public class TestMaze {
     // Testing isWall
 
     @Test
-    public void AlwaysIsWallTrue() {
+    public void AlwaysCanPassFalse() {
         Maze maze = new Maze(4, 4, true);
-        assertTrue(maze.isWall(0, 0, Direction.W));
+        assertFalse(maze.canPass(0, 0, Direction.W));
     }
 
     @Test
-    public void RandomIsWallTrue() {
+    public void RandomCanPassFalse() {
         Maze maze = createAndPopulate(4, 4, random);
-        assertTrue(maze.isWall(0, 0, Direction.W));
+        assertFalse(maze.canPass(0, 0, Direction.W));
     }
 
     @Test
-    public void RandomIsWallFalse() {
+    public void RandomCanPassTrue() {
         Maze maze = createAndPopulate(4, 4, random);
-        assertFalse(maze.isWall(1, 1, Direction.W));
+        assertTrue(maze.canPass(1, 1, Direction.W));
     }
 
     @Test
     public void ThrowsIsWallOutOfBounds() {
         Maze maze = new Maze(4, 4, true);
         assertThrows(Exception.class, () -> {
-            maze.isWall(999,999, Direction.N);
+            maze.canPass(999,999, Direction.N);
         });
     }
 

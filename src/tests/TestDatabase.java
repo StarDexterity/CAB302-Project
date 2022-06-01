@@ -28,7 +28,6 @@ public class TestDatabase {
                 .title("Him's Cloud Maze")
                 .description("It's stored exclusively in the cloud");
         save(himsMaze);
-
     }
 
     @Test
