@@ -1,6 +1,4 @@
-package maze.helper;
-
-import maze.data.Maze;
+package maze.data;
 
 /**
  * Holds a cartesian coordinate, representing the position in the internal maze grid of a cell.
@@ -16,7 +14,6 @@ public class Position {
     public static Position getBottomRight(Maze maze) {
         return new Position(maze.getCols() - 1, maze.getRows() - 1);
     }
-
 
     public Position(int x, int y) {
         this.x = x;

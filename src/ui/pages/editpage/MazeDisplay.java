@@ -1,8 +1,7 @@
 package ui.pages.editpage;
 
 import maze.data.Maze;
-import maze.helper.MazeSolver;
-import maze.helper.Position;
+import maze.data.Position;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,8 +61,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
     private Color background = Color.WHITE;
 
     // selected cell coordinates
-    private int cellX = 0;
-    private int cellY = 0;
+    private Position selectedCell;
 
     private boolean isCellSelected = false;
 
@@ -97,27 +95,21 @@ public class MazeDisplay extends JPanel implements Scrollable {
                     int x = e.getX();
                     int y = e.getY();
 
-                    // checking for change
-                    int oldX = cellX;
-                    int oldY = cellY;
-
-                    cellX = -1;
-                    cellY = -1;
+                    Position oldSelectedCell = selectedCell;
 
                     if ((x > margin && x < margin + cellSize * nCols) && (y > margin && y < margin + cellSize * nRows)) {
-                        cellX = (int)Math.round((x - margin) / cellSize);
-                        cellY = (int)Math.round((y - margin) / cellSize);
+                        int cellX = (int)Math.round((x - margin) / cellSize);
+                        int cellY = (int)Math.round((y - margin) / cellSize);
+                        selectedCell = new Position(cellX, cellY);
                         isCellSelected = true;
                     }
                     else {
                         isCellSelected = false;
                     }
 
-                    // only repaint if a new cell is selected
-                    if (cellX != oldX || cellY != oldY) {
-                        repaint();
-                        selectedCellChanged();
-                    }
+                    selectedCellChanged();
+                    repaint();
+                    revalidate();
                 }
             }
 
@@ -170,7 +162,6 @@ public class MazeDisplay extends JPanel implements Scrollable {
     }
 
     public void setMaze(Maze maze) {
-        MazeSolver.solve(new Position(0, 0), maze);
         solution = maze.getSolution();
 
         mazeGrid = maze.getMazeGrid();
@@ -178,9 +169,14 @@ public class MazeDisplay extends JPanel implements Scrollable {
         nRows = maze.getRows();
 
         // when maze is altered in any way this component is repainted
-        maze.addListener(() -> {
-            repaint();
+        maze.addListener(new Maze.MazeListener() {
+            @Override
+            public void mazeChanged() {
+                repaint();
+                revalidate();
+            }
         });
+
 
         repaint();
         revalidate();
@@ -273,7 +269,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         // draws selected cell if any
         if (isCellSelected) {
             g.setColor(new Color(0, 128, 128, 128));
-            g.fillRect(cellX * cellSize + margin, cellY * cellSize + margin, cellSize, cellSize);
+            g.fillRect(selectedCell.getX() * cellSize + margin, selectedCell.getY() * cellSize + margin, cellSize, cellSize);
         }
 
         g.dispose();
@@ -294,14 +290,12 @@ public class MazeDisplay extends JPanel implements Scrollable {
     }
 
     public class CellChangeEvent {
-        public int cellX;
-        public int cellY;
-        public boolean cellSelected;
+        public Position selectedCell;
+        public boolean isCellSelected;
 
-        public CellChangeEvent(int cellX, int cellY, boolean cellSelected) {
-            this.cellX = cellX;
-            this.cellY = cellY;
-            this.cellSelected = cellSelected;
+        public CellChangeEvent(Position selectedCell, boolean isCellSelected) {
+            this.isCellSelected = isCellSelected;
+            this.selectedCell = selectedCell;
         }
     }
 
@@ -314,8 +308,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
     private void selectedCellChanged() {
         for (MazeDisplayListener l : listeners) {
             l.selectedCellChanged(new CellChangeEvent(
-                    cellX,
-                    cellY,
+                    selectedCell,
                     isCellSelected
             ));
         }

@@ -7,8 +7,6 @@ import ui.pages.HomePage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class App extends JFrame {
     public static final int WIDTH = 1200;
@@ -17,20 +15,14 @@ public class App extends JFrame {
     public static final int MIN_WIDTH = 1000;
     public static final int MIN_HEIGHT = 500;
 
-    public static final String editPageString = "EditPage";
 
 
     public EditPage editPage;
     public HomePage homePage;
     public JMenuBar menuBar;
 
-    private String editPageID = "EditPage";
-    private String homePageID = "HomePage";
-
-    /**
-     *  Stores the current maze object
-     */
-    public static Maze currentMaze;
+    private final String editPageID = "EditPage";
+    private final String homePageID = "HomePage";
 
     // may change in the future
     public static final boolean RESIZEABLE = false;
@@ -61,7 +53,7 @@ public class App extends JFrame {
         setJMenuBar(menuBar);
 
 
-        editPage = new EditPage(this);
+        editPage = new EditPage();
         homePage = new HomePage(this);
 
         add(homePage, homePageID);
@@ -81,67 +73,27 @@ public class App extends JFrame {
         JMenuItem close = new JMenuItem("Home");
         JMenuItem exit = new JMenuItem("Exit");
 
-        newMaze.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // create and display and new dialog window
-                NewMazeDialog nmd = new NewMazeDialog(new JFrame());
-                nmd.setLocationRelativeTo(getContentPane());
-                nmd.setVisible(true);
+        newMaze.addActionListener(e -> {
+            // create and display and new dialog window
+            NewMazeDialog nmd = new NewMazeDialog(new JFrame());
+            nmd.setLocationRelativeTo(getContentPane());
+            nmd.setVisible(true);
 
-                // if maze is null, the dialog was canceled
-                Maze m = nmd.getGeneratedMaze();
-                if (m != null) {
-                    showEditPage(m);
-                }
+            // if maze is null, the dialog was canceled
+            Maze m = nmd.getGeneratedMaze();
+            if (m != null) {
+                showEditPage(m);
             }
         });
 
-        close.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                firstPage();
-            }
-        });
+        close.addActionListener(e -> showHomePage());
 
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(69);
-            }
-        });
+        exit.addActionListener(e -> System.exit(69));
         mb.add(newMaze);
         mb.add(close);
         //mb.add( Box.createHorizontalStrut( 10 ) );  //this will add a 10 pixel space
         mb.add(exit);
         return mb;
-    }
-
-    /**
-     * @deprecated
-     */
-    public void nextPage() {
-        Container c = getContentPane();
-        CardLayout cl = (CardLayout)c.getLayout();
-        cl.next(c);
-    }
-
-    /**
-     * @deprecated
-     */
-    public void lastPage() {
-        Container c = getContentPane();
-        CardLayout cl = (CardLayout)c.getLayout();
-        cl.last(c);
-    }
-
-    /**
-     * @deprecated
-     */
-    public void firstPage() {
-        Container c = getContentPane();
-        CardLayout cl = (CardLayout)c.getLayout();
-        cl.first(c);
     }
 
     public void showHomePage() {

@@ -3,7 +3,7 @@ package tests;
 import maze.enums.Direction;
 import maze.data.Maze;
 import maze.helper.MazeSolver;
-import maze.helper.Position;
+import maze.data.Position;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

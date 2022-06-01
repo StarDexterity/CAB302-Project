@@ -1,7 +1,9 @@
 package maze.helper;
 
+import maze.data.Position;
 import maze.enums.Direction;
 import maze.data.Maze;
+import maze.enums.SolveStatus;
 
 import java.util.LinkedList;
 
@@ -22,7 +24,11 @@ public final class MazeSolver {
      */
     public static boolean solve(Position pos, Maze maze) {
         maze.getSolution().clear();
-        return recursiveSolve(pos, maze);
+        setAllUnvisited(maze);
+
+        boolean solvable = recursiveSolve(pos, maze);
+        maze.setSolveStatus(solvable ? SolveStatus.SOLVED : SolveStatus.UNSOLVABLE);
+        return solvable;
     }
 
     /**
@@ -39,6 +45,9 @@ public final class MazeSolver {
 
         int x = pos.getX();
         int y = pos.getY();
+
+        // set this cell as visited
+        mazeGrid[y][x] |= 16;
 
         if (x == nCols - 1 && y == nRows - 1) return true;
 
@@ -61,9 +70,6 @@ public final class MazeSolver {
 
                 solution.add(newPos);
 
-                // sets the 5th bit to mark visit
-                mazeGrid[ny][nx] |= 16;
-
                 // if maze is solved, halt and return true
                 if (MazeSolver.recursiveSolve(newPos, maze))
                     return true;
@@ -71,11 +77,22 @@ public final class MazeSolver {
 
                 // backtracks from current cell to the last one
                 solution.removeLast();
-                mazeGrid[ny][nx] &= ~16;
             }
         }
         // All cells have been visited and a solution hasn't been found
         return false;
+    }
+
+    private static void setAllUnvisited(Maze maze) {
+        int nCols = maze.getCols();
+        int nRows = maze.getRows();
+        int[][] mazeGrid = maze.getMazeGrid();
+
+        for (int y = 0; y < nRows; y++) {
+            for (int x = 0; x < nCols; x++) {
+                mazeGrid[y][x] &= ~(1 << 4);
+            }
+        }
     }
 
     /**

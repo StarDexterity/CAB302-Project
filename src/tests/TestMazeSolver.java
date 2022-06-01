@@ -4,7 +4,7 @@ import maze.data.Maze;
 import maze.enums.Direction;
 import maze.enums.SolveStatus;
 import maze.helper.MazeSolver;
-import maze.helper.Position;
+import maze.data.Position;
 import org.junit.jupiter.api.*;
 
 import java.util.LinkedList;

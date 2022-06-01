@@ -1,5 +1,6 @@
 package maze.helper;
 
+import maze.data.Position;
 import maze.enums.Direction;
 import maze.data.Maze;
 import maze.enums.GenerationOption;
@@ -14,14 +15,6 @@ import java.util.*;
  * varying results of fun mazes.
  */
 public final class MazeGenerator {
-    /**
-     * Generates a maze of nCols and nRows using the algorithm specified by the @{@link GenerationOption} enum
-     * @param nCols
-     * @param nRows
-     * @param option
-     * @return
-     */
-
     // Disable constructor
     private MazeGenerator(){}
 
@@ -35,28 +28,19 @@ public final class MazeGenerator {
         int y = r.nextInt(nRows);
 
         switch (option) {
-            case DFS -> {
-                generateMazeDFS(x, y, nCols, nRows, mazeGrid);
-            }
-            case PRIM -> {
-                generateMazePrim(x, y, nCols, nRows, mazeGrid);
-            }
-            case ALDOUS -> {
-                generateMazeAldousBroder(x, y, nCols, nRows, mazeGrid);
-            }
-            case EMPTY -> {
-                generateEmptyMaze(nCols, nRows, mazeGrid);
-            }
+            case DFS -> generateMazeDFS(x, y, nCols, nRows, mazeGrid);
+            case PRIM -> generateMazePrim(x, y, nCols, nRows, mazeGrid);
+            case ALDOUS -> generateMazeAldousBroder(x, y, nCols, nRows, mazeGrid);
+            case EMPTY -> generateEmptyMaze(nCols, nRows, mazeGrid);
         }
         return mazeGrid;
     }
 
     /**
      * Generates an empty maze
-     * @param nCols
-     * @param nRows
-     * @param grid
-     * @return
+     * @param nCols Number of columns
+     * @param nRows Number of rows
+     * @param grid The internal maze grid
      */
     private static void generateEmptyMaze(int nCols, int nRows, int[][] grid) {
         // gets an array of the directions, then picks one at random
@@ -72,7 +56,7 @@ public final class MazeGenerator {
                     int nextX = x + dir.dx;
                     int nextY = y + dir.dy;
 
-                    // If the neighbor is within the bounds of the maze)
+                    // If the neighbor is within the bounds of the maze
                     if (Maze.withinBounds(nextX, nextY, nCols, nRows)) {
                         // Set this vertex bit and the neighbors to the opposite direction of this bit
                         // This operation connects these two vertices together
@@ -88,11 +72,11 @@ public final class MazeGenerator {
 
     /**
      * Generates a maze, using a randomised recursive backtracking DFS based algorithm
-     * @param x
-     * @param y
-     * @param nCols
-     * @param nRows
-     * @param grid
+     * @param x x-position
+     * @param y y-position
+     * @param nCols Number of columns
+     * @param nRows Number of rows
+     * @param grid The internal maze grid
      */
     private static void generateMazeDFS(int x, int y, int nCols, int nRows, int[][] grid) {
         // gets an array of the directions, then picks one at random
@@ -117,16 +101,17 @@ public final class MazeGenerator {
         }
     }
 
+    // TODO: Delete poor generation function
     /**
      * Generates a maze using a randomised BFS based algorithm (does not produce a good result)
-     * @param startX
-     * @param startY
-     * @param nCols
-     * @param nRows
-     * @param grid
+     * @param startX Starting x position
+     * @param startY Starting y position
+     * @param nCols Number of columns
+     * @param nRows Number of rows
+     * @param grid The internal maze grid
      */
     private static void generateMazeBFS(int startX, int startY, int nCols, int nRows, int[][] grid) {
-        LinkedList<Position> queue = new LinkedList<Position>();
+        LinkedList<Position> queue = new LinkedList<>();
         queue.addLast(new Position(startX, startY));
 
         while (!queue.isEmpty()) {
@@ -170,9 +155,9 @@ public final class MazeGenerator {
      * 3. If the current cell does not have an edge, and is adjacent from one or more visited cells
      * pick a neighboring cell at random, and connect them
      * 4. Repeat steps 1 to 3 until the frontier list is empty
-     * @param nCols
-     * @param nRows
-     * @param grid
+     * @param nCols Number of columns
+     * @param nRows Number of rows
+     * @param grid The internal maze grid
      */
     private static void generateMazePrim(int startX, int startY, int nCols, int nRows, int[][] grid) {
         // init random
@@ -235,9 +220,9 @@ public final class MazeGenerator {
      * 2. Choose a neighbor of the cell and travel to it.
      * If the neighbor has not yet been visited, connect the cells and add the new cell to the visited list
      * 3. Repeat step 2 until all cell have been visited.
-     * @param nCols
-     * @param nRows
-     * @param grid
+     * @param nCols Number columns
+     * @param nRows Number of rows
+     * @param grid The internal maze grid
      */
     private static void generateMazeAldousBroder(int startX, int startY, int nCols, int nRows, int[][] grid) {
         LinkedList<Position> visited = new LinkedList<>();
