@@ -84,9 +84,9 @@ public final class MazeSolver {
     }
 
     private static void setAllUnvisited(Maze maze) {
+        int[][] mazeGrid = maze.getMazeGrid();
         int nCols = maze.getCols();
         int nRows = maze.getRows();
-        int[][] mazeGrid = maze.getMazeGrid();
 
         for (int y = 0; y < nRows; y++) {
             for (int x = 0; x < nCols; x++) {
@@ -101,29 +101,26 @@ public final class MazeSolver {
      */
     public static double TotalDeadEnds(Maze maze) {
 
-        int array[][] = maze.getMazeGrid();
+        int mazeGrid[][] = maze.getMazeGrid();
         double count = 0;
 
-        for (int j = 0; j<array[0].length; j++) {			//loop through array[this][]
-            for (int i = 0; i < array.length; i++) {	//loop through array[][this]
-                array[i][j] = array[i][j] & 0b1111;
-                if (array[j][i]== 8){
-                    count++;
-                }
-                if (array[j][i]== 4){
-                    count++;
-                }
-                if (array[j][i]== 2){
-                    count++;
-                }
-                if (array[j][i]== 1){
-                    count++;
-                }
+        for (int y = 0; y < maze.getRows(); y++) {			//loop through array[this][]
+            for (int x = 0; x < maze.getCols(); x++) {	//loop through array[][this]
+                int b = mazeGrid[y][x] & 0b1111;
+                if (countSetBits(b) == 3) count++;
+
             }
         }
 
-        double deadEnd =((((count)/(maze.getnRows() * maze.getnCols()))*100));
+        double deadEnd =((((count) / (maze.getRows() * maze.getCols())) * 100));
         return deadEnd;
+    }
+
+    private static int countSetBits(int n) {
+
+        if (n == 0) return 0;
+
+        return countSetBits(n >> 1) + (n & 0x01);
     }
 
     /**
@@ -132,7 +129,7 @@ public final class MazeSolver {
     public static double TotalPassThrough(Maze maze) {
         double count = maze.getSolution().size();
 
-        double passThrough = ((count+1)/(maze.getRows() * maze.getCols())) * 100;
+        double passThrough = ((count) / (maze.getRows() * maze.getCols())) * 100;
         return passThrough;
     }
 }
