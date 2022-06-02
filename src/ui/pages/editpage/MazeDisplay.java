@@ -96,18 +96,22 @@ public class MazeDisplay extends JPanel implements Scrollable {
                     int y = e.getY();
 
                     Position oldSelectedCell = selectedCell;
+                    selectedCell = null;
+                    isCellSelected = false;
 
                     if ((x > margin && x < margin + cellSize * nCols) && (y > margin && y < margin + cellSize * nRows)) {
                         int cellX = (int)Math.round((x - margin) / cellSize);
                         int cellY = (int)Math.round((y - margin) / cellSize);
-                        selectedCell = new Position(cellX, cellY);
-                        isCellSelected = true;
-                    }
-                    else {
-                        isCellSelected = false;
+                        Position newSelectedCell = new Position(cellX, cellY);
+
+                        if (!newSelectedCell.equals(oldSelectedCell)) {
+                            selectedCell = newSelectedCell;
+                            isCellSelected = true;
+                        }
                     }
 
                     selectedCellChanged();
+
                     repaint();
                     revalidate();
                 }
@@ -180,6 +184,12 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
         repaint();
         revalidate();
+    }
+
+    public void deselect() {
+        selectedCell = null;
+        isCellSelected = false;
+        selectedCellChanged();
     }
 
     @Override
@@ -312,6 +322,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
                     isCellSelected
             ));
         }
+        repaint();
+        revalidate();
     }
 
 
