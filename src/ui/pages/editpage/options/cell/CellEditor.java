@@ -25,11 +25,11 @@ public class CellEditor extends JPanel {
         cellDisplay = new CellDisplay();
 
 
-        setAll = new JButton("Set all");
-        setAll.addActionListener(e -> cellDisplay.setAll(true));
+        setAll = new JButton("Fill all");
+        setAll.addActionListener(e -> cellDisplay.setAll(false));
 
         clearAll = new JButton("Clear all");
-        clearAll.addActionListener(e -> cellDisplay.setAll(false));
+        clearAll.addActionListener(e -> cellDisplay.setAll(true));
 
         // if the mazeDisplays selected cell is altered, this listener is called
         editPage.mazeDisplay.addListener(e -> {

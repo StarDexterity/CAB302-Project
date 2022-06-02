@@ -186,18 +186,19 @@ public class CellDisplay extends JComponent {
     }
 
    public void setPath(Direction dir, boolean isPath) {
+        if (selectedCell == null) return;
         maze.setPath(selectedCell, dir, isPath);
    }
 
    public void togglePath(Direction dir) {
+        if (selectedCell == null) return;
         maze.setPath(selectedCell, dir, !maze.isPath(selectedCell, dir));
    }
 
 
     public void setAll(boolean isPath) {
-        for (Direction dir : Direction.values()) {
-            setPath(dir, isPath);
-        }
+        if (selectedCell == null) return;
+        maze.setAll(selectedCell, isPath);
     }
 
 
@@ -236,6 +237,13 @@ public class CellDisplay extends JComponent {
 
     public void setMaze(Maze maze) {
         this.maze = maze;
+        maze.addListener(new Maze.MazeListener() {
+            @Override
+            public void mazeChanged() {
+                repaint();
+                revalidate();
+            }
+        });
     }
 
     public void setSelectedCell(Position selectedCell) {
