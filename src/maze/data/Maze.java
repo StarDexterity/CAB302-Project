@@ -83,8 +83,6 @@ public class Maze {
     public int[][] getMazeGrid() {
         return mazeGrid;
     }
-    public int getnCols() {return nCols;}
-    public int getnRows() {return nRows;}
 
     //TODO: Throw exception if data is not correct dimensions
     public void setMazeGrid (int[][] mazeGrid) throws IndexOutOfBoundsException {
@@ -184,6 +182,33 @@ public class Maze {
         int x = pos.getX();
         int y = pos.getY();
         setPath(x, y, dir, isPath);
+    }
+
+    public void setAll(int x, int y, boolean isPath) {
+        for (Direction dir : Direction.values()) {
+            // next x and y coordinates
+            int nX = x + dir.dx;
+            int nY = y + dir.dy;
+
+            // If the neighbor is within the bounds of the maze
+            if (withinBounds(nX, nY)) {
+                // depending on the value, set or clear this bit and the neighbours opposite bit
+                if (isPath) {
+                    mazeGrid[y][x] |= dir.bit;
+                    mazeGrid[nY][nX] |= dir.opposite.bit;
+                } else {
+                    mazeGrid[y][x] &= ~(dir.bit);
+                    mazeGrid[nY][nX] &= ~(dir.opposite.bit);
+                }
+            }
+        }
+        mazeChanged();
+    }
+
+    public void setAll(Position pos, boolean isPath) {
+        int x = pos.getX();
+        int y = pos.getY();
+        setAll(x, y, isPath);
     }
 
     // Based on the Build Pattern. Have to use this method to edit maze data
