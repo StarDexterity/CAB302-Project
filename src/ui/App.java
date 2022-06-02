@@ -48,16 +48,18 @@ public class App extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new CardLayout());
 
-        // create and set menubar
-        menuBar = createMenu();
-        setJMenuBar(menuBar);
 
 
         editPage = new EditPage();
         homePage = new HomePage(this);
 
+        // create and set menubar
+        menuBar = createMenu();
+        setJMenuBar(menuBar);
+
         add(homePage, homePageID);
         add(editPage, editPageID);
+
 
 
         setVisible(true);
@@ -69,9 +71,26 @@ public class App extends JFrame {
 
     private JMenuBar createMenu() {
         JMenuBar mb = new JMenuBar();
+        JMenu file = new JMenu("File");
+        JMenu edit = new JMenu(("Edit"));
+
         JMenuItem newMaze = new JMenuItem("New Maze");
+        JMenuItem save = new JMenuItem("Save");
+        JMenuItem export = new JMenuItem("Export");
         JMenuItem close = new JMenuItem("Home");
         JMenuItem exit = new JMenuItem("Exit");
+
+        JMenuItem deselect = new JMenuItem("Deselect");
+        deselect.setEnabled(false);
+        deselect.addActionListener(e -> {
+            editPage.mazeDisplay.deselect();
+        });
+
+        editPage.mazeDisplay.addListener(cce -> {
+            deselect.setEnabled(cce.isCellSelected);
+        });
+
+        JMenuItem insert = new JMenuItem("Insert Image");
 
         newMaze.addActionListener(e -> {
             // create and display and new dialog window
@@ -89,10 +108,19 @@ public class App extends JFrame {
         close.addActionListener(e -> showHomePage());
 
         exit.addActionListener(e -> System.exit(69));
-        mb.add(newMaze);
-        mb.add(close);
-        //mb.add( Box.createHorizontalStrut( 10 ) );  //this will add a 10 pixel space
-        mb.add(exit);
+
+        file.add(newMaze);
+        file.add(save);
+        file.add(export);
+        file.add(close);
+        file.addSeparator();
+        file.add(exit);
+
+        edit.add(deselect);
+
+        mb.add(file);
+        mb.add(edit);
+
         return mb;
     }
 
