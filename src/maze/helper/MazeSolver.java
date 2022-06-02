@@ -99,10 +99,30 @@ public final class MazeSolver {
      * For a given maze, finds the total cells with dead ends
      * @return
      */
-    public static String TotalDeadEnds(Maze maze) {
-        double count = maze.getSolution().size();
+    public static double TotalDeadEnds(Maze maze) {
 
-        String deadEnd = Double.toString(( 100 - ((count + 1) / (maze.getRows() * maze.getCols())) * 100));
+        int array[][] = maze.getMazeGrid();
+        double count = 0;
+
+        for (int j = 0; j<array[0].length; j++) {			//loop through array[this][]
+            for (int i = 0; i < array.length; i++) {	//loop through array[][this]
+                array[i][j] = array[i][j] & 0b1111;
+                if (array[j][i]== 8){
+                    count++;
+                }
+                if (array[j][i]== 4){
+                    count++;
+                }
+                if (array[j][i]== 2){
+                    count++;
+                }
+                if (array[j][i]== 1){
+                    count++;
+                }
+            }
+        }
+
+        double deadEnd =((((count)/(maze.getnRows() * maze.getnCols()))*100));
         return deadEnd;
     }
 

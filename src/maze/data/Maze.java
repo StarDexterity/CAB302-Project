@@ -83,6 +83,8 @@ public class Maze {
     public int[][] getMazeGrid() {
         return mazeGrid;
     }
+    public int getnCols() {return nCols;}
+    public int getnRows() {return nRows;}
 
     //TODO: Throw exception if data is not correct dimensions
     public void setMazeGrid (int[][] mazeGrid) throws IndexOutOfBoundsException {

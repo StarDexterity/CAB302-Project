@@ -39,7 +39,7 @@ public class SolveOptions extends JPanel {
 
             MazeSolver.solve(Position.ZERO, maze);
             explorationStatus.setText(Double.toString(MazeSolver.TotalPassThrough(editPage.currentMaze)));
-            deadEndStatus.setText(MazeSolver.TotalDeadEnds(editPage.currentMaze));
+            deadEndStatus.setText(Double.toString(MazeSolver.TotalDeadEnds(editPage.currentMaze)));
         });
 
         Border innerBorder = BorderFactory.createTitledBorder("Solve status");

@@ -93,7 +93,7 @@ public class HomePage extends JPanel {
         editItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                app.nextPage();
+                //app.nextPage();
             }
         });
 
