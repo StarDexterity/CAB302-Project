@@ -5,16 +5,25 @@ import maze.enums.SolveStatus;
 import ui.helper.GridBagHelper;
 import ui.helper.UIHelper;
 import ui.pages.EditPage;
+import ui.pages.editpage.options.cell.CellDisplay;
+import ui.pages.editpage.options.image.InsertImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
 
 public class DisplayOptions extends JPanel {
     private final JCheckBox showSolution;
     private final JCheckBox showGrid;
 
     public JButton colorButton;
+    public JButton addImage;
+
+    private File img;
 
     public DisplayOptions(EditPage editPage) {
 
@@ -32,6 +41,21 @@ public class DisplayOptions extends JPanel {
             Color changeColor = JColorChooser.showDialog(null, "Change Color",Color.RED);
             if (changeColor != null){
                 editPage.mazeDisplay.changeSolutionColor(changeColor);
+            }
+        });
+
+        addImage = new JButton("Add Image");
+        addImage.addActionListener(e -> {
+            FileFilter imageFilter = new FileNameExtensionFilter("Image Files", ImageIO.getReaderFileSuffixes());
+            if (CellDisplay.selectedCell != null){
+                final JFileChooser fc = new JFileChooser();
+                fc.setFileFilter(imageFilter);
+                int returnVal = fc.showOpenDialog(null);
+                if (returnVal == JFileChooser.APPROVE_OPTION){
+                    img = fc.getSelectedFile();
+                }
+                System.out.println(returnVal);
+                System.out.println(img);
             }
         });
 
@@ -57,6 +81,7 @@ public class DisplayOptions extends JPanel {
         GridBagHelper.addToPanel(this, showSolution, gbc, 0, 0, 1, 1);
         GridBagHelper.addToPanel(this, showGrid, gbc, 0, 1, 1, 1);
         GridBagHelper.addToPanel(this, colorButton, gbc, 0,2,1,1);
+        GridBagHelper.addToPanel(this, addImage, gbc,1,0,1,1 );
     }
 
     public void setMaze(Maze maze) {
