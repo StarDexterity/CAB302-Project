@@ -14,6 +14,7 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class DisplayOptions extends JPanel {
@@ -23,7 +24,7 @@ public class DisplayOptions extends JPanel {
     public JButton colorButton;
     public JButton addImage;
 
-    private File img;
+    public static File img;
 
     public DisplayOptions(EditPage editPage) {
 
@@ -53,6 +54,7 @@ public class DisplayOptions extends JPanel {
                 int returnVal = fc.showOpenDialog(null);
                 if (returnVal == JFileChooser.APPROVE_OPTION){
                     img = fc.getSelectedFile();
+                    InsertImage i = new InsertImage(img);
                 }
                 System.out.println(returnVal);
                 System.out.println(img);

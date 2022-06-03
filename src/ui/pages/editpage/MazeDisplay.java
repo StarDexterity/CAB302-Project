@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Path2D;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -162,6 +163,9 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     public void setShowGrid(boolean showGrid) {
         this.showGrid = showGrid;
+        repaint();
+    }
+    public void addImage (File image){
         repaint();
     }
 
