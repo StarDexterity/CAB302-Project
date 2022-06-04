@@ -2,6 +2,7 @@ package ui.pages.editpage;
 
 import maze.data.Maze;
 import maze.data.Position;
+import ui.pages.editpage.options.cell.CellDisplay;
 import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
@@ -235,7 +236,9 @@ public class MazeDisplay extends JPanel implements Scrollable {
         }
 
         if (addImage){
-            g.drawImage(InsertImage.newImg, 0, 0, null);
+            final int xCoord = InsertImage.imageCell.getX();
+            final int yCoord = InsertImage.imageCell.getY();
+            g.drawImage(InsertImage.newImg, (xCoord*cellSize)+margin, (yCoord*cellSize)+margin, null);
             System.out.println(InsertImage.newImg);
         }
 

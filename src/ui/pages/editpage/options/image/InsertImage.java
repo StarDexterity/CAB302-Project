@@ -17,13 +17,13 @@ import java.nio.Buffer;
 
 public class InsertImage extends JPanel {
 
-    public Position selectedCell;
+    public static Position imageCell;
     public static BufferedImage newImg;
 
     public static File img;
 
-    public void setSelectedCell(Position cell) {
-        this.selectedCell = cell;
+    public void setImageCell(Position cell) {
+        this.imageCell = cell;
     }
 
     public InsertImage() {
@@ -45,13 +45,25 @@ public class InsertImage extends JPanel {
             throw new RuntimeException(e);
         }
 
+        imageCell = CellDisplay.selectedCell;
 
-        newImg = resize(newImg,10,10);
+        int x1 = CellDisplay.selectedCell.getX();
+        int y1 = CellDisplay.selectedCell.getY();
+
+        //HARDCODED FOR TESTING
+        int x2 = x1+2;
+        int y2 = y1+2;
+
+        int xFinal = (x2-x1)*25;
+        int yFinal = (y2-y1)*25;
+
+
+        newImg = resize(newImg,xFinal,yFinal);
         return newImg;
     }
 
     public BufferedImage resize(BufferedImage image, int newW, int newH){
-        BufferedImage newImage = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_RGB); //HARDCODED SIZES FOR NOW
+        BufferedImage newImage = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_RGB);
 
         Graphics g = newImage.createGraphics();
         g.drawImage(image, 0, 0, newW, newH, null);
