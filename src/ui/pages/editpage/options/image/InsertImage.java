@@ -18,6 +18,7 @@ import java.nio.Buffer;
 public class InsertImage extends JPanel {
 
     public static Position imageCell;
+    public static Position bottomRight;
     public static BufferedImage newImg;
 
     public static File img;
@@ -45,17 +46,15 @@ public class InsertImage extends JPanel {
             throw new RuntimeException(e);
         }
 
-        imageCell = CellDisplay.selectedCell;
-
-        int x1 = CellDisplay.selectedCell.getX();
-        int y1 = CellDisplay.selectedCell.getY();
+        int x1 = imageCell.getX();
+        int y1 = imageCell.getY();
 
         //HARDCODED FOR TESTING
-        int x2 = x1+2;
-        int y2 = y1+2;
+        int x2 = bottomRight.getX();
+        int y2 = bottomRight.getY();
 
-        int xFinal = (x2-x1)*25;
-        int yFinal = (y2-y1)*25;
+        int xFinal = (x2-x1)*25+25;
+        int yFinal = (y2-y1)*25+25;
 
 
         newImg = resize(newImg,xFinal,yFinal);

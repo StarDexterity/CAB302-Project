@@ -15,6 +15,8 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -49,8 +51,19 @@ public class DisplayOptions extends JPanel {
         addImage = new JButton("Add Image");
         addImage.addActionListener(e -> {
             if (CellDisplay.selectedCell != null){
-                insertImage.getImage();
-                editPage.mazeDisplay.addImage(true);
+                InsertImage.imageCell=CellDisplay.selectedCell;
+                editPage.mazeDisplay.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (CellDisplay.selectedCell != null) {
+                            InsertImage.bottomRight = CellDisplay.selectedCell;
+                            insertImage.getImage();
+                            editPage.mazeDisplay.addImage(true);
+                            removeMouseListener(this);
+                        }
+                    }
+                });
+
             }
         });
 
