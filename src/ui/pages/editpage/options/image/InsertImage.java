@@ -1,6 +1,9 @@
 package ui.pages.editpage.options.image;
 
+import maze.data.Maze;
+import maze.data.MazeData;
 import maze.data.Position;
+import ui.pages.EditPage;
 import ui.pages.editpage.options.cell.CellDisplay;
 
 import javax.imageio.ImageIO;
@@ -23,6 +26,8 @@ public class InsertImage extends JPanel {
 
     public static File img;
 
+    public static Maze currentMaze;
+
     public void setImageCell(Position cell) {
         this.imageCell = cell;
     }
@@ -38,6 +43,8 @@ public class InsertImage extends JPanel {
         int returnVal = fc.showOpenDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             img = fc.getSelectedFile();
+        } else if (returnVal == JFileChooser.CANCEL_OPTION) {
+
         }
 
         try {
@@ -58,6 +65,7 @@ public class InsertImage extends JPanel {
 
 
         newImg = resize(newImg,xFinal,yFinal);
+        removeCells(x1, x2, y1, y2);
         return newImg;
     }
 
@@ -68,6 +76,18 @@ public class InsertImage extends JPanel {
         g.drawImage(image, 0, 0, newW, newH, null);
         g.dispose();
         return newImage;
+    }
+
+    //function to border out affected cells
+    public Maze removeCells(int x1, int x2, int y1, int y2){
+        int[][] x = currentMaze.getMazeGrid();
+        for (int i = x1; i==x2; i++){
+            for (int j = y1; j==y2; j++){
+                x[i][j] = 0;
+            }
+        }
+        currentMaze.setMazeGrid(x);
+        return currentMaze;
     }
 
 }

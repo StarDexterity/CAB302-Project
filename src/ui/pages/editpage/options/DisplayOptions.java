@@ -51,6 +51,7 @@ public class DisplayOptions extends JPanel {
         addImage = new JButton("Add Image");
         addImage.addActionListener(e -> {
             if (CellDisplay.selectedCell != null){
+                InsertImage.currentMaze = editPage.currentMaze;
                 InsertImage.imageCell=CellDisplay.selectedCell;
                 editPage.mazeDisplay.addMouseListener(new MouseAdapter() {
                     @Override
@@ -58,8 +59,9 @@ public class DisplayOptions extends JPanel {
                         if (CellDisplay.selectedCell != null) {
                             InsertImage.bottomRight = CellDisplay.selectedCell;
                             insertImage.getImage();
+                            editPage.currentMaze = InsertImage.currentMaze;
                             editPage.mazeDisplay.addImage(true);
-                            removeMouseListener(this);
+                            editPage.mazeDisplay.removeMouseListener(this);
                         }
                     }
                 });
