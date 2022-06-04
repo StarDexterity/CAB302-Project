@@ -17,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.Buffer;
+import java.util.Arrays;
 
 public class InsertImage extends JPanel {
 
@@ -44,7 +45,7 @@ public class InsertImage extends JPanel {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             img = fc.getSelectedFile();
         } else if (returnVal == JFileChooser.CANCEL_OPTION) {
-
+            return null;
         }
 
         try {
@@ -81,12 +82,15 @@ public class InsertImage extends JPanel {
     //function to border out affected cells
     public Maze removeCells(int x1, int x2, int y1, int y2){
         int[][] x = currentMaze.getMazeGrid();
-        for (int i = x1; i==x2; i++){
-            for (int j = y1; j==y2; j++){
-                x[i][j] = 0;
+        for (int i = x1; i<=x2; i++){
+            for (int j = y1; j<=y2; j++){
+                x[j][i] = 0;
+
             }
         }
+        //System.out.println("new int[][]" + Arrays.deepToString(x).replace("[","{").replace("]", "}"));
         currentMaze.setMazeGrid(x);
+        System.out.println(x);
         return currentMaze;
     }
 
