@@ -53,6 +53,7 @@ public class DisplayOptions extends JPanel {
             if (CellDisplay.selectedCell != null){
                 InsertImage.currentMaze = editPage.currentMaze;
                 InsertImage.imageCell=CellDisplay.selectedCell;
+                InsertImage.newImg=null;
                 editPage.mazeDisplay.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {

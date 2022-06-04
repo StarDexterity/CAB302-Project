@@ -3,6 +3,7 @@ package ui.pages.editpage.options.image;
 import maze.data.Maze;
 import maze.data.MazeData;
 import maze.data.Position;
+import maze.enums.Direction;
 import ui.pages.EditPage;
 import ui.pages.editpage.options.cell.CellDisplay;
 
@@ -82,9 +83,23 @@ public class InsertImage extends JPanel {
     //function to border out affected cells
     public Maze removeCells(int x1, int x2, int y1, int y2){
         int[][] x = currentMaze.getMazeGrid();
+        System.out.println(x1);
+        System.out.println(x2);
+        System.out.println(y1);
+        System.out.println(y2);
         for (int i = x1; i<=x2; i++){
             for (int j = y1; j<=y2; j++){
-                x[j][i] = 0;
+                x[j][i] = 15;
+                if (i==x1){
+                    x[j][i]=x[j][i]&0b0111;
+                }else if(i==x2){
+                    x[j][i]=x[j][i]&0b1011;
+                }
+                if (j==y1){
+                    x[j][i]=x[j][i]&0b1110;
+                }else if (j==y2){
+                    x[j][i]=x[j][i]&0b1101;
+                }
 
             }
         }
