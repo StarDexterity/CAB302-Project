@@ -5,6 +5,7 @@ import maze.enums.SolveStatus;
 import ui.helper.GridBagHelper;
 import ui.helper.UIHelper;
 import ui.pages.EditPage;
+import ui.pages.editpage.MazeDisplay;
 import ui.pages.editpage.options.cell.CellDisplay;
 import ui.pages.editpage.options.image.InsertImage;
 
@@ -24,7 +25,7 @@ public class DisplayOptions extends JPanel {
     public JButton colorButton;
     public JButton addImage;
 
-    public static File img;
+    InsertImage insertImage = new InsertImage();
 
     public DisplayOptions(EditPage editPage) {
 
@@ -47,17 +48,9 @@ public class DisplayOptions extends JPanel {
 
         addImage = new JButton("Add Image");
         addImage.addActionListener(e -> {
-            FileFilter imageFilter = new FileNameExtensionFilter("Image Files", ImageIO.getReaderFileSuffixes());
             if (CellDisplay.selectedCell != null){
-                final JFileChooser fc = new JFileChooser();
-                fc.setFileFilter(imageFilter);
-                int returnVal = fc.showOpenDialog(null);
-                if (returnVal == JFileChooser.APPROVE_OPTION){
-                    img = fc.getSelectedFile();
-                    InsertImage i = new InsertImage(img);
-                }
-                System.out.println(returnVal);
-                System.out.println(img);
+                insertImage.getImage();
+                editPage.mazeDisplay.addImage(true);
             }
         });
 

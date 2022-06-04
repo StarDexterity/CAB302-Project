@@ -2,11 +2,13 @@ package ui.pages.editpage;
 
 import maze.data.Maze;
 import maze.data.Position;
+import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Path2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -53,6 +55,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     private boolean showSolution;
     private boolean showGrid;
+
+    public boolean addImage;
 
     // color settings
     // TODO: Hook these up below
@@ -165,7 +169,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
         this.showGrid = showGrid;
         repaint();
     }
-    public void addImage (File image){
+    public void addImage (boolean addImage){
+        this.addImage = addImage;
         repaint();
     }
 
@@ -227,6 +232,11 @@ public class MazeDisplay extends JPanel implements Scrollable {
                 int rowWid = cellSize;
                 g.drawLine((i * rowWid) + margin, 0 + margin, (i * rowWid) + margin, (cellSize * nRows) + margin);
             }
+        }
+
+        if (addImage){
+            g.drawImage(InsertImage.newImg, 0, 0, null);
+            System.out.println(InsertImage.newImg);
         }
 
         g.setStroke(new BasicStroke(2));
