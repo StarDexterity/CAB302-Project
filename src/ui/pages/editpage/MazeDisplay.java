@@ -57,7 +57,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
     private boolean showSolution;
     private boolean showGrid;
 
-    public boolean addImage;
+    InsertImage insertImage = new InsertImage();
+    public static boolean addImage;
 
     // color settings
     // TODO: Hook these up below
@@ -236,10 +237,13 @@ public class MazeDisplay extends JPanel implements Scrollable {
         }
 
         if (addImage){
-            final int xCoord = InsertImage.imageCell.getX();
-            final int yCoord = InsertImage.imageCell.getY();
-            g.drawImage(InsertImage.newImg, (xCoord*cellSize)+margin, (yCoord*cellSize)+margin, null);
-            System.out.println(InsertImage.newImg);
+            for (int i=0; i<insertImage.images.size(); i++){
+                Position p = insertImage.imageTopLeft.get(i);
+                int x = p.getX();
+                int y = p.getY();
+                g.drawImage(insertImage.images.get(i), (x*cellSize)+margin, (y*cellSize)+margin, null);
+            }
+            System.out.println(insertImage.newImg);
         }
 
         g.setStroke(new BasicStroke(2));

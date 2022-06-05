@@ -1,24 +1,17 @@
 package ui.pages.editpage.options.image;
 
 import maze.data.Maze;
-import maze.data.MazeData;
 import maze.data.Position;
-import maze.enums.Direction;
-import ui.pages.EditPage;
-import ui.pages.editpage.options.cell.CellDisplay;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
-import java.util.Arrays;
+import java.util.ArrayList;
+
 
 public class InsertImage extends JPanel {
 
@@ -26,16 +19,26 @@ public class InsertImage extends JPanel {
     public static Position bottomRight;
     public static BufferedImage newImg;
 
+    public static ArrayList<BufferedImage> images;
+
+    public static ArrayList<Position> imageTopLeft;
+
+    public static ArrayList<Position> imageBottomRight;
+
     public static File img;
 
     public static Maze currentMaze;
+
+    public static int imageCount = -1;
 
     public void setImageCell(Position cell) {
         this.imageCell = cell;
     }
 
     public InsertImage() {
-
+        images = new ArrayList<>();
+        imageTopLeft = new ArrayList<>();
+        imageBottomRight = new ArrayList<>();
     }
 
     FileFilter imageFilter = new FileNameExtensionFilter("Image Files", ImageIO.getReaderFileSuffixes());
@@ -68,6 +71,14 @@ public class InsertImage extends JPanel {
 
         newImg = resize(newImg,xFinal,yFinal);
         removeCells(x1, x2, y1, y2);
+
+        //Will be used to add multiple images, and to help with removing
+        images.add(newImg);
+        imageTopLeft.add(imageCell);
+        imageBottomRight.add(bottomRight);
+        imageCount++;
+
+        System.out.println(images.size());
         return newImg;
     }
 
@@ -107,6 +118,12 @@ public class InsertImage extends JPanel {
         currentMaze.setMazeGrid(x);
         System.out.println(x);
         return currentMaze;
+    }
+
+    public static void newMazeClear(){
+        images.clear();
+        imageTopLeft.clear();
+        imageBottomRight.clear();
     }
 
 }

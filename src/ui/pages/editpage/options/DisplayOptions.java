@@ -5,20 +5,13 @@ import maze.enums.SolveStatus;
 import ui.helper.GridBagHelper;
 import ui.helper.UIHelper;
 import ui.pages.EditPage;
-import ui.pages.editpage.MazeDisplay;
 import ui.pages.editpage.options.cell.CellDisplay;
 import ui.pages.editpage.options.image.InsertImage;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
 
 public class DisplayOptions extends JPanel {
     private final JCheckBox showSolution;
@@ -26,6 +19,8 @@ public class DisplayOptions extends JPanel {
 
     public JButton colorButton;
     public JButton addImage;
+
+    public JButton removeImage;
 
     InsertImage insertImage = new InsertImage();
 
@@ -50,23 +45,32 @@ public class DisplayOptions extends JPanel {
 
         addImage = new JButton("Add Image");
         addImage.addActionListener(e -> {
+
             if (CellDisplay.selectedCell != null){
-                InsertImage.currentMaze = editPage.currentMaze;
-                InsertImage.imageCell=CellDisplay.selectedCell;
-                InsertImage.newImg=null;
+                insertImage.currentMaze = editPage.currentMaze;
+                insertImage.imageCell=CellDisplay.selectedCell;
+                insertImage.newImg=null;
                 editPage.mazeDisplay.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (CellDisplay.selectedCell != null) {
-                            InsertImage.bottomRight = CellDisplay.selectedCell;
+                            insertImage.bottomRight = CellDisplay.selectedCell;
                             insertImage.getImage();
-                            editPage.currentMaze = InsertImage.currentMaze;
+                            editPage.currentMaze = insertImage.currentMaze;
                             editPage.mazeDisplay.addImage(true);
                             editPage.mazeDisplay.removeMouseListener(this);
                         }
                     }
                 });
 
+            }
+        });
+
+        removeImage = new JButton("Remove Image");
+        removeImage.addActionListener(e -> {
+            if (insertImage.imageTopLeft.contains(CellDisplay.selectedCell)){
+                int x = insertImage.images.indexOf(CellDisplay.selectedCell);
+                //SOME OTHER STUFF
             }
         });
 
@@ -93,6 +97,7 @@ public class DisplayOptions extends JPanel {
         GridBagHelper.addToPanel(this, showGrid, gbc, 0, 1, 1, 1);
         GridBagHelper.addToPanel(this, colorButton, gbc, 0,2,1,1);
         GridBagHelper.addToPanel(this, addImage, gbc,1,0,1,1 );
+        GridBagHelper.addToPanel(this, removeImage,gbc,1,1,1,1);
     }
 
     public void setMaze(Maze maze) {
