@@ -69,8 +69,11 @@ public class DisplayOptions extends JPanel {
         removeImage = new JButton("Remove Image");
         removeImage.addActionListener(e -> {
             if (insertImage.imageTopLeft.contains(CellDisplay.selectedCell)){
-                int x = insertImage.images.indexOf(CellDisplay.selectedCell);
-                //SOME OTHER STUFF
+                int x = insertImage.imageTopLeft.indexOf(CellDisplay.selectedCell);
+                insertImage.images.remove(x);
+                insertImage.imageTopLeft.remove(x);
+                insertImage.imageBottomRight.remove(x);
+                editPage.mazeDisplay.repaint();
             }
         });
 
