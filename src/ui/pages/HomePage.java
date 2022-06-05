@@ -16,6 +16,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+
+import static maze.Export.exportMaze;
 
 public class HomePage extends JPanel {
     private App app;
@@ -86,7 +89,7 @@ public class HomePage extends JPanel {
 
     private JPopupMenu createPopupMenu(JTable table) {
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem exportItem = new JMenuItem("Default.Export");
+        JMenuItem exportItem = new JMenuItem("Export");
         JMenuItem editItem = new JMenuItem("Edit");
         JMenuItem deleteItem = new JMenuItem("Delete");
 
@@ -100,6 +103,20 @@ public class HomePage extends JPanel {
         popupMenu.add(exportItem);
         popupMenu.add(editItem);
         popupMenu.add(deleteItem);
+
+        exportItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("testing button");
+                try {
+                    exportMaze("export maze");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+
+            }
+        });
 
         // this code automatically selects row when popup menu is opened
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
