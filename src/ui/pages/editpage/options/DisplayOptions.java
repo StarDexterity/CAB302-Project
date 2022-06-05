@@ -22,6 +22,8 @@ public class DisplayOptions extends JPanel {
 
     public JButton removeImage;
 
+    private Maze maze;
+
     InsertImage insertImage = new InsertImage();
 
     public DisplayOptions(EditPage editPage) {
@@ -47,6 +49,9 @@ public class DisplayOptions extends JPanel {
         addImage.addActionListener(e -> {
 
             if (CellDisplay.selectedCell != null){
+                int x1 = CellDisplay.selectedCell.getX();
+                int y1 = CellDisplay.selectedCell.getY();
+
                 insertImage.currentMaze = editPage.currentMaze;
                 insertImage.imageCell=CellDisplay.selectedCell;
                 insertImage.newImg=null;
@@ -54,11 +59,19 @@ public class DisplayOptions extends JPanel {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (CellDisplay.selectedCell != null) {
-                            insertImage.bottomRight = CellDisplay.selectedCell;
-                            insertImage.getImage();
-                            editPage.currentMaze = insertImage.currentMaze;
-                            editPage.mazeDisplay.addImage(true);
-                            editPage.mazeDisplay.removeMouseListener(this);
+                            int x2 = CellDisplay.selectedCell.getX();
+                            int y2 = CellDisplay.selectedCell.getY();
+                            if (x2 >= x1 && y2 >=y1){
+                                insertImage.bottomRight = CellDisplay.selectedCell;
+                                insertImage.getImage();
+                                editPage.currentMaze = insertImage.currentMaze;
+                                editPage.mazeDisplay.addImage(true);
+                                InsertImage.currentMaze.placeImage();
+                                editPage.mazeDisplay.removeMouseListener(this);
+                            }else{
+                                editPage.mazeDisplay.removeMouseListener(this);
+                            }
+
                         }
                     }
                 });

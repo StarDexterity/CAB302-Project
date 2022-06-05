@@ -109,9 +109,9 @@ public class Maze {
     // public methods
     /**
      * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
-     * @param image Image to place
+     * //@param image Image to place
      */
-    public void placeImage(MazeImage image) {
+    public void placeImage() {
         mazeChanged();
     }
 
