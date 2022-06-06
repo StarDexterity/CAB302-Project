@@ -1,62 +1,41 @@
 package maze.data;
 
+import javax.imageio.ImageIO;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * This class holds the information of an image to be placed within a maze, including its file path, coordinate within the maze, and its dimensions.
  */
 public class MazeImage {
-    private int x;
-    private int y;
-    private int width;
-    private int height;
-    private String path;
+    private Position topLeft;
+    private Position bottomRight;
+    private BufferedImage image;
 
     // constructor
-    public MazeImage(int x, int y, int width, int height, String path) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.path = path;
+    public MazeImage(Position topLeft, Position bottomRight, File file) {
+        this.topLeft = topLeft;
+        this.bottomRight = bottomRight;
+
+        try {
+            image = ImageIO.read(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    // Getters and Setters
-    public int getX() {
-        return x;
+    public Position getTopLeft() {
+        return topLeft;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public Position getBottomRight() {
+        return bottomRight;
     }
 
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
+    public BufferedImage getImage() {
+        return image;
     }
 }

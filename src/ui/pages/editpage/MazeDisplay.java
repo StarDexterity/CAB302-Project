@@ -3,6 +3,7 @@ package ui.pages.editpage;
 import maze.data.Maze;
 import maze.data.Position;
 import ui.pages.editpage.options.cell.CellDisplay;
+import ui.pages.editpage.options.cell.CellEditor;
 import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
@@ -182,6 +183,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         mazeGrid = maze.getMazeGrid();
         nCols = maze.getCols();
         nRows = maze.getRows();
+        deselect();
 
         // when maze is altered in any way this component is repainted
         maze.addListener(new Maze.MazeListener() {
@@ -324,6 +326,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
         repaint();
     }
 
+
+
     // Observer design pattern
     public interface MazeDisplayListener {
         void selectedCellChanged(CellChangeEvent cce);
@@ -341,19 +345,17 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     private ArrayList<MazeDisplayListener> listeners = new ArrayList<MazeDisplayListener>();
 
-    public void addListener(MazeDisplayListener ml) {
-        listeners.add(ml);
-    }
+    public void addListener(MazeDisplayListener ml) { listeners.add(ml); }
+
+    public void removeListener(MazeDisplayListener ml) { listeners.remove(ml); }
 
     private void selectedCellChanged() {
-        for (MazeDisplayListener l : listeners) {
-            l.selectedCellChanged(new CellChangeEvent(
-                    selectedCell,
-                    isCellSelected
-            ));
-        }
         repaint();
         revalidate();
+
+        for (int i = 0; i < listeners.size(); i++) {
+            listeners.get(i).selectedCellChanged(new CellChangeEvent(selectedCell, isCellSelected));
+        }
     }
 
 

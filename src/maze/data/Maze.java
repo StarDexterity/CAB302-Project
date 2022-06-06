@@ -111,7 +111,38 @@ public class Maze {
      * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
      * //@param image Image to place
      */
-    public void placeImage() {
+    public void placeImage(MazeImage image) {
+        int x1 = image.getTopLeft().getX();
+        int y1 = image.getTopLeft().getY();
+
+        int x2 = image.getBottomRight().getX();
+        int y2 = image.getBottomRight().getY();
+
+        // disable all cells in the area of the placed image
+        for (int y = y1; y <= y2; y++) {
+            for (int x = x1; x <= x2; x++) {
+                setCellEnabled(x, y,false);
+            }
+        }
+        mazeChanged();
+    }
+
+    public void placeImage() {}
+
+    public void removeImage(MazeImage image) {
+        int x1 = image.getTopLeft().getX();
+        int y1 = image.getTopLeft().getY();
+
+        int x2 = image.getBottomRight().getX();
+        int y2 = image.getBottomRight().getY();
+
+        // enable all cells in the area of the removed image
+        for (int y = y1; y <= y2; y++) {
+            for (int x = x1; x <= x2; x++) {
+                setCellEnabled(x, y,true);
+            }
+        }
+
         mazeChanged();
     }
 
