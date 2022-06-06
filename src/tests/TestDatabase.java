@@ -1,22 +1,20 @@
 package tests;
 
 import database.DatabaseConnection;
-import database.MazeAttribute;
 import maze.data.Maze;
 
 import org.junit.jupiter.api.*;
 
-import javax.xml.crypto.Data;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-import static database.DatabaseConnection.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestDatabase {
 
     private static DatabaseConnection connection;
 
-    public static void createDummyMazes(DatabaseConnection connection) {
+    public static void createDummyMazes(DatabaseConnection connection) throws SQLException {
         Maze mikesMaze = new Maze(4, 4, false);
         mikesMaze.setMazeGrid(DummyMazes.random);
         mikesMaze.setData("Mike Gmail")
@@ -33,8 +31,26 @@ public class TestDatabase {
     }
 
     @BeforeAll
-    public static void PopulateDatabase () {
+    public static void PopulateDatabase () throws SQLException {
         connection = new DatabaseConnection();
+
+        Statement statement = connection.testConnection().createStatement();
+
+        statement.execute("CREATE DATABASE IF NOT EXISTS TestMazeCo;");
+        statement.execute("USE TestMazeCo;");
+        statement.execute("DROP TABLE IF EXISTS Maze;");
+        statement.execute("CREATE TABLE Maze (" +
+                "mazeID INT AUTO_INCREMENT PRIMARY KEY," +
+                "author VARCHAR(32) NOT NULL," +
+                "mazeData INT NOT NULL," +
+                "creationDate TIMESTAMP NOT NULL," +
+                "lastEditDate TIMESTAMP NOT NULL," +
+                "nCols INT NOT NULL," +
+                "nRows INT NOT NULL," +
+                "title VARCHAR(32)," +
+                "description TEXT" +
+                ");");
+
         createDummyMazes(connection);
     }
 
@@ -45,7 +61,7 @@ public class TestDatabase {
 //    }
 
     @Test
-    public void AssignsId() {
+    public void AssignsId() throws SQLException {
         Maze roboMaze = new Maze(4, 4, false);
         roboMaze.setMazeGrid(DummyMazes.random);
         roboMaze.setData("Robot Kevin").title("Robot Maze");

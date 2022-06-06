@@ -3,9 +3,7 @@ package database;
 import maze.data.Maze;
 import maze.data.MazeData;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -19,15 +17,16 @@ public class DatabaseConnection {
 
     private Connection connection;
 
-
-
     public DatabaseConnection() {
         try {
             connection = DriverManager.getConnection(url, username, password);
         } catch (SQLException sqle) {
             System.err.println(sqle);
         }
+    }
 
+    public Connection testConnection() {
+        return connection;
     }
 
     /**
@@ -42,9 +41,22 @@ public class DatabaseConnection {
      * Saves the given Default.Maze to the database
      * @param maze The @{@link Maze} object to be saved
      */
-    public void save(Maze maze){
-        if (maze.mazeData.getId() == 0) {
+    public void save(Maze maze) throws SQLException {
+        MazeData mazeData = maze.mazeData;
 
+        if (mazeData.getId() == 0) {
+            PreparedStatement insert = connection.prepareStatement(
+                    "INSERT INTO Maze (author, mazeData, creationDate, lastEditDate, nCols, nRows) VALUES (?, ?, ?, ?, ?, ?)");
+            insert.clearParameters();
+            insert.setString(1, mazeData.getAuthor());
+            insert.setInt(2, 1);
+            insert.setTimestamp(3, Timestamp.from(mazeData.getCreationDate()));
+            insert.setTimestamp(4, Timestamp.from(mazeData.getLastEditDate()));
+            insert.setInt(5, maze.getCols());
+            insert.setInt(6, maze.getRows());
+            insert.executeUpdate();
+
+            //batch here
         }
     }
 
@@ -56,12 +68,18 @@ public class DatabaseConnection {
 
     }
 
-    public Maze retrieve(int id) {
+    public Maze retrieveIndividualMaze(int id) {
         return null;
     }
 
-    public ArrayList<MazeData> retrieveMazes() {
-        return null;
+    public ArrayList<MazeData> retrieveMazes() throws SQLException {
+        Statement select = connection.createStatement();
+        ResultSet result = select.executeQuery("SELECT mazeID, author, title, description, creationDate, lastEditDate FROM maze");
+
+        while (result.next()) {
+
+        }
+
     }
 
     /**

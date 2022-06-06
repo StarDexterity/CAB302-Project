@@ -1,5 +1,6 @@
 package maze.data;
 
+import java.time.Instant;
 import java.util.Date;
 
 public class MazeData {
@@ -8,8 +9,8 @@ public class MazeData {
     private String author;
     private String title;
     private String description;
-    private Date creationDate;
-    private Date lastEditDate;
+    private Instant creationDate;
+    private Instant lastEditDate;
 
     public MazeData() {
         id = 0;
@@ -18,7 +19,7 @@ public class MazeData {
         description = "";
 
         // Gets current date
-        creationDate = new Date();
+        creationDate = Instant.now();
         lastEditDate = new Date();
     }
 
@@ -34,7 +35,7 @@ public class MazeData {
     public void updateData(String author) {
         this.author = author;
         // Updates with current date
-        lastEditDate = new Date();
+        lastEditDate = Instant.now();
     }
 
     public int getId() {
@@ -85,6 +86,20 @@ public class MazeData {
         this.lastEditDate = lastEditDate;
     }
 
+
+    // ---- Getters!
+    public String getAuthor() {
+        return author;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public Instant getLastEditDate() {
+        return lastEditDate;
+    }
+    // ----
 
     public MazeData title(String title) {
         this.title = title;
