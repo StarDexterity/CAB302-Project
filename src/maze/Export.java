@@ -48,6 +48,18 @@ public class Export {
 
         Graphics2D export = bufferedImage.createGraphics();
 
+
+        export.setColor(Color.white);
+        export.fillRect(0, 0, width, height);
+
+        Color gridColor = new Color(0, 0, 0);
+        Color solutionColor = new Color(255, 0, 0);
+        Color startColor = new Color(0, 0, 255);
+        Color endColor = new Color(0, 255, 0);
+
+
+        export.setColor(gridColor);
+
         // draw maze
         for (int r = 0; r < nRows; r++) {
             for (int c = 0; c < nCols; c++) {
