@@ -24,7 +24,7 @@ public final class MazeSolver {
      */
     public static boolean solve(Position pos, Maze maze) {
         maze.getSolution().clear();
-        setAllUnvisited(maze);
+        maze.setAllUnvisited();
 
         boolean solvable = recursiveSolve(pos, maze);
         maze.setSolveStatus(solvable ? SolveStatus.SOLVED : SolveStatus.UNSOLVABLE);
@@ -62,8 +62,11 @@ public final class MazeSolver {
             // If the next cell is within bounds of maze,
             // is connected to this cell
             // and hasn't been visited, visit it
-            if (maze.withinBounds(nx, ny) && (mazeGrid[y][x] & dir.bit) != 0
-                    && (mazeGrid[ny][nx] & 16) == 0) {
+            if (maze.withinBounds(nx, ny)
+                    && (mazeGrid[y][x] & dir.bit) != 0 // is path
+                    && (mazeGrid[ny][nx] & (1 << 4)) == 0 // is unvisited
+                    && (mazeGrid[ny][nx] & (1 << 5)) == 0) // is enabled
+                {
 
                 // condensing coordinate
                 Position newPos = new Position(nx, ny);
@@ -83,17 +86,7 @@ public final class MazeSolver {
         return false;
     }
 
-    private static void setAllUnvisited(Maze maze) {
-        int[][] mazeGrid = maze.getMazeGrid();
-        int nCols = maze.getCols();
-        int nRows = maze.getRows();
 
-        for (int y = 0; y < nRows; y++) {
-            for (int x = 0; x < nCols; x++) {
-                mazeGrid[y][x] &= ~(1 << 4);
-            }
-        }
-    }
 
     /**
      * For a given maze, finds the total cells with dead ends

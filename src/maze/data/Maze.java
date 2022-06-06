@@ -211,6 +211,29 @@ public class Maze {
         setAll(x, y, isPath);
     }
 
+    public void setCellEnabled(int x, int y, boolean isEnabled) {
+        if (isEnabled) {
+            mazeGrid[y][x] &= ~(1 << 5);
+        }
+        else {
+            mazeGrid[y][x] |= (1 << 5);
+        }
+    }
+
+    public void setCellEnabled(Position pos, boolean isEnabled) {
+        int x = pos.getX();
+        int y = pos.getY();
+        setCellEnabled(x, y, isEnabled);
+    }
+
+    public void setAllUnvisited() {
+        for (int y = 0; y < nRows; y++) {
+            for (int x = 0; x < nCols; x++) {
+                mazeGrid[y][x] &= ~(1 << 4);
+            }
+        }
+    }
+
     // Based on the Build Pattern. Have to use this method to edit maze data
     public MazeData setData(String author) {
         mazeData.updateData(author);
