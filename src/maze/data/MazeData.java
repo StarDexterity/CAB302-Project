@@ -8,15 +8,27 @@ public class MazeData {
     private String author;
     private String title;
     private String description;
-    //TODO: Final
     private Date creationDate;
     private Date lastEditDate;
 
     public MazeData() {
+        id = 0;
+        title = "Unnamed Maze";
+        author = "Anonymous";
+        description = "";
+
         // Gets current date
         creationDate = new Date();
-        // Default
-        title = "Unnamed Maze";
+        lastEditDate = new Date();
+    }
+
+    public MazeData(int id, String author, String title, String description, Date creationDate, Date lastEditDate) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.lastEditDate = lastEditDate;
     }
 
     public void updateData(String author) {
@@ -25,13 +37,54 @@ public class MazeData {
         lastEditDate = new Date();
     }
 
-    public void assignId(int id) {
-        this.id = id;
-    }
-
     public int getId() {
         return id;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getLastEditDate() {
+        return lastEditDate;
+    }
+
+    public void setLastEditDate(Date lastEditDate) {
+        this.lastEditDate = lastEditDate;
+    }
+
 
     public MazeData title(String title) {
         this.title = title;
