@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import static maze.Export.exportMaze;
+import static maze.Export.displayMaze;
 
 public class App extends JFrame {
     public static final int WIDTH = 1200;
@@ -113,9 +113,11 @@ public class App extends JFrame {
         export.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("testing button");
                 try {
-                    exportMaze("export maze");
+                    //NewMazeDialog nmd = new NewMazeDialog(new JFrame());
+                    //System.out.print(nmd);
+                    //Maze maze = nmd.getGeneratedMaze();
+                    displayMaze(editPage.currentMaze);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
