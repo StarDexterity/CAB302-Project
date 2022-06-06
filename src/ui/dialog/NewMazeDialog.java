@@ -45,8 +45,8 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
     public NewMazeDialog(JFrame frame) {
         super(frame);
 
-        SpinnerNumberModel xModel = new SpinnerNumberModel(25, 4, 100, 1);
-        SpinnerNumberModel yModel = new SpinnerNumberModel(25, 4, 100, 1);
+        SpinnerNumberModel xModel = new SpinnerNumberModel(4, 4, 100, 1);
+        SpinnerNumberModel yModel = new SpinnerNumberModel(4, 4, 100, 1);
 
         sizeX = new JSpinner(xModel);
         sizeY = new JSpinner(yModel);

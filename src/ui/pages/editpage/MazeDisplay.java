@@ -236,15 +236,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
             }
         }
 
-        if (addImage){
-            for (int i=0; i<insertImage.images.size(); i++){
-                Position p = insertImage.imageTopLeft.get(i);
-                int x = p.getX();
-                int y = p.getY();
-                g.drawImage(insertImage.images.get(i), (x*cellSize)+margin, (y*cellSize)+margin, null);
-            }
-            System.out.println(insertImage.newImg);
-        }
+
 
         g.setStroke(new BasicStroke(2));
         g.setColor(Color.black);
@@ -270,6 +262,24 @@ public class MazeDisplay extends JPanel implements Scrollable {
             }
         }
 
+        if (addImage) {
+            for (int i = 0; i < insertImage.images.size(); i++) {
+                Position topLeft = insertImage.imageTopLeft.get(i);
+                int topX = topLeft.getX();
+                int topY = topLeft.getY();
+                Position bottomRight = insertImage.imageBottomRight.get(i);
+                int bottomX = bottomRight.getX();
+                int bottomY = bottomRight.getY();
+                g.drawImage(insertImage.images.get(i), (topX * cellSize) + margin, (topY * cellSize) + margin, null);
+                //BORDERS
+                g.drawLine((topX*cellSize)+margin,(topY*cellSize)+margin,(bottomX*cellSize)+2*margin,(topY*cellSize)+margin); //top line
+                g.drawLine(topX*cellSize+margin,topY*cellSize+margin,topX*cellSize+margin,(bottomY*cellSize)+margin*2); //left line
+                g.drawLine((bottomX*cellSize)+margin*2,topY*cellSize+margin,(bottomX*cellSize)+margin*2,(bottomY*cellSize)+margin*2); //right line
+                g.drawLine(topX*cellSize+margin,(bottomY*cellSize)+margin*2,(bottomX*cellSize)+margin*2,(bottomY*cellSize)+margin*2); //bottom line
+            }
+            System.out.println(insertImage.newImg);
+
+        }
         // draw pathfinding animation
         int offset = margin + cellSize / 2;
 

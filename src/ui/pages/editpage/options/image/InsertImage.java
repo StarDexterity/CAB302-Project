@@ -100,7 +100,7 @@ public class InsertImage extends JPanel {
         System.out.println(y2);
         for (int i = x1; i<=x2; i++){
             for (int j = y1; j<=y2; j++){
-                x[j][i] = 15;
+                /*x[j][i] = 15;
                 if (i==x1){
                     x[j][i]=x[j][i]&0b0111;
                 }else if(i==x2){
@@ -110,7 +110,8 @@ public class InsertImage extends JPanel {
                     x[j][i]=x[j][i]&0b1110;
                 }else if (j==y2){
                     x[j][i]=x[j][i]&0b1101;
-                }
+                }*/
+                currentMaze.setCellEnabled(i,j,false);
 
             }
         }
@@ -120,10 +121,31 @@ public class InsertImage extends JPanel {
         return currentMaze;
     }
 
+    public Maze resetPassable(Position topLeft, Position bottomRight){
+        int x1 = topLeft.getX();
+        int y1 = topLeft.getY();
+        int x2 = bottomRight.getX();
+        int y2 = bottomRight.getY();
+        int[][] x = currentMaze.getMazeGrid();
+        for (int i = x1; i<=x2; i++){
+            for (int j = y1; j<=y2; j++){
+
+                currentMaze.setCellEnabled(i,j,true);
+
+            }
+        }
+        //System.out.println("new int[][]" + Arrays.deepToString(x).replace("[","{").replace("]", "}"));
+        currentMaze.setMazeGrid(x);
+        System.out.println(x);
+        return currentMaze;
+    }
+
+
     public static void newMazeClear(){
         images.clear();
         imageTopLeft.clear();
         imageBottomRight.clear();
+
     }
 
 }

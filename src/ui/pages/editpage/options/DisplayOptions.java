@@ -1,6 +1,7 @@
 package ui.pages.editpage.options;
 
 import maze.data.Maze;
+import maze.data.Position;
 import maze.enums.SolveStatus;
 import ui.helper.GridBagHelper;
 import ui.helper.UIHelper;
@@ -67,6 +68,7 @@ public class DisplayOptions extends JPanel {
                                 editPage.currentMaze = insertImage.currentMaze;
                                 editPage.mazeDisplay.addImage(true);
                                 InsertImage.currentMaze.placeImage();
+                                showSolution.doClick();
                                 editPage.mazeDisplay.removeMouseListener(this);
                             }else{
                                 editPage.mazeDisplay.removeMouseListener(this);
@@ -84,8 +86,11 @@ public class DisplayOptions extends JPanel {
             if (insertImage.imageTopLeft.contains(CellDisplay.selectedCell)){
                 int x = insertImage.imageTopLeft.indexOf(CellDisplay.selectedCell);
                 insertImage.images.remove(x);
+                Position topLeft = insertImage.imageTopLeft.get(x);
                 insertImage.imageTopLeft.remove(x);
+                Position bottomRight = insertImage.imageBottomRight.get(x);
                 insertImage.imageBottomRight.remove(x);
+                editPage.currentMaze = insertImage.resetPassable(topLeft, bottomRight);
                 editPage.mazeDisplay.repaint();
             }
         });
