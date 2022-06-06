@@ -78,7 +78,6 @@ public class InsertImage extends JPanel {
         imageBottomRight.add(bottomRight);
         imageCount++;
 
-        System.out.println(images.size());
         return newImg;
     }
 
@@ -94,10 +93,6 @@ public class InsertImage extends JPanel {
     //function to border out affected cells
     public Maze removeCells(int x1, int x2, int y1, int y2){
         int[][] x = currentMaze.getMazeGrid();
-        System.out.println(x1);
-        System.out.println(x2);
-        System.out.println(y1);
-        System.out.println(y2);
         for (int i = x1; i<=x2; i++){
             for (int j = y1; j<=y2; j++){
                 /*x[j][i] = 15;
@@ -115,9 +110,7 @@ public class InsertImage extends JPanel {
 
             }
         }
-        //System.out.println("new int[][]" + Arrays.deepToString(x).replace("[","{").replace("]", "}"));
         currentMaze.setMazeGrid(x);
-        System.out.println(x);
         return currentMaze;
     }
 
@@ -134,9 +127,7 @@ public class InsertImage extends JPanel {
 
             }
         }
-        //System.out.println("new int[][]" + Arrays.deepToString(x).replace("[","{").replace("]", "}"));
         currentMaze.setMazeGrid(x);
-        System.out.println(x);
         return currentMaze;
     }
 

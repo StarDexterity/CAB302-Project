@@ -277,7 +277,6 @@ public class MazeDisplay extends JPanel implements Scrollable {
                 g.drawLine((bottomX*cellSize)+margin*2,topY*cellSize+margin,(bottomX*cellSize)+margin*2,(bottomY*cellSize)+margin*2); //right line
                 g.drawLine(topX*cellSize+margin,(bottomY*cellSize)+margin*2,(bottomX*cellSize)+margin*2,(bottomY*cellSize)+margin*2); //bottom line
             }
-            System.out.println(insertImage.newImg);
 
         }
         // draw pathfinding animation
