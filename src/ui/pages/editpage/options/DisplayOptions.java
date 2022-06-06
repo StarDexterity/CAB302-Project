@@ -19,13 +19,10 @@ public class DisplayOptions extends JPanel {
     private final JCheckBox showGrid;
 
     public JButton colorButton;
-    public JButton addImage;
 
-    public JButton removeImage;
 
     private Maze maze;
 
-    InsertImage insertImage = new InsertImage();
 
     public DisplayOptions(EditPage editPage) {
 
@@ -43,55 +40,6 @@ public class DisplayOptions extends JPanel {
             Color changeColor = JColorChooser.showDialog(null, "Change Color",Color.RED);
             if (changeColor != null){
                 editPage.mazeDisplay.changeSolutionColor(changeColor);
-            }
-        });
-
-        addImage = new JButton("Add Image");
-        addImage.addActionListener(e -> {
-
-            if (CellDisplay.selectedCell != null){
-                int x1 = CellDisplay.selectedCell.getX();
-                int y1 = CellDisplay.selectedCell.getY();
-
-                insertImage.currentMaze = editPage.currentMaze;
-                insertImage.imageCell=CellDisplay.selectedCell;
-                insertImage.newImg=null;
-                editPage.mazeDisplay.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if (CellDisplay.selectedCell != null) {
-                            int x2 = CellDisplay.selectedCell.getX();
-                            int y2 = CellDisplay.selectedCell.getY();
-                            if (x2 >= x1 && y2 >=y1){
-                                insertImage.bottomRight = CellDisplay.selectedCell;
-                                insertImage.getImage();
-                                editPage.currentMaze = insertImage.currentMaze;
-                                editPage.mazeDisplay.addImage(true);
-                                InsertImage.currentMaze.placeImage();
-                                showSolution.doClick();
-                                editPage.mazeDisplay.removeMouseListener(this);
-                            }else{
-                                editPage.mazeDisplay.removeMouseListener(this);
-                            }
-
-                        }
-                    }
-                });
-
-            }
-        });
-
-        removeImage = new JButton("Remove Image");
-        removeImage.addActionListener(e -> {
-            if (insertImage.imageTopLeft.contains(CellDisplay.selectedCell)){
-                int x = insertImage.imageTopLeft.indexOf(CellDisplay.selectedCell);
-                insertImage.images.remove(x);
-                Position topLeft = insertImage.imageTopLeft.get(x);
-                insertImage.imageTopLeft.remove(x);
-                Position bottomRight = insertImage.imageBottomRight.get(x);
-                insertImage.imageBottomRight.remove(x);
-                editPage.currentMaze = insertImage.resetPassable(topLeft, bottomRight);
-                editPage.mazeDisplay.repaint();
             }
         });
 
@@ -117,8 +65,6 @@ public class DisplayOptions extends JPanel {
         GridBagHelper.addToPanel(this, showSolution, gbc, 0, 0, 1, 1);
         GridBagHelper.addToPanel(this, showGrid, gbc, 0, 1, 1, 1);
         GridBagHelper.addToPanel(this, colorButton, gbc, 0,2,1,1);
-        GridBagHelper.addToPanel(this, addImage, gbc,1,0,1,1 );
-        GridBagHelper.addToPanel(this, removeImage,gbc,1,1,1,1);
     }
 
     public void setMaze(Maze maze) {
