@@ -20,10 +20,10 @@ public class MazeData {
 
         // Gets current date
         creationDate = Instant.now();
-        lastEditDate = new Date();
+        lastEditDate = Instant.now();
     }
 
-    public MazeData(int id, String author, String title, String description, Date creationDate, Date lastEditDate) {
+    public MazeData(int id, String author, String title, String description, Instant creationDate, Instant lastEditDate) {
         this.id = id;
         this.author = author;
         this.title = title;
@@ -43,7 +43,6 @@ public class MazeData {
     }
 
     public void setId(int id) {
-        this.id = id;
     }
 
     public String getAuthor() {
@@ -51,55 +50,32 @@ public class MazeData {
     }
 
     public void setAuthor(String author) {
-        this.author = author;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setTitle(String title) {}
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Date getLastEditDate() {
-        return lastEditDate;
-    }
-
-    public void setLastEditDate(Date lastEditDate) {
-        this.lastEditDate = lastEditDate;
-    }
-
-
-    // ---- Getters!
-    public String getAuthor() {
-        return author;
-    }
+    public void setDescription(String description) {}
 
     public Instant getCreationDate() {
         return creationDate;
     }
 
+    public void setCreationDate(Instant creationDate) {}
+
     public Instant getLastEditDate() {
         return lastEditDate;
     }
-    // ----
+
+    public void setLastEditDate(Instant lastEditDate) {}
+
 
     public MazeData title(String title) {
         this.title = title;

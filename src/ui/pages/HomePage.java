@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -109,7 +110,7 @@ public class HomePage extends JPanel {
         String[] titles = {"Cool maze", "Great maze", "Amazing maze", "Bad maze", "Test maze", ":("};
 
         for (int i = 0; i < 6; i++) {
-            data.add(new MazeData(id, authors[i], titles[i], "", new Date(), new Date()));
+            data.add(new MazeData(id, authors[i], titles[i], "", Instant.now(), Instant.now()));
             id++;
         }
         return data;

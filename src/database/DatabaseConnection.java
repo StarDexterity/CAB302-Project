@@ -20,8 +20,8 @@ public class DatabaseConnection {
     public DatabaseConnection() {
         try {
             connection = DriverManager.getConnection(url, username, password);
-        } catch (SQLException sqle) {
-            System.err.println(sqle);
+        } catch (SQLException sqlError) {
+            System.err.println(sqlError);
         }
     }
 
@@ -56,7 +56,11 @@ public class DatabaseConnection {
             insert.setInt(6, maze.getRows());
             insert.executeUpdate();
 
-            //batch here
+            //batch update here
+
+        } else {
+            PreparedStatement insert = connection.prepareStatement(
+                    "UPDATE Maze (author, mazeData, creationDate, lastEditDate, nCols, nRows) VALUES (?, ?, ?, ?, ?, ?) WHERE mazeID = ?");
         }
     }
 
@@ -76,10 +80,19 @@ public class DatabaseConnection {
         Statement select = connection.createStatement();
         ResultSet result = select.executeQuery("SELECT mazeID, author, title, description, creationDate, lastEditDate FROM maze");
 
+        ArrayList<MazeData> mazes = new ArrayList<>();
+
         while (result.next()) {
+            int mazeID = result.getInt(1);
+            int author = result.getInt(1);
+            int title = result.getInt(1);
+            int description = result.getInt(1);
+            int creationDate = result.getInt(1);
+            int lastEditDate = result.getInt(1);
 
         }
 
+        return mazes;
     }
 
     /**

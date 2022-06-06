@@ -1,8 +1,9 @@
 package maze.data;
 
 import javax.swing.table.AbstractTableModel;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 
 public class MazeTableModel extends AbstractTableModel {
@@ -149,10 +150,10 @@ public class MazeTableModel extends AbstractTableModel {
                 record.setAuthor((String) value);
             }
             case LAST_EDITED -> {
-                record.setLastEditDate((Date) value);
+                record.setLastEditDate((Instant) value);
             }
             case CREATED -> {
-                record.setCreationDate((Date) value);
+                record.setCreationDate((Instant) value);
             }
         }
         fireTableCellUpdated(row, col);
