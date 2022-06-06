@@ -1,5 +1,6 @@
 package ui.pages.editpage.options;
 
+import maze.data.Maze;
 import ui.helper.GridBagHelper;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 
-import static maze.Export.exportMaze;
+import static maze.Export.displayMaze;
 
 
 public class SaveOptions extends JPanel {
@@ -75,19 +76,20 @@ public class SaveOptions extends JPanel {
         GridBagHelper.addToPanel(this, deleteButton, gbc, 2, y, 1, 1);
 
 
-        exportButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("testing button");
-                try {
-                    exportMaze("export maze");
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-
-            }
-        });
+//        exportButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("testing button");
+//                try {
+//                    Maze maze = null;
+//                    exportMaze(maze);
+//                } catch (IOException ex) {
+//                    ex.printStackTrace();
+//                }
+//
+//
+//            }
+//        });
 
         //if (exportButton) {
 

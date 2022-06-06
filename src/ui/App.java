@@ -7,6 +7,11 @@ import ui.pages.HomePage;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import static maze.Export.displayMaze;
 
 public class App extends JFrame {
     public static final int WIDTH = 1200;
@@ -105,6 +110,22 @@ public class App extends JFrame {
             }
         });
 
+        export.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    //NewMazeDialog nmd = new NewMazeDialog(new JFrame());
+                    //System.out.print(nmd);
+                    //Maze maze = nmd.getGeneratedMaze();
+                    displayMaze(editPage.currentMaze);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+
+            }
+        });
+
         close.addActionListener(e -> showHomePage());
 
         exit.addActionListener(e -> System.exit(69));
@@ -123,6 +144,7 @@ public class App extends JFrame {
 
         return mb;
     }
+
 
     public void showHomePage() {
         Container c = getContentPane();

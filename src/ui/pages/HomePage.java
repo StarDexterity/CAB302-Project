@@ -3,6 +3,7 @@ package ui.pages;
 import maze.enums.GenerationOption;
 import maze.data.Maze;
 import ui.App;
+import ui.pages.EditPage;
 import ui.pages.homepage.MazeTableModel;
 
 import javax.swing.*;
@@ -16,6 +17,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+
+import static maze.Export.displayMaze;
 
 public class HomePage extends JPanel {
     private App app;
@@ -24,6 +28,9 @@ public class HomePage extends JPanel {
     private JTable table;
     private MazeTableModel mazeTableModel;
     private JPopupMenu popupMenu;
+
+    public EditPage editPage;
+
 
     public HomePage(App app) {
         super();
@@ -86,7 +93,7 @@ public class HomePage extends JPanel {
 
     private JPopupMenu createPopupMenu(JTable table) {
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem exportItem = new JMenuItem("Default.Export");
+        JMenuItem exportItem = new JMenuItem("Export");
         JMenuItem editItem = new JMenuItem("Edit");
         JMenuItem deleteItem = new JMenuItem("Delete");
 
@@ -100,6 +107,22 @@ public class HomePage extends JPanel {
         popupMenu.add(exportItem);
         popupMenu.add(editItem);
         popupMenu.add(deleteItem);
+
+
+        //DOES NOT WORK YET
+        exportItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("testing button");
+                try {
+                    displayMaze(editPage.currentMaze);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+
+            }
+        });
 
         // this code automatically selects row when popup menu is opened
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
