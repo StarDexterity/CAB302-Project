@@ -19,8 +19,7 @@ public class TestMazeSolver {
     private Maze createAndSolve(int nCols, int nRows, int[][] mazeGrid) {
         Maze maze = new Maze(nCols, nRows, false);
         maze.setMazeGrid(mazeGrid);
-        //TODO: Try make the '0' default
-        MazeSolver.solve(Position.ZERO, maze);
+        MazeSolver.solve(maze);
         return maze;
     }
 
@@ -72,7 +71,7 @@ public class TestMazeSolver {
         assertEquals(maze.getSolveStatus(), SolveStatus.SOLVED);
         maze.setPath(0, 0, Direction.N, false);
         assertEquals(maze.getSolveStatus(), SolveStatus.UNSOLVED);
-        MazeSolver.solve(Position.ZERO, maze);
+        MazeSolver.solve(maze);
         assertEquals(maze.getSolveStatus(), SolveStatus.SOLVED);
     }
 }

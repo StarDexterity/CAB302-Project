@@ -198,7 +198,7 @@ public class CellDisplay extends JComponent {
 
     public void setAll(boolean isPath) {
         if (selectedCell == null) return;
-        maze.setAll(selectedCell, isPath);
+        maze.setAllPaths(selectedCell, isPath);
     }
 
 

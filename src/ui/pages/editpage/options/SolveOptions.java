@@ -37,7 +37,7 @@ public class SolveOptions extends JPanel {
         solve.addActionListener(e -> {
             if (maze == null) return;
 
-            MazeSolver.solve(Position.ZERO, maze);
+            MazeSolver.solve(maze);
             explorationStatus.setText(Double.toString(MazeSolver.TotalPassThrough(editPage.currentMaze)));
             deadEndStatus.setText(Double.toString(MazeSolver.TotalDeadEnds(editPage.currentMaze)));
         });

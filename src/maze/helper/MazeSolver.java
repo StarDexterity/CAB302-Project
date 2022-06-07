@@ -5,7 +5,7 @@ import maze.enums.Direction;
 import maze.data.Maze;
 import maze.enums.SolveStatus;
 
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * This static class finds the solution or a property of a given @{@link Maze} object.
@@ -15,20 +15,88 @@ import java.util.LinkedList;
 public final class MazeSolver {
 
     // Disable constructor
-    private MazeSolver(){}
+    private MazeSolver() {}
 
     /**
      * For a given maze, validates if the maze has a solution
      * @param maze A @{@link Maze} object. The solution to the maze is stored within this object
      * @return A bool value indicating whether the maze was successfully solved.
      */
-    public static boolean solve(Position pos, Maze maze) {
-        maze.getSolution().clear();
+    public static boolean solve(Maze maze) {
         maze.setAllUnvisited();
 
-        boolean solvable = recursiveSolve(pos, maze);
+        boolean solvable = solveBFS(maze);
         maze.setSolveStatus(solvable ? SolveStatus.SOLVED : SolveStatus.UNSOLVABLE);
         return solvable;
+    }
+
+    private static boolean solveBFS(Maze maze) {
+        // get start and end positions
+        Position startPosition = maze.getStart();
+        Position endPosition = maze.getEnd();
+
+        // set up queue and add first position
+        LinkedList<Position> queue = new LinkedList<>();
+        queue.addLast(startPosition);
+
+        // mark root position as visited
+        maze.setVisited(startPosition, true);
+
+
+        while (!queue.isEmpty()) {
+            // get the current cell position
+            Position current = queue.pop();
+
+            int cX = current.getX();
+            int cY = current.getY();
+
+            // if at the end position
+            if (endPosition.equals(current)) {
+                maze.setSolution(reconstructPath(current));
+                return true;
+            }
+
+            // for each direction
+            for (Direction dir : Direction.values()) {
+                // gets the coordinates of a neighbor of the current vertex,
+                // in the direction of dir
+                int nX = cX + dir.dx;
+                int nY = cY + dir.dy;
+                Position neighbor = new Position(nX, nY);
+
+                // If the neighbor is within the bounds of the maze, and has not been visited
+                if (maze.withinBounds(neighbor)
+                        && (maze.isPath(current, dir))
+                        && !maze.isVisited(nX, nY)) {
+
+                    // mark neighbor as visited
+                    maze.setVisited(nX, nY, true);
+
+                    // add neighbor to the end of queue
+                    queue.addLast(neighbor);
+
+                    // add parent of neighbor to hash table
+                    neighbor.setPrev(current);
+
+                }
+            }
+        }
+        // if this point is reached, the whole maze has been traversed and no solution is found
+        return false;
+    }
+
+    private static LinkedList<Position> reconstructPath(Position endPosition) {
+        // init solution and add first position
+        LinkedList<Position> solution = new LinkedList<>();
+        solution.add(endPosition);
+
+        while (endPosition.getPrev() != null) {
+            solution.add(endPosition.getPrev());
+            endPosition = endPosition.getPrev();
+        }
+
+        Collections.reverse(solution);
+        return solution;
     }
 
     /**
@@ -37,7 +105,7 @@ public final class MazeSolver {
      * @param maze
      * @return
      */
-    private static boolean recursiveSolve(Position pos, Maze maze) {
+    private static boolean solveDFS(Position pos, Maze maze) {
         int[][] mazeGrid = maze.getMazeGrid();
         int nRows = maze.getRows();
         int nCols = maze.getCols();
@@ -63,10 +131,8 @@ public final class MazeSolver {
             // is connected to this cell
             // and hasn't been visited, visit it
             if (maze.withinBounds(nx, ny)
-                    && (mazeGrid[y][x] & dir.bit) != 0 // is path
-                    && (mazeGrid[ny][nx] & (1 << 4)) == 0 // is unvisited
-                    && (mazeGrid[ny][nx] & (1 << 5)) == 0) // is enabled
-                {
+                    && (mazeGrid[y][x] & dir.bit) != 0
+                    && !maze.isVisited(nx, ny)) {
 
                 // condensing coordinate
                 Position newPos = new Position(nx, ny);
@@ -74,7 +140,7 @@ public final class MazeSolver {
                 solution.add(newPos);
 
                 // if maze is solved, halt and return true
-                if (MazeSolver.recursiveSolve(newPos, maze))
+                if (MazeSolver.solveDFS(newPos, maze))
                     return true;
 
 
@@ -85,6 +151,8 @@ public final class MazeSolver {
         // All cells have been visited and a solution hasn't been found
         return false;
     }
+
+
 
 
 
@@ -110,7 +178,6 @@ public final class MazeSolver {
     }
 
     private static int countSetBits(int n) {
-
         if (n == 0) return 0;
 
         return countSetBits(n >> 1) + (n & 0x01);
