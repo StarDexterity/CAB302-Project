@@ -13,7 +13,6 @@ import java.util.LinkedList;
  */
 public class Maze {
 
-    //TODO: Make private;
     private final int[][] mazeGrid;
     private final int nCols;
     private final int nRows;
@@ -26,7 +25,7 @@ public class Maze {
 
     public MazeData mazeData;
 
-    private ArrayList<MazeImage> logos;
+    private ArrayList<MazeImage> images;
 
     // constructors
     /**
@@ -52,6 +51,10 @@ public class Maze {
 
         // initialise solution
         solution = new LinkedList<>();
+        solveStatus = SolveStatus.UNSOLVED;
+
+        // initialise logos
+        images = new ArrayList<>();
 
         // initialise maze data
         mazeData = new MazeData();
@@ -121,12 +124,18 @@ public class Maze {
         this.solution = solution;
     }
 
+    public ArrayList<MazeImage> getImages() {
+        return images;
+    }
+
     // public methods
     /**
      * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
      * //@param image Image to place
      */
     public void placeImage(MazeImage image) {
+        if (!validateImage(image))  return;
+
         int x1 = image.getTopLeft().getX();
         int y1 = image.getTopLeft().getY();
 
@@ -139,10 +148,12 @@ public class Maze {
                 setCellEnabled(x, y,false);
             }
         }
+
+        images.add(image);
+
         mazeChanged();
     }
 
-    public void placeImage() {}
 
     public void removeImage(MazeImage image) {
         int x1 = image.getTopLeft().getX();
@@ -157,6 +168,8 @@ public class Maze {
                 setCellEnabled(x, y,true);
             }
         }
+
+        images.remove(image);
 
         mazeChanged();
     }
@@ -205,8 +218,6 @@ public class Maze {
         return isPath(x, y, dir);
     }
 
-
-
     public boolean isVisited(int x, int y) {
         return ((mazeGrid[y][x] & (1 << 4)) != 0);
     }
@@ -215,6 +226,16 @@ public class Maze {
         int x = pos.getX();
         int y = pos.getY();
         return isVisited(x, y);
+    }
+
+    public boolean isEnabled(int x, int y) {
+        return (mazeGrid[y][x] & (1 << 5)) == 0;
+    }
+
+    public boolean isEnabled(Position pos) {
+        int x = pos.getX();
+        int y = pos.getY();
+        return isEnabled(x, y);
     }
 
     public void setVisited(int x, int y, boolean value) {
@@ -314,13 +335,6 @@ public class Maze {
         setCellEnabled(x, y, isEnabled);
     }
 
-    public void setAllUnvisited() {
-        for (int y = 0; y < nRows; y++) {
-            for (int x = 0; x < nCols; x++) {
-                mazeGrid[y][x] &= ~(1 << 4);
-            }
-        }
-    }
 
     // Based on the Build Pattern. Have to use this method to edit maze data
     public MazeData setData(String author) {
@@ -371,6 +385,10 @@ public class Maze {
      * @return
      */
     private boolean validateImage(MazeImage image) {
-        return false;
+        Position topLeft = image.getTopLeft();
+        Position botomRight = image.getBottomRight();
+
+        return (withinBounds(image.getTopLeft())
+            && withinBounds(image.getBottomRight()));
     }
 }

@@ -3,6 +3,8 @@ package ui.pages.editpage.options.cell;
 import maze.data.Maze;
 import maze.data.MazeImage;
 import maze.data.Position;
+import maze.data.Selection;
+import maze.enums.SelectionType;
 import ui.helper.GridBagHelper;
 import ui.pages.EditPage;
 import ui.pages.editpage.MazeDisplay;
@@ -31,7 +33,7 @@ public class CellEditor extends JPanel {
 
     // data
     private Maze maze;
-    private Position selectedCell;
+    private Selection selection;
 
     private final static FileFilter imageFilter = new FileNameExtensionFilter(
             "Image Files",
@@ -61,18 +63,30 @@ public class CellEditor extends JPanel {
 
         // if the mazeDisplays selected cell is altered, this listener is called
         editPage.mazeDisplay.addListener(e -> {
-            if (e.isCellSelected) {
+            this.selection = e;
+            if (e.selectionType == SelectionType.CELL) {
                 title.setText("Cell Editor [%s, %s]".formatted(e.selectedCell.getX(), e.selectedCell.getY()));
-                // update the display with new walls
-                selectedCell = e.selectedCell;
+
+                // set options
                 fillAll.setEnabled(true);
                 clearAll.setEnabled(true);
                 addImage.setEnabled(true);
-                removeImage.setEnabled(true);
+                removeImage.setEnabled(false);
+
 
                 cellDisplay.setSelectedCell(e.selectedCell);
-            } else {
-                selectedCell = null;
+            }
+            else if (e.selectionType == SelectionType.IMAGE) {
+                title.setText("Cell Editor [Image]");
+
+
+                fillAll.setEnabled(false);
+                clearAll.setEnabled(false);
+                addImage.setEnabled(false);
+                removeImage.setEnabled(true);
+
+            }
+            else {
                 cellDisplay.setSelectedCell(null);
                 title.setText("Cell Editor [None]");
                 fillAll.setEnabled(false);
@@ -84,18 +98,18 @@ public class CellEditor extends JPanel {
 
         addImage = new JButton("Add Image");
         addImage.addActionListener(e -> {
-            if (cellDisplay.selectedCell != null) {
+            if (selection.selectionType == SelectionType.CELL) {
                 // get x and y position of selected cell
-                Position p1 = selectedCell;
+                Position p1 = selection.selectedCell;
                 int x1 = cellDisplay.selectedCell.getX();
                 int y1 = cellDisplay.selectedCell.getY();
 
-                JOptionPane.showMessageDialog(getRootPane(), "Top right cell selected, please select bottom right cell");
+                JOptionPane.showMessageDialog(getRootPane(), "Top left cell selected, please select bottom right cell");
 
                 editPage.mazeDisplay.addListener(new MazeDisplay.MazeDisplayListener() {
                     @Override
-                    public void selectedCellChanged(MazeDisplay.CellChangeEvent cce) {
-                        if (cce.isCellSelected) {
+                    public void selectedCellChanged(Selection cce) {
+                        if (cce.selectionType == SelectionType.CELL) {
                             // get x and y position of selected cell (will act as bottom right anchor of image)
                             Position p2 = cce.selectedCell;
                             int x2 = cellDisplay.selectedCell.getX();
@@ -125,15 +139,8 @@ public class CellEditor extends JPanel {
 
         removeImage = new JButton("Remove Image");
         removeImage.addActionListener(e -> {
-            if (insertImage.imageTopLeft.contains(cellDisplay.selectedCell)) {
-                int x = insertImage.imageTopLeft.indexOf(cellDisplay.selectedCell);
-                insertImage.images.remove(x);
-                Position topLeft = insertImage.imageTopLeft.get(x);
-                insertImage.imageTopLeft.remove(x);
-                Position bottomRight = insertImage.imageBottomRight.get(x);
-                insertImage.imageBottomRight.remove(x);
-                editPage.currentMaze = insertImage.resetPassable(topLeft, bottomRight);
-                editPage.mazeDisplay.repaint();
+            if (selection.selectionType == SelectionType.IMAGE) {
+                maze.removeImage(selection.selectedImage);
             }
         });
 

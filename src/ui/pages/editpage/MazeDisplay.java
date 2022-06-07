@@ -1,17 +1,16 @@
 package ui.pages.editpage;
 
 import maze.data.Maze;
+import maze.data.MazeImage;
 import maze.data.Position;
-import ui.pages.editpage.options.cell.CellDisplay;
-import ui.pages.editpage.options.cell.CellEditor;
+import maze.data.Selection;
+import maze.enums.SelectionType;
 import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Path2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -64,9 +63,11 @@ public class MazeDisplay extends JPanel implements Scrollable {
     private Color background = Color.WHITE;
 
     // selected cell coordinates
+    // TODO: convert this into a Selection object
     private Position selectedCell;
+    private MazeImage selectedImage;
+    private SelectionType selectionType;
 
-    private boolean isCellSelected = false;
 
     public void changeSolutionColor(Color color){
         solutionLineColor = color;
@@ -96,25 +97,42 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
                 // below code gets selected cell if any
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    int x = e.getX();
-                    int y = e.getY();
-
+                    // set to defaults
                     Position oldSelectedCell = selectedCell;
+                    MazeImage oldSelectedImage = selectedImage;
                     selectedCell = null;
-                    isCellSelected = false;
+                    selectedImage = null;
+                    selectionType = SelectionType.NONE;
 
-                    if ((x > margin && x < margin + cellSize * maze.getCols())
-                            && (y > margin && y < margin + cellSize * maze.getRows())) {
-                        int cellX = (int)Math.round((x - margin) / cellSize);
-                        int cellY = (int)Math.round((y - margin) / cellSize);
-                        Position newSelectedCell = new Position(cellX, cellY);
+                    // get mouse position in grid coordinates
+                    int x = (e.getX() - margin) / cellSize;
+                    int y = (e.getY() - margin) / cellSize;
+                    Position newSelectedCell = new Position(x, y);
 
-                        if (!newSelectedCell.equals(oldSelectedCell)) {
-                            selectedCell = newSelectedCell;
-                            isCellSelected = true;
+                    // is the cell position within maze bounds
+                    if (maze.withinBounds(newSelectedCell)) {
+                        boolean withinImage = false;
+
+                        for (MazeImage image : maze.getImages()) {
+                            // image is selected
+                            if (image.withinBounds(newSelectedCell)) {
+                                withinImage = true;
+                                // only make a selection if a different image is selected
+                                if (!image.equals(oldSelectedImage)) {
+                                    selectionType = SelectionType.IMAGE;
+                                    selectedImage = image;
+                                }
+                            }
                         }
-                    }
+                        if (!withinImage) {
+                            // only make a selection if a different cell is selected
+                            if (!newSelectedCell.equals(oldSelectedCell)) {
+                                selectionType = SelectionType.CELL;
+                                selectedCell = newSelectedCell;
+                            }
+                        }
 
+                    }
                     selectedCellChanged();
 
                     repaint();
@@ -194,7 +212,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     public void deselect() {
         selectedCell = null;
-        isCellSelected = false;
+        selectedImage = null;
+        selectionType = SelectionType.NONE;
         selectedCellChanged();
     }
 
@@ -261,23 +280,25 @@ public class MazeDisplay extends JPanel implements Scrollable {
             }
         }
 
-        if (addImage) {
-            for (int i = 0; i < insertImage.images.size(); i++) {
-                Position topLeft = insertImage.imageTopLeft.get(i);
-                int topX = topLeft.getX();
-                int topY = topLeft.getY();
-                Position bottomRight = insertImage.imageBottomRight.get(i);
-                int bottomX = bottomRight.getX();
-                int bottomY = bottomRight.getY();
-                g.drawImage(insertImage.images.get(i), (topX * cellSize) + margin, (topY * cellSize) + margin, null);
-                //BORDERS
-                g.drawLine((topX*cellSize)+margin,(topY*cellSize)+margin,(bottomX*cellSize)+2*margin,(topY*cellSize)+margin); //top line
-                g.drawLine(topX*cellSize+margin,topY*cellSize+margin,topX*cellSize+margin,(bottomY*cellSize)+margin*2); //left line
-                g.drawLine((bottomX*cellSize)+margin*2,topY*cellSize+margin,(bottomX*cellSize)+margin*2,(bottomY*cellSize)+margin*2); //right line
-                g.drawLine(topX*cellSize+margin,(bottomY*cellSize)+margin*2,(bottomX*cellSize)+margin*2,(bottomY*cellSize)+margin*2); //bottom line
-            }
 
+        // draw images
+        for (MazeImage image : maze.getImages()) {
+            // get top left coordinate
+            Position topLeft = image.getTopLeft();
+
+            // get width and height of image in pixels
+            int width = image.getWidth() * cellSize;
+            int height = image.getHeight() * cellSize;
+
+            // get x and y position of image top left corner in pixels
+            int xPos = (topLeft.getX() * cellSize) + margin;
+            int yPos = (topLeft.getY() * cellSize) + margin;
+
+            image.resize(width, height);
+            g.drawImage(image.getImage(), xPos, yPos, null);
+            g.drawRect(xPos, yPos, width, height);
         }
+
         // draw pathfinding animation
         int offset = margin + cellSize / 2;
 
@@ -305,10 +326,18 @@ public class MazeDisplay extends JPanel implements Scrollable {
         int y = offset + (nRows - 1) * cellSize;
         g.fillOval(x - 5, y - 5, 10, 10);
 
-        // draws selected cell if any
-        if (isCellSelected) {
-            g.setColor(new Color(0, 128, 128, 128));
-            g.fillRect(selectedCell.getX() * cellSize + margin, selectedCell.getY() * cellSize + margin, cellSize, cellSize);
+        // draws selected object
+        g.setColor(new Color(0, 128, 128, 128));
+        if (selectionType == SelectionType.CELL) {
+            g.fillRect(selectedCell.getX() * cellSize + margin,
+                    selectedCell.getY() * cellSize + margin,
+                    cellSize, cellSize);
+        }
+        else if (selectionType == SelectionType.IMAGE) {
+            g.fillRect(selectedImage.getTopLeft().getX() * cellSize + margin,
+                    selectedImage.getTopLeft().getY() * cellSize + margin,
+                    selectedImage.getWidth() * cellSize,
+                    selectedImage.getHeight() * cellSize);
         }
 
         g.dispose();
@@ -325,18 +354,11 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     // Observer design pattern
     public interface MazeDisplayListener {
-        void selectedCellChanged(CellChangeEvent cce);
+        void selectedCellChanged(Selection cce);
     }
 
-    public class CellChangeEvent {
-        public Position selectedCell;
-        public boolean isCellSelected;
 
-        public CellChangeEvent(Position selectedCell, boolean isCellSelected) {
-            this.isCellSelected = isCellSelected;
-            this.selectedCell = selectedCell;
-        }
-    }
+
 
     private ArrayList<MazeDisplayListener> listeners = new ArrayList<MazeDisplayListener>();
 
@@ -349,7 +371,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         revalidate();
 
         for (int i = 0; i < listeners.size(); i++) {
-            listeners.get(i).selectedCellChanged(new CellChangeEvent(selectedCell, isCellSelected));
+            listeners.get(i).selectedCellChanged(new Selection(selectedCell, selectedImage, selectionType));
         }
     }
 

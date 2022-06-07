@@ -67,7 +67,8 @@ public final class MazeSolver {
                 // If the neighbor is within the bounds of the maze, and has not been visited
                 if (maze.withinBounds(neighbor)
                         && (maze.isPath(current, dir))
-                        && !maze.isVisited(nX, nY)) {
+                        && !maze.isVisited(neighbor)
+                        && maze.isEnabled(neighbor)) {
 
                     // mark neighbor as visited
                     maze.setVisited(nX, nY, true);
