@@ -34,7 +34,7 @@ public class Export {
     }
 
     //placeholder export (will replace with maze display)
-    public static void displayMaze(Maze maze) throws IOException {
+    public static void displayMaze(Maze maze, String Imagetype) throws IOException {
 
         //get maze values
         mazeValues(maze);
@@ -84,14 +84,19 @@ public class Export {
         // deletes this graphics
         export.dispose();
 
-        //could make this a dropdown as user submits???
+        if (Imagetype == "png"){
+            // save as PNG
+            File file = new File("mazeImage.png");
+            ImageIO.write(bufferedImage, "png", file);
+        }
 
-        // save as PNG
-        File file = new File("mazeImage.png");
-        ImageIO.write(bufferedImage, "png", file);
+        if (Imagetype == "jpg"){
+            // save as PNG
+            File file = new File("mazeImage.jpg");
+            ImageIO.write(bufferedImage, "jpg", file);
+        }
 
-        // save as JPG
-        file = new File("mazeImage.jpg");
-        ImageIO.write(bufferedImage, "jpg", file);
+        // save as PDF (may not implement) (needs to be implemented differently to other exports)
+
     }
 }

@@ -2,6 +2,7 @@ package ui;
 
 import maze.data.Maze;
 import ui.dialog.NewMazeDialog;
+import ui.dialog.ExportDialog;
 import ui.pages.EditPage;
 import ui.pages.HomePage;
 
@@ -113,15 +114,13 @@ public class App extends JFrame {
         export.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    //NewMazeDialog nmd = new NewMazeDialog(new JFrame());
-                    //System.out.print(nmd);
-                    //Maze maze = nmd.getGeneratedMaze();
-                    displayMaze(editPage.currentMaze);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                // create and display and new dialog window
+                Maze m = editPage.currentMaze;
+                ExportDialog.storedMazes(m);
 
+                ExportDialog get = new ExportDialog(new JFrame());
+                get.setLocationRelativeTo(getContentPane());
+                get.setVisible(true);
 
             }
         });

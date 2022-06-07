@@ -113,9 +113,8 @@ public class HomePage extends JPanel {
         exportItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("testing button");
                 try {
-                    displayMaze(editPage.currentMaze);
+                    displayMaze(editPage.currentMaze, "imageType");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
