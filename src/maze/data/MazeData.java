@@ -16,7 +16,7 @@ public class MazeData {
         id = 0;
         title = "Unnamed Maze";
         author = "Anonymous";
-        description = "";
+        description = "A maze.";
 
         // Gets current date
         creationDate = Instant.now();
@@ -43,14 +43,14 @@ public class MazeData {
     }
 
     public void setId(int id) {
+        this.id = id;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-    }
+    public void setAuthor(String author) {}
 
     public String getTitle() {
         return title;

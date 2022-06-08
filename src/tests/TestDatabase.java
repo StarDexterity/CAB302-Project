@@ -3,10 +3,13 @@ package tests;
 import database.DatabaseConnection;
 import maze.data.Maze;
 
+import maze.data.MazeData;
 import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.ZoneId;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,16 +42,16 @@ public class TestDatabase {
         statement.execute("CREATE DATABASE IF NOT EXISTS TestMazeCo;");
         statement.execute("USE TestMazeCo;");
         statement.execute("DROP TABLE IF EXISTS Maze;");
-        statement.execute("CREATE TABLE Maze (" +
-                "mazeID INT AUTO_INCREMENT PRIMARY KEY," +
-                "author VARCHAR(32) NOT NULL," +
-                "mazeData INT NOT NULL," +
-                "creationDate TIMESTAMP NOT NULL," +
-                "lastEditDate TIMESTAMP NOT NULL," +
-                "nCols INT NOT NULL," +
-                "nRows INT NOT NULL," +
-                "title VARCHAR(32)," +
-                "description TEXT" +
+        statement.execute("CREATE TABLE Maze (\n" +
+                "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                "\tauthor VARCHAR(32) NOT NULL,\n" +
+                "\ttitle VARCHAR(32) NOT NULL,\n" +
+                "\tdescription TEXT NOT NULL,\n" +
+                "\tcreationDate TIMESTAMP NOT NULL,\n" +
+                "\tlastEditDate TIMESTAMP NOT NULL,\n" +
+                "\tmazeData BLOB NOT NULL,\n" +
+                "    nCols INT NOT NULL,\n" +
+                "    nRows INT NOT NULL\n" +
                 ");");
 
         createDummyMazes(connection);
@@ -59,6 +62,16 @@ public class TestDatabase {
 //        ArrayList<Maze> mazes = connection.retrieve(MazeAttribute.Author, "Mike Gmail");
 //        assertEquals(mazes.size(), 1);
 //    }
+
+    @Test
+    public void RetrieveMazeCatalog() throws SQLException {
+        ArrayList<MazeData> mazes = connection.retrieveMazeCatalogue();
+        for (MazeData m : mazes) {
+            System.out.println(m.getTitle());
+            System.out.println(m.getCreationDate().toEpochMilli());
+            System.out.println(m.getLastEditDate());
+        }
+    }
 
     @Test
     public void AssignsId() throws SQLException {

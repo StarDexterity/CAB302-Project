@@ -4,6 +4,7 @@ import maze.data.Maze;
 import maze.data.MazeData;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 
 /**
@@ -38,32 +39,43 @@ public class DatabaseConnection {
     }
 
     /**
-     * Saves the given Default.Maze to the database
-     * @param maze The @{@link Maze} object to be saved
+     * Saves the given {@link Maze} to the database.
+     * If the maze doesn't have an ID, creates an entry in the database and gives it one
+     * @param maze The {@link Maze} object to be saved
      */
     public void save(Maze maze) throws SQLException {
         MazeData mazeData = maze.mazeData;
 
         if (mazeData.getId() == 0) {
-            PreparedStatement insert = connection.prepareStatement(
-                    "INSERT INTO Maze (author, mazeData, creationDate, lastEditDate, nCols, nRows) VALUES (?, ?, ?, ?, ?, ?)");
+            // If the maze doesn't have an ID, create a new entry in the database.
+
+            PreparedStatement insert = connection.prepareStatement("INSERT INTO Maze\n" +
+                            "(author, title, description, creationDate, lastEditDate, mazeData, nCols, nRows)\n" +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
             insert.clearParameters();
             insert.setString(1, mazeData.getAuthor());
-            insert.setInt(2, 1);
-            insert.setTimestamp(3, Timestamp.from(mazeData.getCreationDate()));
-            insert.setTimestamp(4, Timestamp.from(mazeData.getLastEditDate()));
-            insert.setInt(5, maze.getCols());
-            insert.setInt(6, maze.getRows());
+            insert.setString(2, mazeData.getTitle());
+            insert.setString(3, mazeData.getDescription());
+            insert.setTimestamp(4, Timestamp.from(mazeData.getCreationDate()));
+            insert.setTimestamp(5, Timestamp.from(mazeData.getLastEditDate()));
+            insert.setInt(6, 1);
+            insert.setInt(7, maze.getCols());
+            insert.setInt(8, maze.getRows());
             insert.executeUpdate();
 
-            //batch update here
+            ResultSet result = insert.getGeneratedKeys();
+            result.next();
+            maze.mazeData.setId(result.getInt(1));
 
         } else {
-            PreparedStatement insert = connection.prepareStatement(
-                    "UPDATE Maze (author, mazeData, creationDate, lastEditDate, nCols, nRows) VALUES (?, ?, ?, ?, ?, ?) WHERE mazeID = ?");
+            // If the maze has an ID, update its entry in the database.
+
+            PreparedStatement insert = connection.prepareStatement("UPDATE Maze\n" +
+                    "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeData = ?, nCols = ?, nRows = ?;");
         }
     }
 
+    //TODO: Delete
     /**
      * Updates any changes from the maze to the appropriate record in the database
      * @param maze The @{@link Maze} object to be updated
@@ -72,24 +84,46 @@ public class DatabaseConnection {
 
     }
 
-    public Maze retrieveIndividualMaze(int id) {
-        return null;
+    public Maze retrieveMaze(int id) throws SQLException {
+        PreparedStatement select = connection.prepareStatement("SELECT * FROM Maze WHERE id = ?");
+
+        select.clearParameters();
+        select.setInt(1, id);
+        select.executeUpdate();
+
+        ResultSet result = select.getResultSet();
+
+        while (result.next()) {
+            int mazeID = result.getInt(1);
+            String author = result.getString(2);
+            String title = result.getString(3);
+            String description = result.getString(4);
+            Instant creationDate = result.getTimestamp(5).toInstant();
+            Instant lastEditDate = result.getTimestamp(6).toInstant();
+
+
+
+            MazeData Mazedata = new MazeData(mazeID, author, title, description, creationDate, lastEditDate);
+        }
+
+
     }
 
-    public ArrayList<MazeData> retrieveMazes() throws SQLException {
+    public ArrayList<MazeData> retrieveMazeCatalogue() throws SQLException {
         Statement select = connection.createStatement();
-        ResultSet result = select.executeQuery("SELECT mazeID, author, title, description, creationDate, lastEditDate FROM maze");
+        ResultSet result = select.executeQuery("SELECT mazeID, author, title, description, creationDate, lastEditDate FROM Maze");
 
         ArrayList<MazeData> mazes = new ArrayList<>();
 
         while (result.next()) {
             int mazeID = result.getInt(1);
-            int author = result.getInt(1);
-            int title = result.getInt(1);
-            int description = result.getInt(1);
-            int creationDate = result.getInt(1);
-            int lastEditDate = result.getInt(1);
+            String author = result.getString(2);
+            String title = result.getString(3);
+            String description = result.getString(4);
+            Instant creationDate = result.getTimestamp(5).toInstant();
+            Instant lastEditDate = result.getTimestamp(6).toInstant();
 
+            mazes.add(new MazeData(mazeID, author, title, description, creationDate, lastEditDate));
         }
 
         return mazes;

@@ -19,7 +19,6 @@ public class TestMazeSolver {
     private Maze createAndSolve(int nCols, int nRows, int[][] mazeGrid) {
         Maze maze = new Maze(nCols, nRows, false);
         maze.setMazeGrid(mazeGrid);
-        //TODO: Try make the '0' default
         MazeSolver.solve(Position.ZERO, maze);
         return maze;
     }
