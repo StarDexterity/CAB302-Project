@@ -55,8 +55,8 @@ public class TestInsertImage {
     @Test
     public void testResize(){
         m.resize(50,50);
-        assertEquals(m.getWidth(), 50);
-        assertEquals(m.getHeight(),50);
+        assertEquals(m.getWidth(), 2);
+        assertEquals(m.getHeight(),2);
     }
 }
 
