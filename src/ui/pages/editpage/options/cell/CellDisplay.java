@@ -37,7 +37,7 @@ public class CellDisplay extends JComponent {
     private final int hoverPadding = 10;
 
     private Maze maze;
-    private Position selectedCell;
+    public Position selectedCell;
 
     // rectangle boxes of the four walls, helps for painting and checking for mouse events
     private final Rectangle northWall;
@@ -198,7 +198,7 @@ public class CellDisplay extends JComponent {
 
     public void setAll(boolean isPath) {
         if (selectedCell == null) return;
-        maze.setAll(selectedCell, isPath);
+        maze.setAllPaths(selectedCell, isPath);
     }
 
 
