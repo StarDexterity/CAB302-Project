@@ -22,6 +22,9 @@ public class DatabaseConnection {
 
     private Connection connection;
 
+    /**
+     * Instantiates the connection with the database
+     */
     public DatabaseConnection() {
         try {
             connection = DriverManager.getConnection(url, username, password);
@@ -36,10 +39,17 @@ public class DatabaseConnection {
 
     /**
      * Deletes a maze record from the database
-     * @param id The id of the maze record to be deleted
+     * @param mazeID The id of the maze record to be deleted
      */
-    public void delete(int id){
-
+    public void delete(int mazeID){
+            try {
+                PreparedStatement select = connection.prepareStatement("DELETE FROM Maze WHERE mazeID = ?");
+                select.clearParameters();
+                select.setInt(1, mazeID);
+                select.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
     }
 
     /**
@@ -83,19 +93,18 @@ public class DatabaseConnection {
         }
     }
 
-    public Maze retrieveMaze(int id) throws SQLDataException {
+    public Maze retrieveMaze(int mazeID) throws SQLDataException {
         try {
             PreparedStatement select = connection.prepareStatement("SELECT * FROM Maze WHERE mazeID = ?");
 
             select.clearParameters();
-            select.setInt(1, id);
+            select.setInt(1, mazeID);
             select.executeUpdate();
 
             ResultSet result = select.getResultSet();
 
             result.next();
 
-            int mazeID = result.getInt(1);
             String author = result.getString(2);
             String title = result.getString(3);
             String description = result.getString(4);

@@ -10,7 +10,6 @@ import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +17,7 @@ public class TestDatabase {
 
     private static DatabaseConnection connection;
 
-    public static void createDummyMazes(DatabaseConnection connection) throws SQLException {
+    public static void createDummyMazes(DatabaseConnection connection) {
         Maze mikesMaze = new Maze(4, 4, false);
         mikesMaze.setMazeGrid(DummyMazes.random);
         mikesMaze.setData("Mike Gmail")
@@ -61,7 +60,8 @@ public class TestDatabase {
     @Test
     public void TestRetrieveMaze() throws SQLException {
         Maze maze = connection.retrieveMaze(1);
-        assertEquals(maze.mazeData.getAuthor(), "Mike Gmail");
+        assertEquals("Mike Gmail", maze.mazeData.getAuthor());
+        assertEquals("Mike's Maze", maze.mazeData.getTitle());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class TestDatabase {
     }
 
     @Test
-    public void AssignsId() throws SQLException {
+    public void AssignsId() {
         Maze roboMaze = new Maze(4, 4, false);
         roboMaze.setMazeGrid(DummyMazes.random);
         roboMaze.setData("Robot Kevin").title("Robot Maze");
