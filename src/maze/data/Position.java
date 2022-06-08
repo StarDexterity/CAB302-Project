@@ -17,6 +17,7 @@ public class Position {
 
     public static final Position ZERO = new Position(0, 0);
 
+    //TODO: delete?
     public static Position getBottomRight(Maze maze) {
         return new Position(maze.getCols() - 1, maze.getRows() - 1);
     }
@@ -53,6 +54,11 @@ public class Position {
 
     public void setPrev(Position pos) { prev = pos; }
 
+    /**
+     * Checks that the supplied position is equal to the position of this object
+     * @param obj a Position
+     * @return
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Position pos) {
@@ -62,6 +68,9 @@ public class Position {
     }
 
     @Override
+    /**
+     * Turns this object into a String
+     */
     public String toString() {
         return "{" +
                 "x=" + x +

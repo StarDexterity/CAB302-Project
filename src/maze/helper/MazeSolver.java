@@ -178,6 +178,11 @@ public final class MazeSolver {
         return deadEnd;
     }
 
+    /**
+     * Counts the bits that are set in the supplied integer
+     * @param n An integer
+     * @return
+     */
     private static int countSetBits(int n) {
         if (n == 0) return 0;
 

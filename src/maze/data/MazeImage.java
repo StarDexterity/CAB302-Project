@@ -15,6 +15,13 @@ public class MazeImage {
     private BufferedImage image;
 
     // constructor
+
+    /**
+     * Constructor for the MazeImage class
+     * @param topLeft The top left position of the image
+     * @param bottomRight The bottom right position of the image
+     * @param file The image file to be inserted into the maze
+     */
     public MazeImage(Position topLeft, Position bottomRight, File file) {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
@@ -46,17 +53,33 @@ public class MazeImage {
         return image;
     }
 
+    /**
+     * Checking if the selected cell is within the bounds of the Maze
+     * @param x The x co-ordinate of the selected cell
+     * @param y The y co-ordinate of the selected cell
+     * @return a boolean
+     */
     public boolean withinBounds(int x, int y) {
         return (x >= topLeft.getX() && x <= bottomRight.getX())
             && (y >= topLeft.getY() && y <= bottomRight.getY());
     }
 
+    /**
+     * Checking if the selected cell is within the bounds of the Maze
+     * @param pos The Position of the selected cell
+     * @return a boolean
+     */
     public boolean withinBounds(Position pos) {
         int x = pos.getX();
         int y = pos.getY();
         return withinBounds(x, y);
     }
 
+    /**
+     * Takes an image and resizes it to the specified width and height.
+     * @param width Wanted new width of the image
+     * @param height Wanted new height of the image
+     */
     public void resize(int width, int height){
         BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 

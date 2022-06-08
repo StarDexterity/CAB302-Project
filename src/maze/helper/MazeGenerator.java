@@ -18,6 +18,13 @@ public final class MazeGenerator {
     // Disable constructor
     private MazeGenerator(){}
 
+    /**
+     * Generates a maze with the supplied generation option
+     * @param nCols The number of columns the maze will have
+     * @param nRows The number of rows the maze will have
+     * @param option The generation style for the maze
+     * @return
+     */
     public static int[][] generateMaze(int nCols, int nRows, GenerationOption option) {
         // initialise mazeGrid array with given column and row size
         int[][] mazeGrid = new int[nRows][nCols];
