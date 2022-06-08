@@ -26,6 +26,8 @@ public final class MazeSolver {
         maze.setAllUnvisited();
 
         boolean solvable = solveBFS(maze);
+        maze.setAllUnvisited();
+
         maze.setSolveStatus(solvable ? SolveStatus.SOLVED : SolveStatus.UNSOLVABLE);
         return solvable;
     }
