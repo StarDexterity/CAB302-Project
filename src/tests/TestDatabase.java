@@ -49,7 +49,7 @@ public class TestDatabase {
                 "\tdescription TEXT NOT NULL,\n" +
                 "\tcreationDate TIMESTAMP NOT NULL,\n" +
                 "\tlastEditDate TIMESTAMP NOT NULL,\n" +
-                "\tmazeData BLOB NOT NULL,\n" +
+                "\tmazeGrid BLOB NOT NULL,\n" +
                 "    nCols INT NOT NULL,\n" +
                 "    nRows INT NOT NULL\n" +
                 ");");
@@ -57,14 +57,21 @@ public class TestDatabase {
         createDummyMazes(connection);
     }
 
-//    @Test
-//    public void RetrieveByTitle() {
-//        ArrayList<Maze> mazes = connection.retrieve(MazeAttribute.Author, "Mike Gmail");
-//        assertEquals(mazes.size(), 1);
-//    }
+    @Test
+    public void TestRetrieveMaze() throws SQLException {
+        Maze maze = connection.retrieveMaze(1);
+        assertEquals(maze.mazeData.getAuthor(), "Mike Gmail");
+    }
 
     @Test
-    public void RetrieveMazeCatalog() throws SQLException {
+    public void TestRetrieveMazeThrows() throws SQLException {
+        assertThrows(SQLException.class, () -> {
+            Maze maze = connection.retrieveMaze(9999);
+        });
+    }
+
+    @Test
+    public void TestRetrieveMazeCatalog() throws SQLException {
         ArrayList<MazeData> mazes = connection.retrieveMazeCatalogue();
         for (MazeData m : mazes) {
             System.out.println(m.getTitle());

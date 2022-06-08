@@ -2,6 +2,7 @@ package database;
 
 import maze.data.Maze;
 import maze.data.MazeData;
+import maze.data.MazeImage;
 
 import java.sql.*;
 import java.time.Instant;
@@ -50,7 +51,7 @@ public class DatabaseConnection {
             // If the maze doesn't have an ID, create a new entry in the database.
 
             PreparedStatement insert = connection.prepareStatement("INSERT INTO Maze\n" +
-                            "(author, title, description, creationDate, lastEditDate, mazeData, nCols, nRows)\n" +
+                            "(author, title, description, creationDate, lastEditDate, mazeGrid, nCols, nRows)\n" +
                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
             insert.clearParameters();
             insert.setString(1, mazeData.getAuthor());
@@ -85,7 +86,7 @@ public class DatabaseConnection {
     }
 
     public Maze retrieveMaze(int id) throws SQLException {
-        PreparedStatement select = connection.prepareStatement("SELECT * FROM Maze WHERE id = ?");
+        PreparedStatement select = connection.prepareStatement("SELECT * FROM Maze WHERE mazeID = ?");
 
         select.clearParameters();
         select.setInt(1, id);
@@ -93,20 +94,30 @@ public class DatabaseConnection {
 
         ResultSet result = select.getResultSet();
 
-        while (result.next()) {
-            int mazeID = result.getInt(1);
-            String author = result.getString(2);
-            String title = result.getString(3);
-            String description = result.getString(4);
-            Instant creationDate = result.getTimestamp(5).toInstant();
-            Instant lastEditDate = result.getTimestamp(6).toInstant();
+        result.next();
 
+        int mazeID = result.getInt(1);
+        String author = result.getString(2);
+        String title = result.getString(3);
+        String description = result.getString(4);
+        Instant creationDate = result.getTimestamp(5).toInstant();
+        Instant lastEditDate = result.getTimestamp(6).toInstant();
+        int mazeGrid = result.getInt(7);
+        int nCols = result.getInt(8);
+        int nRows = result.getInt(9);
 
+        MazeData mazeData = new MazeData(mazeID, author, title, description, creationDate, lastEditDate);
 
-            MazeData Mazedata = new MazeData(mazeID, author, title, description, creationDate, lastEditDate);
-        }
+        int[][] mazeGrid_placeholder = new int[][] {{6, 14, 14, 10}, {7, 15, 15, 11}, {7, 15, 15, 11}, {5, 13, 13, 9}};
 
+        ArrayList logos = retrieveLogos();
 
+        return new Maze(nCols, nRows, mazeGrid_placeholder, mazeData, logos);
+
+    }
+
+    private ArrayList<MazeImage> retrieveLogos() {
+        return new ArrayList<MazeImage>();
     }
 
     public ArrayList<MazeData> retrieveMazeCatalogue() throws SQLException {
