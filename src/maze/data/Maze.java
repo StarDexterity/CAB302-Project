@@ -25,7 +25,7 @@ public class Maze {
 
     public MazeData mazeData;
 
-    private ArrayList<MazeImage> images;
+    public ArrayList<MazeImage> images;
 
     // constructors
     /**
