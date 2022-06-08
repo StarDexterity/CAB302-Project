@@ -26,6 +26,13 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
 
     private final JButton jpg;
     private final JButton png;
+    private final JCheckBox showSolution;
+    private final JCheckBox showGrid;
+    private final JLabel labelSolution;
+    private final JLabel labelGrid;
+    private final JLabel labelColour;
+
+
     public EditPage editPage;
 
     private static Maze current;
@@ -53,24 +60,36 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
 
         jpg = new JButton("JPG");
         png = new JButton("PNG");
+        showSolution = new JCheckBox();
+        showGrid = new JCheckBox();
+        labelSolution = new JLabel("Show solution: ");
+        labelGrid = new JLabel("Show grid: ");;
+        labelColour = new JLabel("Select a colour: ");
 
 
         JPanel myPanel = new JPanel();
         myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
 
         JPanel row1 = new JPanel();
+        JPanel row2 = new JPanel();
 
         row1.add(jpg);
         row1.add(Box.createHorizontalStrut(15)); // a spacer
         row1.add(png);
 
-        myPanel.add(row1);
+        row2.add(labelSolution);
+        row2.add(showSolution);
+        row2.add(labelGrid);
+        row2.add(showGrid);
+        row2.add(labelColour);
 
+
+        myPanel.add(row1);
+        myPanel.add(row2);
 
         //Create an array specifying the number of dialog buttons
         //and their text.
         Object[] options = {CancelString};
-
 
         //Create the JOptionPane
         optionPane = new JOptionPane(myPanel,
