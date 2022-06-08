@@ -18,22 +18,6 @@ import java.util.LinkedList;
  */
 
 public class MazeDisplay extends JPanel implements Scrollable {
-    /**
-     * Indicates the direction of one or more neighboring vertices a vertex connects with (shares an edge)
-     * Can be used like bits aka
-     *          (If a vertex has both South and East neighbors this can be represented with a bit value of 6)
-     */
-
-
-    /**
-     * Number of columns in the maze
-     */
-    private int nCols;
-    /**
-     * Number of rows in the maze
-     */
-    private int nRows;
-
     // These two values are for rendering
     final int cellSize = 25;
     final int margin = 25;
@@ -41,14 +25,9 @@ public class MazeDisplay extends JPanel implements Scrollable {
     private final MazeDisplay ref = this;
 
     /**
-     * The internal representation of the maze, represented as a matrix of vertices connected by the direction enumerable
+     * Stores a reference to the current maze object being rendered
      */
-    private int[][] mazeGrid;
-
-    /**
-     * Stores the solution to the maze. This is empty until solve is called.
-     */
-    LinkedList<Position> solution;
+    private Maze maze;
 
     private boolean showSolution;
     private boolean showGrid;
@@ -75,7 +54,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
         // graphics code
         setBackground(Color.white);
 
-
+        // set a placeholder maze
+        this.maze = new Maze();
 
         // adapted from https://stackoverflow.com/questions/31171502/scroll-jscrollpane-by-dragging-mouse-java-swing
         MouseAdapter ma = new MouseAdapter() {
@@ -99,7 +79,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
                     selectedCell = null;
                     isCellSelected = false;
 
-                    if ((x > margin && x < margin + cellSize * nCols) && (y > margin && y < margin + cellSize * nRows)) {
+                    if ((x > margin && x < margin + cellSize * maze.getCols())
+                            && (y > margin && y < margin + cellSize * maze.getRows())) {
                         int cellX = (int)Math.round((x - margin) / cellSize);
                         int cellY = (int)Math.round((y - margin) / cellSize);
                         Position newSelectedCell = new Position(cellX, cellY);
@@ -166,11 +147,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
     }
 
     public void setMaze(Maze maze) {
-        solution = maze.getSolution();
-
-        mazeGrid = maze.getMazeGrid();
-        nCols = maze.getCols();
-        nRows = maze.getRows();
+        this.maze = maze;
 
         // when maze is altered in any way this component is repainted
         maze.addListener(new Maze.MazeListener() {
@@ -194,7 +171,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(nCols * cellSize + margin * 2, nRows * cellSize + margin * 2);
+        return new Dimension(maze.getCols() * cellSize + margin * 2, maze.getRows() * cellSize + margin * 2);
     }
 
     /**
@@ -208,6 +185,12 @@ public class MazeDisplay extends JPanel implements Scrollable {
         Graphics2D g = (Graphics2D) gg;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // gets important maze data for rendering
+        int nCols = maze.getCols();
+        int nRows = maze.getRows();
+        int[][] mazeGrid = maze.getMazeGrid();
+        LinkedList<Position> solution = maze.getSolution();
 
 
         // draws the grid if showGrid grid option is enabled

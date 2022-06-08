@@ -66,10 +66,16 @@ public class DisplayOptions extends JPanel {
                 switch (status) {
                     case SOLVED -> {
                         showSolution.setEnabled(true);
+                        if (!showSolution.isSelected()) {
+                            showSolution.doClick();
+                        }
+
                         colorButton.setEnabled(true);
                     }
                     case UNSOLVED, UNSOLVABLE -> {
-                        showSolution.doClick();
+                        if (showSolution.isSelected()) {
+                            showSolution.doClick();
+                        }
                         showSolution.setEnabled(false);
                         colorButton.setEnabled(false);
                     }
