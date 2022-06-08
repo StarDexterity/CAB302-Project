@@ -1,5 +1,6 @@
 package ui.pages;
 
+import database.DatabaseConnection;
 import maze.data.MazeData;
 import maze.enums.GenerationOption;
 import maze.data.Maze;
@@ -99,7 +100,7 @@ public class HomePage extends JPanel {
         MazeTableModel tableModel = (MazeTableModel) table.getModel();
         tableModel.clear();
 
-        tableModel.addRows(getDummyMazeData());
+        tableModel.addRows(new DatabaseConnection().retrieveMazeCatalogue());
     }
 
     private ArrayList<MazeData> getDummyMazeData() {

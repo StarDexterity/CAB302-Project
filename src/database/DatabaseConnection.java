@@ -20,21 +20,71 @@ public class DatabaseConnection {
     public static String username = "root";
     public static String password = "secret";
 
-    private Connection connection;
+    private static Connection connection;
 
     /**
      * Instantiates the connection with the database
      */
-    public DatabaseConnection() {
+    public static void instantiate() {
         try {
             connection = DriverManager.getConnection(url, username, password);
+
+            Statement create = connection.createStatement();
+
+            create.execute("CREATE DATABASE IF NOT EXISTS MazeCo;");
+            create.execute("USE MazeCo;");
+            create.execute("CREATE TABLE IF NOT EXISTS Maze (\n" +
+                    "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                    "\tauthor VARCHAR(32) NOT NULL,\n" +
+                    "\ttitle VARCHAR(32) NOT NULL,\n" +
+                    "\tdescription TEXT NOT NULL,\n" +
+                    "\tcreationDate TIMESTAMP NOT NULL,\n" +
+                    "\tlastEditDate TIMESTAMP NOT NULL,\n" +
+                    "\tmazeGrid BLOB NOT NULL,\n" +
+                    "\tnCols INT NOT NULL,\n" +
+                    "\tnRows INT NOT NULL\n" +
+                    ");");
+
+            create.close();
         } catch (SQLException e) {
             e.printStackTrace();;
         }
     }
 
-    public Connection testConnection() {
-        return connection;
+    public DatabaseConnection() {
+        if (connection == null) {
+            System.err.println("No database connection instantiated. Instantiating new connection.");
+            instantiate();
+        }
+    }
+
+    /**
+     * Debug command used for deleting all mazes in the Maze table
+     */
+    public static void instantiateTestDatabase() {
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+
+            Statement create = connection.createStatement();
+
+            create.execute("CREATE DATABASE IF NOT EXISTS TestMazeCo;");
+            create.execute("USE TestMazeCo;");
+            create.execute("DROP TABLE IF EXISTS Maze");
+            create.execute("CREATE TABLE Maze (\n" +
+                    "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                    "\tauthor VARCHAR(32) NOT NULL,\n" +
+                    "\ttitle VARCHAR(32) NOT NULL,\n" +
+                    "\tdescription TEXT NOT NULL,\n" +
+                    "\tcreationDate TIMESTAMP NOT NULL,\n" +
+                    "\tlastEditDate TIMESTAMP NOT NULL,\n" +
+                    "\tmazeGrid BLOB NOT NULL,\n" +
+                    "\tnCols INT NOT NULL,\n" +
+                    "\tnRows INT NOT NULL\n" +
+                    ");");
+            create.close();
+        } catch (SQLException e) {
+            e.printStackTrace();;
+        }
     }
 
     /**
@@ -43,10 +93,12 @@ public class DatabaseConnection {
      */
     public void delete(int mazeID){
             try {
-                PreparedStatement select = connection.prepareStatement("DELETE FROM Maze WHERE mazeID = ?");
-                select.clearParameters();
-                select.setInt(1, mazeID);
-                select.executeUpdate();
+                PreparedStatement delete = connection.prepareStatement("DELETE FROM Maze WHERE mazeID = ?");
+                delete.clearParameters();
+                delete.setInt(1, mazeID);
+                delete.executeUpdate();
+
+                delete.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -58,38 +110,58 @@ public class DatabaseConnection {
      * @param maze The {@link Maze} object to be saved
      */
     public void save(Maze maze) {
-        try {
-            MazeData mazeData = maze.mazeData;
 
-            if (mazeData.getId() == 0) {
-                // If the maze doesn't have an ID, create a new entry in the database.
+        MazeData mazeData = maze.mazeData;
 
-                PreparedStatement insert = connection.prepareStatement("INSERT INTO Maze\n" +
-                        "(author, title, description, creationDate, lastEditDate, mazeGrid, nCols, nRows)\n" +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+        if (mazeData.getId() == 0) {
+            // If the maze doesn't have an ID, create a new entry in the database.
+
+            try {
+            PreparedStatement insert = connection.prepareStatement("INSERT INTO Maze\n" +
+                    "(author, title, description, creationDate, lastEditDate, mazeGrid, nCols, nRows)\n" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+
                 insert.clearParameters();
                 insert.setString(1, mazeData.getAuthor());
                 insert.setString(2, mazeData.getTitle());
                 insert.setString(3, mazeData.getDescription());
                 insert.setTimestamp(4, Timestamp.from(mazeData.getCreationDate()));
-                insert.setTimestamp(5, Timestamp.from(mazeData.getLastEditDate()));
+                insert.setTimestamp(5, Timestamp.from(Instant.now()));
                 insert.setBlob(6, mazeGridToBlob(maze.getMazeGrid()));
                 insert.setInt(7, maze.getCols());
                 insert.setInt(8, maze.getRows());
                 insert.executeUpdate();
 
-                ResultSet result = insert.getGeneratedKeys();
-                result.next();
-                maze.mazeData.setId(result.getInt(1));
+                ResultSet generatedID = insert.getGeneratedKeys();
+                generatedID.next();
+                maze.mazeData.setId(generatedID.getInt(1));
 
-            } else {
-                // If the maze has an ID, update its entry in the database.
+                insert.close();
+                generatedID.close();
 
-                PreparedStatement insert = connection.prepareStatement("UPDATE Maze\n" +
-                        "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeData = ?, nCols = ?, nRows = ?;");
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            // If the maze has an ID, update its entry in the database.
+            try {
+                PreparedStatement update = connection.prepareStatement("UPDATE Maze\n" +
+                        "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeGrid = ?, nCols = ?, nRows = ?;");
+                update.setString(1, mazeData.getAuthor());
+                update.setString(2, mazeData.getTitle());
+                update.setString(3, mazeData.getDescription());
+                update.setTimestamp(4, Timestamp.from(mazeData.getCreationDate()));
+                update.setTimestamp(5, Timestamp.from(Instant.now()));
+                update.setBlob(6, mazeGridToBlob(maze.getMazeGrid()));
+                update.setInt(7, maze.getCols());
+                update.setInt(8, maze.getRows());
+                update.executeUpdate();
+
+                update.close();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -118,6 +190,9 @@ public class DatabaseConnection {
 
             ArrayList logos = retrieveLogos();
 
+            select.close();
+            result.close();
+
             return new Maze(nCols, nRows, mazeGrid, mazeData, logos);
 
         } catch (SQLDataException e) {
@@ -128,28 +203,36 @@ public class DatabaseConnection {
         }
     }
 
-    private ArrayList<MazeImage> retrieveLogos() {
+    private static ArrayList<MazeImage> retrieveLogos() {
         return new ArrayList<MazeImage>();
     }
 
-    public ArrayList<MazeData> retrieveMazeCatalogue() throws SQLException {
-        Statement select = connection.createStatement();
-        ResultSet result = select.executeQuery("SELECT mazeID, author, title, description, creationDate, lastEditDate FROM Maze");
+    public ArrayList<MazeData> retrieveMazeCatalogue() {
+        try {
+            Statement select = connection.createStatement();
+            ResultSet result = select.executeQuery("SELECT mazeID, author, title, description, creationDate, lastEditDate FROM Maze");
 
-        ArrayList<MazeData> mazes = new ArrayList<>();
+            ArrayList<MazeData> mazes = new ArrayList<>();
 
-        while (result.next()) {
-            int mazeID = result.getInt(1);
-            String author = result.getString(2);
-            String title = result.getString(3);
-            String description = result.getString(4);
-            Instant creationDate = result.getTimestamp(5).toInstant();
-            Instant lastEditDate = result.getTimestamp(6).toInstant();
+            while (result.next()) {
+                int mazeID = result.getInt(1);
+                String author = result.getString(2);
+                String title = result.getString(3);
+                String description = result.getString(4);
+                Instant creationDate = result.getTimestamp(5).toInstant();
+                Instant lastEditDate = result.getTimestamp(6).toInstant();
 
-            mazes.add(new MazeData(mazeID, author, title, description, creationDate, lastEditDate));
+                mazes.add(new MazeData(mazeID, author, title, description, creationDate, lastEditDate));
+            }
+
+            select.close();
+            result.close();
+
+            return mazes;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
-
-        return mazes;
     }
 
     /**

@@ -1,5 +1,6 @@
 package ui;
 
+import database.DatabaseConnection;
 import maze.data.Maze;
 import maze.enums.SelectionType;
 import ui.dialog.NewMazeDialog;
@@ -39,6 +40,8 @@ public class App extends JFrame {
     }
 
     public static void main(String[] args) {
+
+        DatabaseConnection.instantiate();
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
