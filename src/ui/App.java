@@ -1,6 +1,7 @@
 package ui;
 
 import maze.data.Maze;
+import maze.enums.SelectionType;
 import ui.dialog.NewMazeDialog;
 import ui.dialog.ExportDialog;
 import ui.pages.EditPage;
@@ -93,7 +94,7 @@ public class App extends JFrame {
         });
 
         editPage.mazeDisplay.addListener(cce -> {
-            deselect.setEnabled(cce.isCellSelected);
+            deselect.setEnabled(cce.selectionType != SelectionType.NONE);
         });
 
         JMenuItem insert = new JMenuItem("Insert Image");

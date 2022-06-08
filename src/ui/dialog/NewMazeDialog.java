@@ -3,6 +3,8 @@ package ui.dialog;
 import maze.enums.GenerationOption;
 import maze.data.Maze;
 import ui.pages.EditPage;
+import ui.pages.editpage.MazeDisplay;
+import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,8 +45,8 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
     public NewMazeDialog(JFrame frame) {
         super(frame);
 
-        SpinnerNumberModel xModel = new SpinnerNumberModel(25, 4, 100, 1);
-        SpinnerNumberModel yModel = new SpinnerNumberModel(25, 4, 100, 1);
+        SpinnerNumberModel xModel = new SpinnerNumberModel(4, 4, 100, 1);
+        SpinnerNumberModel yModel = new SpinnerNumberModel(4, 4, 100, 1);
 
         sizeX = new JSpinner(xModel);
         sizeY = new JSpinner(yModel);
@@ -160,6 +162,8 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
                 GenerationOption option = GenerationOption.getOption((String) generationCBox.getSelectedItem());
 
                 generatedMaze = new Maze(cols, rows, option);
+                MazeDisplay.addImage = false;
+                InsertImage.newMazeClear();
                 clearAndHide();
             }
          else { //user closed dialog or clicked cancel

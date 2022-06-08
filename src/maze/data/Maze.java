@@ -13,7 +13,6 @@ import java.util.LinkedList;
  */
 public class Maze {
 
-    //TODO: Make private;
     private final int[][] mazeGrid;
     private final int nCols;
     private final int nRows;
@@ -26,7 +25,7 @@ public class Maze {
 
     public MazeData mazeData;
 
-    private ArrayList<MazeImage> logos;
+    private ArrayList<MazeImage> images;
 
     // constructors
     /**
@@ -52,6 +51,10 @@ public class Maze {
 
         // initialise solution
         solution = new LinkedList<>();
+        solveStatus = SolveStatus.UNSOLVED;
+
+        // initialise logos
+        images = new ArrayList<>();
 
         // initialise maze data
         mazeData = new MazeData();
@@ -121,14 +124,11 @@ public class Maze {
         this.solution = solution;
     }
 
-    // public methods
-    /**
-     * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
-     * @param image Image to place
-     */
-    public void placeImage(MazeImage image) {
-        mazeChanged();
+    public ArrayList<MazeImage> getImages() {
+        return images;
     }
+
+    // public methods
 
     /**
      * Is the supplied x and y position of a vertex within the bounds of the maze
@@ -174,8 +174,6 @@ public class Maze {
         return isPath(x, y, dir);
     }
 
-
-
     public boolean isVisited(int x, int y) {
         return ((mazeGrid[y][x] & (1 << 4)) != 0);
     }
@@ -184,6 +182,16 @@ public class Maze {
         int x = pos.getX();
         int y = pos.getY();
         return isVisited(x, y);
+    }
+
+    public boolean isEnabled(int x, int y) {
+        return (mazeGrid[y][x] & (1 << 5)) == 0;
+    }
+
+    public boolean isEnabled(Position pos) {
+        int x = pos.getX();
+        int y = pos.getY();
+        return isEnabled(x, y);
     }
 
     public void setVisited(int x, int y, boolean value) {
@@ -268,6 +276,22 @@ public class Maze {
         setAllPaths(x, y, isPath);
     }
 
+    public void setCellEnabled(int x, int y, boolean isEnabled) {
+        if (isEnabled) {
+            mazeGrid[y][x] &= ~(1 << 5);
+        }
+        else {
+            mazeGrid[y][x] |= (1 << 5);
+        }
+    }
+
+    public void setCellEnabled(Position pos, boolean isEnabled) {
+        int x = pos.getX();
+        int y = pos.getY();
+        setCellEnabled(x, y, isEnabled);
+    }
+
+
     // Based on the Build Pattern. Have to use this method to edit maze data
     public MazeData setData(String author) {
         mazeData.updateData(author);
@@ -283,10 +307,60 @@ public class Maze {
         solveStatusChange();
     }
 
+    // Image methods
+    /**
+     * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
+     * //@param image Image to place
+     */
+    public void placeImage(MazeImage image) {
+        if (!validateImage(image))  return;
+
+        int x1 = image.getTopLeft().getX();
+        int y1 = image.getTopLeft().getY();
+
+        int x2 = image.getBottomRight().getX();
+        int y2 = image.getBottomRight().getY();
+
+        // disable all cells in the area of the placed image
+        for (int y = y1; y <= y2; y++) {
+            for (int x = x1; x <= x2; x++) {
+                setCellEnabled(x, y,false);
+            }
+        }
+
+        images.add(image);
+
+        addedImage(image);
+        mazeChanged();
+    }
+
+
+    public void removeImage(MazeImage image) {
+        int x1 = image.getTopLeft().getX();
+        int y1 = image.getTopLeft().getY();
+
+        int x2 = image.getBottomRight().getX();
+        int y2 = image.getBottomRight().getY();
+
+        // enable all cells in the area of the removed image
+        for (int y = y1; y <= y2; y++) {
+            for (int x = x1; x <= x2; x++) {
+                setCellEnabled(x, y,true);
+            }
+        }
+
+        images.remove(image);
+
+        removedImage(image);
+        mazeChanged();
+    }
+
     // Observer design pattern
     public interface MazeListener {
         default void mazeChanged() {}
         default void solveStatusChanged(SolveStatus status) {}
+        default void addedImage(MazeImage image) {}
+        default void removedImage(MazeImage image) {}
     }
 
     private final ArrayList<MazeListener> listeners = new ArrayList<>();
@@ -308,6 +382,18 @@ public class Maze {
         }
     }
 
+    private void addedImage(MazeImage image) {
+        for (MazeListener l: listeners) {
+            l.addedImage(image);
+        }
+    }
+
+    private void removedImage(MazeImage image) {
+        for (MazeListener l: listeners) {
+            l.removedImage(image);
+        }
+    }
+
 
     // private methods
 
@@ -317,6 +403,10 @@ public class Maze {
      * @return
      */
     private boolean validateImage(MazeImage image) {
-        return false;
+        Position topLeft = image.getTopLeft();
+        Position botomRight = image.getBottomRight();
+
+        return (withinBounds(image.getTopLeft())
+            && withinBounds(image.getBottomRight()));
     }
 }
