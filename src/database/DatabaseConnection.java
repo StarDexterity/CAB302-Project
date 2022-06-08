@@ -4,9 +4,12 @@ import maze.data.Maze;
 import maze.data.MazeData;
 import maze.data.MazeImage;
 
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.*;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This static class provides functionality for interacting with the maze database,
@@ -22,8 +25,8 @@ public class DatabaseConnection {
     public DatabaseConnection() {
         try {
             connection = DriverManager.getConnection(url, username, password);
-        } catch (SQLException sqlError) {
-            System.err.println(sqlError);
+        } catch (SQLException e) {
+            e.printStackTrace();;
         }
     }
 
@@ -44,76 +47,76 @@ public class DatabaseConnection {
      * If the maze doesn't have an ID, creates an entry in the database and gives it one
      * @param maze The {@link Maze} object to be saved
      */
-    public void save(Maze maze) throws SQLException {
-        MazeData mazeData = maze.mazeData;
+    public void save(Maze maze) {
+        try {
+            MazeData mazeData = maze.mazeData;
 
-        if (mazeData.getId() == 0) {
-            // If the maze doesn't have an ID, create a new entry in the database.
+            if (mazeData.getId() == 0) {
+                // If the maze doesn't have an ID, create a new entry in the database.
 
-            PreparedStatement insert = connection.prepareStatement("INSERT INTO Maze\n" +
-                            "(author, title, description, creationDate, lastEditDate, mazeGrid, nCols, nRows)\n" +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
-            insert.clearParameters();
-            insert.setString(1, mazeData.getAuthor());
-            insert.setString(2, mazeData.getTitle());
-            insert.setString(3, mazeData.getDescription());
-            insert.setTimestamp(4, Timestamp.from(mazeData.getCreationDate()));
-            insert.setTimestamp(5, Timestamp.from(mazeData.getLastEditDate()));
-            insert.setInt(6, 1);
-            insert.setInt(7, maze.getCols());
-            insert.setInt(8, maze.getRows());
-            insert.executeUpdate();
+                PreparedStatement insert = connection.prepareStatement("INSERT INTO Maze\n" +
+                        "(author, title, description, creationDate, lastEditDate, mazeGrid, nCols, nRows)\n" +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+                insert.clearParameters();
+                insert.setString(1, mazeData.getAuthor());
+                insert.setString(2, mazeData.getTitle());
+                insert.setString(3, mazeData.getDescription());
+                insert.setTimestamp(4, Timestamp.from(mazeData.getCreationDate()));
+                insert.setTimestamp(5, Timestamp.from(mazeData.getLastEditDate()));
+                insert.setBlob(6, mazeGridToBlob(maze.getMazeGrid()));
+                insert.setInt(7, maze.getCols());
+                insert.setInt(8, maze.getRows());
+                insert.executeUpdate();
 
-            ResultSet result = insert.getGeneratedKeys();
-            result.next();
-            maze.mazeData.setId(result.getInt(1));
+                ResultSet result = insert.getGeneratedKeys();
+                result.next();
+                maze.mazeData.setId(result.getInt(1));
 
-        } else {
-            // If the maze has an ID, update its entry in the database.
+            } else {
+                // If the maze has an ID, update its entry in the database.
 
-            PreparedStatement insert = connection.prepareStatement("UPDATE Maze\n" +
-                    "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeData = ?, nCols = ?, nRows = ?;");
+                PreparedStatement insert = connection.prepareStatement("UPDATE Maze\n" +
+                        "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeData = ?, nCols = ?, nRows = ?;");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    //TODO: Delete
-    /**
-     * Updates any changes from the maze to the appropriate record in the database
-     * @param maze The @{@link Maze} object to be updated
-     */
-    public void update(Maze maze) {
+    public Maze retrieveMaze(int id) throws SQLDataException {
+        try {
+            PreparedStatement select = connection.prepareStatement("SELECT * FROM Maze WHERE mazeID = ?");
 
-    }
+            select.clearParameters();
+            select.setInt(1, id);
+            select.executeUpdate();
 
-    public Maze retrieveMaze(int id) throws SQLException {
-        PreparedStatement select = connection.prepareStatement("SELECT * FROM Maze WHERE mazeID = ?");
+            ResultSet result = select.getResultSet();
 
-        select.clearParameters();
-        select.setInt(1, id);
-        select.executeUpdate();
+            result.next();
 
-        ResultSet result = select.getResultSet();
+            int mazeID = result.getInt(1);
+            String author = result.getString(2);
+            String title = result.getString(3);
+            String description = result.getString(4);
+            Instant creationDate = result.getTimestamp(5).toInstant();
+            Instant lastEditDate = result.getTimestamp(6).toInstant();
+            int[][] mazeGrid = blobToMazeGrid(result.getBlob(7));
+            int nCols = result.getInt(8);
+            int nRows = result.getInt(9);
 
-        result.next();
+            MazeData mazeData = new MazeData(mazeID, author, title, description, creationDate, lastEditDate);
 
-        int mazeID = result.getInt(1);
-        String author = result.getString(2);
-        String title = result.getString(3);
-        String description = result.getString(4);
-        Instant creationDate = result.getTimestamp(5).toInstant();
-        Instant lastEditDate = result.getTimestamp(6).toInstant();
-        int mazeGrid = result.getInt(7);
-        int nCols = result.getInt(8);
-        int nRows = result.getInt(9);
+            ArrayList logos = retrieveLogos();
 
-        MazeData mazeData = new MazeData(mazeID, author, title, description, creationDate, lastEditDate);
+            return new Maze(nCols, nRows, mazeGrid, mazeData, logos);
 
-        int[][] mazeGrid_placeholder = new int[][] {{6, 14, 14, 10}, {7, 15, 15, 11}, {7, 15, 15, 11}, {5, 13, 13, 9}};
-
-        ArrayList logos = retrieveLogos();
-
-        return new Maze(nCols, nRows, mazeGrid_placeholder, mazeData, logos);
-
+        } catch (SQLDataException e) {
+            throw e;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private ArrayList<MazeImage> retrieveLogos() {
@@ -148,5 +151,35 @@ public class DatabaseConnection {
      */
     public static void editDatabaseProperties(String password, String username, String url){
 
+    }
+
+    public static Blob mazeGridToBlob(int[][] mazeGrid) {
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
+
+            objectStream.writeObject(mazeGrid);
+            byte[] data = byteStream.toByteArray();
+
+            return new SerialBlob(data);
+        } catch (Exception e) {
+            System.err.println(e);
+            return null;
+        }
+    }
+
+    public static int[][] blobToMazeGrid(Blob blob) {
+        try {
+
+            byte[] data = blob.getBytes(1, (int) blob.length());
+
+            ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
+            ObjectInputStream objectStream = new ObjectInputStream(byteStream);
+            return (int[][]) objectStream.readObject();
+
+        } catch (Exception e) {
+            System.err.println(e);
+            return null;
+        }
     }
 }
