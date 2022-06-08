@@ -129,50 +129,6 @@ public class Maze {
     }
 
     // public methods
-    /**
-     * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
-     * //@param image Image to place
-     */
-    public void placeImage(MazeImage image) {
-        if (!validateImage(image))  return;
-
-        int x1 = image.getTopLeft().getX();
-        int y1 = image.getTopLeft().getY();
-
-        int x2 = image.getBottomRight().getX();
-        int y2 = image.getBottomRight().getY();
-
-        // disable all cells in the area of the placed image
-        for (int y = y1; y <= y2; y++) {
-            for (int x = x1; x <= x2; x++) {
-                setCellEnabled(x, y,false);
-            }
-        }
-
-        images.add(image);
-
-        mazeChanged();
-    }
-
-
-    public void removeImage(MazeImage image) {
-        int x1 = image.getTopLeft().getX();
-        int y1 = image.getTopLeft().getY();
-
-        int x2 = image.getBottomRight().getX();
-        int y2 = image.getBottomRight().getY();
-
-        // enable all cells in the area of the removed image
-        for (int y = y1; y <= y2; y++) {
-            for (int x = x1; x <= x2; x++) {
-                setCellEnabled(x, y,true);
-            }
-        }
-
-        images.remove(image);
-
-        mazeChanged();
-    }
 
     /**
      * Is the supplied x and y position of a vertex within the bounds of the maze
@@ -351,10 +307,60 @@ public class Maze {
         solveStatusChange();
     }
 
+    // Image methods
+    /**
+     * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
+     * //@param image Image to place
+     */
+    public void placeImage(MazeImage image) {
+        if (!validateImage(image))  return;
+
+        int x1 = image.getTopLeft().getX();
+        int y1 = image.getTopLeft().getY();
+
+        int x2 = image.getBottomRight().getX();
+        int y2 = image.getBottomRight().getY();
+
+        // disable all cells in the area of the placed image
+        for (int y = y1; y <= y2; y++) {
+            for (int x = x1; x <= x2; x++) {
+                setCellEnabled(x, y,false);
+            }
+        }
+
+        images.add(image);
+
+        addedImage(image);
+        mazeChanged();
+    }
+
+
+    public void removeImage(MazeImage image) {
+        int x1 = image.getTopLeft().getX();
+        int y1 = image.getTopLeft().getY();
+
+        int x2 = image.getBottomRight().getX();
+        int y2 = image.getBottomRight().getY();
+
+        // enable all cells in the area of the removed image
+        for (int y = y1; y <= y2; y++) {
+            for (int x = x1; x <= x2; x++) {
+                setCellEnabled(x, y,true);
+            }
+        }
+
+        images.remove(image);
+
+        removedImage(image);
+        mazeChanged();
+    }
+
     // Observer design pattern
     public interface MazeListener {
         default void mazeChanged() {}
         default void solveStatusChanged(SolveStatus status) {}
+        default void addedImage(MazeImage image) {}
+        default void removedImage(MazeImage image) {}
     }
 
     private final ArrayList<MazeListener> listeners = new ArrayList<>();
@@ -373,6 +379,18 @@ public class Maze {
     private void solveStatusChange() {
         for (MazeListener l: listeners) {
             l.solveStatusChanged(solveStatus);
+        }
+    }
+
+    private void addedImage(MazeImage image) {
+        for (MazeListener l: listeners) {
+            l.addedImage(image);
+        }
+    }
+
+    private void removedImage(MazeImage image) {
+        for (MazeListener l: listeners) {
+            l.removedImage(image);
         }
     }
 

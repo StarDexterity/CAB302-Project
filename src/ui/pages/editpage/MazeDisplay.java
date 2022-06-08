@@ -133,7 +133,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
                         }
 
                     }
-                    selectedCellChanged();
+                    selectionChanged();
 
                     repaint();
                     revalidate();
@@ -203,6 +203,18 @@ public class MazeDisplay extends JPanel implements Scrollable {
                 repaint();
                 revalidate();
             }
+
+            @Override
+            public void removedImage(MazeImage image) {
+                deselect();
+            }
+
+            @Override
+            public void addedImage(MazeImage image) {
+                selectionType = SelectionType.IMAGE;
+                selectedImage = image;
+                selectionChanged();
+            }
         });
 
 
@@ -214,7 +226,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         selectedCell = null;
         selectedImage = null;
         selectionType = SelectionType.NONE;
-        selectedCellChanged();
+        selectionChanged();
     }
 
     @Override
@@ -366,7 +378,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     public void removeListener(MazeDisplayListener ml) { listeners.remove(ml); }
 
-    private void selectedCellChanged() {
+    private void selectionChanged() {
         repaint();
         revalidate();
 
