@@ -1,6 +1,7 @@
 package maze.enums;
 
 public enum Direction {
+    //N = north; S = south; E = east; W = west;
     N(1, 0, -1),
     S(2, 0, 1),
     E(4, 1, 0),
@@ -46,10 +47,10 @@ public enum Direction {
     }
 
     /**
-     *
-     * @param bit
-     * @param dx
-     * @param dy
+     * Sets the enum values
+     * @param bit The bit value to be changed
+     * @param dx The distance in the x direction
+     * @param dy The distance in the y direction
      */
     Direction(int bit, int dx, int dy) {
         this.bit = bit;
