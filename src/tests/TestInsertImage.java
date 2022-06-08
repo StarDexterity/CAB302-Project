@@ -58,5 +58,11 @@ public class TestInsertImage {
         assertEquals(m.getWidth(), 2);
         assertEquals(m.getHeight(),2);
     }
+
+    @Test
+    public void testNotWithinBounds(){
+        m.withinBounds(6,6);
+        assertNotEquals(m.withinBounds(0,0), true);
+    }
 }
 
