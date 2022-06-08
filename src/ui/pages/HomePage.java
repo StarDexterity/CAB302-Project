@@ -1,10 +1,10 @@
 package ui.pages;
 
+import maze.data.MazeData;
 import maze.enums.GenerationOption;
 import maze.data.Maze;
 import ui.App;
-import ui.pages.EditPage;
-import ui.pages.homepage.MazeTableModel;
+import maze.data.MazeTableModel;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -18,6 +18,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 
 import static maze.Export.displayMaze;
 
@@ -26,7 +29,6 @@ public class HomePage extends JPanel {
 
     private JScrollPane scrollPane;
     private JTable table;
-    private MazeTableModel mazeTableModel;
     private JPopupMenu popupMenu;
 
     public EditPage editPage;
@@ -43,8 +45,10 @@ public class HomePage extends JPanel {
 
         setLayout(new BorderLayout());
 
-        mazeTableModel = new MazeTableModel();
+        MazeTableModel mazeTableModel = new MazeTableModel();
         table = new JTable(mazeTableModel);
+        getMazes();
+
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setResizingAllowed(false);
         table.setFocusable(false);
@@ -89,6 +93,27 @@ public class HomePage extends JPanel {
 
         // layout code
         add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private void getMazes() {
+        MazeTableModel tableModel = (MazeTableModel) table.getModel();
+        tableModel.clear();
+
+        tableModel.addRows(getDummyMazeData());
+    }
+
+    private ArrayList<MazeData> getDummyMazeData() {
+        int id = 0;
+        ArrayList<MazeData> data = new ArrayList<>();
+
+        String[] authors = {"Dave", "Jane", "Richard", "Mary", "Sally", "Bob"};
+        String[] titles = {"Cool maze", "Great maze", "Amazing maze", "Bad maze", "Test maze", ":("};
+
+        for (int i = 0; i < 6; i++) {
+            data.add(new MazeData(id, authors[i], titles[i], "", Instant.now(), Instant.now()));
+            id++;
+        }
+        return data;
     }
 
     private JPopupMenu createPopupMenu(JTable table) {

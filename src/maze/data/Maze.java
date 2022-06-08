@@ -74,15 +74,11 @@ public class Maze {
     }
 
     // From database
-     public Maze(int nCols, int nRows, int[][] mazeGrid, MazeData mazeData, ArrayList<MazeImage> logos) {
-        this(nCols, nRows, true);
-        /* soz just for testing
-        this.nCols = nCols;
-        this.nRows = nRows;
-        this.mazeGrid = mazeGrid;
+     public Maze(int nCols, int nRows, int[][] mazeGrid, MazeData mazeData, ArrayList<MazeImage> images) {
+        this(nCols, nRows, false);
+        this.setMazeGrid(mazeGrid);
         this.mazeData = mazeData;
-        this.logos = logos;
-        */
+        this.images = images;
     }
 
     // getters and setters
@@ -90,10 +86,12 @@ public class Maze {
         return mazeGrid;
     }
 
-    //TODO: Throw exception if data is not correct dimensions
-    public void setMazeGrid (int[][] mazeGrid) throws IndexOutOfBoundsException {
-        //this.mazeGrid = mazeGrid;
-        // cannot change mazeGrid, must scan through instead
+    public void setMazeGrid (int[][] mazeGrid) {
+        for (int y = 0; y < nRows; y++) {
+            for (int x = 0; x < nCols; x++) {
+                this.mazeGrid[y][x] = mazeGrid[y][x];
+            }
+        }
     }
 
     public int getCols() {

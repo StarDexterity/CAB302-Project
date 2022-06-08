@@ -1,15 +1,16 @@
 package tests;
 
 import database.DatabaseConnection;
-import database.MazeAttribute;
 import maze.data.Maze;
 
+import maze.data.MazeData;
 import org.junit.jupiter.api.*;
 
-import javax.xml.crypto.Data;
+import java.sql.SQLDataException;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
-import static database.DatabaseConnection.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestDatabase {
@@ -33,16 +34,58 @@ public class TestDatabase {
     }
 
     @BeforeAll
-    public static void PopulateDatabase () {
+    public static void PopulateDatabase () throws SQLException {
         connection = new DatabaseConnection();
+
+        Statement create = connection.testConnection().createStatement();
+
+        create.execute("CREATE DATABASE IF NOT EXISTS TestMazeCo;");
+        create.execute("USE TestMazeCo;");
+        create.execute("DROP TABLE IF EXISTS Maze;");
+        create.execute("CREATE TABLE Maze (\n" +
+                "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                "\tauthor VARCHAR(32) NOT NULL,\n" +
+                "\ttitle VARCHAR(32) NOT NULL,\n" +
+                "\tdescription TEXT NOT NULL,\n" +
+                "\tcreationDate TIMESTAMP NOT NULL,\n" +
+                "\tlastEditDate TIMESTAMP NOT NULL,\n" +
+                "\tmazeGrid BLOB NOT NULL,\n" +
+                "\tnCols INT NOT NULL,\n" +
+                "\tnRows INT NOT NULL\n" +
+                ");");
+
         createDummyMazes(connection);
     }
 
-//    @Test
-//    public void RetrieveByTitle() {
-//        ArrayList<Maze> mazes = connection.retrieve(MazeAttribute.Author, "Mike Gmail");
-//        assertEquals(mazes.size(), 1);
-//    }
+    @Test
+    public void TestRetrieveMaze() throws SQLException {
+        Maze maze = connection.retrieveMaze(1);
+        assertEquals("Mike Gmail", maze.mazeData.getAuthor());
+        assertEquals("Mike's Maze", maze.mazeData.getTitle());
+    }
+
+    @Test
+    public void RetrievesMazeGrid() throws SQLDataException {
+        Maze maze = connection.retrieveMaze(1);
+        assertEquals(maze.getMazeGrid(), DummyMazes.random);
+    }
+
+    @Test
+    public void TestRetrieveMazeThrows() {
+        assertThrows(SQLDataException.class, () -> {
+            Maze maze = connection.retrieveMaze(9999);
+        });
+    }
+
+    @Test
+    public void TestRetrieveMazeCatalog() throws SQLException {
+        ArrayList<MazeData> mazes = connection.retrieveMazeCatalogue();
+        for (MazeData m : mazes) {
+            System.out.println(m.getTitle());
+            System.out.println(m.getCreationDate());
+            System.out.println(m.getLastEditDate());
+        }
+    }
 
     @Test
     public void AssignsId() {
