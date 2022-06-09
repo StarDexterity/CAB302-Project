@@ -92,6 +92,10 @@ public class App extends JFrame {
 
         JMenuItem newMaze = new JMenuItem("New Maze");
         JMenuItem save = new JMenuItem("Save");
+        save.setEnabled(false);
+        editPage.mazeDisplay.addListener(cce -> {
+            save.setEnabled(editPage.mazeDisplay.isEnabled());
+        });
         JMenuItem export = new JMenuItem("Export");
         JMenuItem close = new JMenuItem("Home");
         JMenuItem exit = new JMenuItem("Exit");
