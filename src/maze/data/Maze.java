@@ -115,17 +115,13 @@ public class Maze {
      * @param nRows
      * @param mazeGrid
      * @param mazeData
-     * @param logos
+     * @param images
      */
-     public Maze(int nCols, int nRows, int[][] mazeGrid, MazeData mazeData, ArrayList<MazeImage> logos) {
-        this(nCols, nRows, true);
-        /* soz just for testing
-        this.nCols = nCols;
-        this.nRows = nRows;
-        this.mazeGrid = mazeGrid;
+    public Maze(int nCols, int nRows, int[][] mazeGrid, MazeData mazeData, ArrayList<MazeImage> images) {
+        this(nCols, nRows, false);
+        this.setMazeGrid(mazeGrid);
         this.mazeData = mazeData;
-        this.logos = logos;
-        */
+        this.images = images;
     }
 
     // getters and setters

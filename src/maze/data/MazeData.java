@@ -1,5 +1,6 @@
 package maze.data;
 
+import java.time.Instant;
 import java.util.Date;
 
 public class MazeData {
@@ -8,30 +9,73 @@ public class MazeData {
     private String author;
     private String title;
     private String description;
-    //TODO: Final
-    private Date creationDate;
-    private Date lastEditDate;
+    private Instant creationDate;
+    private Instant lastEditDate;
 
     public MazeData() {
-        // Gets current date
-        creationDate = new Date();
-        // Default
+        id = 0;
         title = "Unnamed Maze";
+        author = "Anonymous";
+        description = "A maze.";
+
+        // Gets current date
+        creationDate = Instant.now();
+        lastEditDate = Instant.now();
+    }
+
+    public MazeData(int id, String author, String title, String description, Instant creationDate, Instant lastEditDate) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.lastEditDate = lastEditDate;
     }
 
     public void updateData(String author) {
         this.author = author;
         // Updates with current date
-        lastEditDate = new Date();
-    }
-
-    public void assignId(int id) {
-        this.id = id;
+        lastEditDate = Instant.now();
     }
 
     public int getId() {
         return id;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {}
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {}
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {}
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {}
+
+    public Instant getLastEditDate() {
+        return lastEditDate;
+    }
+
+    public void setLastEditDate(Instant lastEditDate) {}
+
 
     public MazeData title(String title) {
         this.title = title;

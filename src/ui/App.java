@@ -1,16 +1,20 @@
 package ui;
 
+import database.DatabaseConnection;
 import maze.data.Maze;
 import maze.enums.SelectionType;
+import ui.dialog.DatabaseErrorHandler;
 import ui.dialog.NewMazeDialog;
 import ui.pages.EditPage;
 import ui.pages.HomePage;
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static maze.Export.displayMaze;
 
@@ -37,7 +41,6 @@ public class App extends JFrame {
         super(s);
         initialize();
     }
-
     public static void main(String[] args) {
 
         try {
@@ -45,6 +48,12 @@ public class App extends JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
                 | UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
+        }
+
+        try {
+            DatabaseConnection.instantiate();
+        } catch (SQLException e) {
+            DatabaseErrorHandler.handle(e, true);
         }
 
         SwingUtilities.invokeLater(() -> new App("Amazing"));
