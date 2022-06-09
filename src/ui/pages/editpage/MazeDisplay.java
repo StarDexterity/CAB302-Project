@@ -1,16 +1,15 @@
 package ui.pages.editpage;
 
-import maze.data.Maze;
-import maze.data.MazeImage;
-import maze.data.Position;
-import maze.data.Selection;
+import maze.data.*;
 import maze.enums.SelectionType;
+import maze.helper.MazeDrawer;
 import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Path2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -64,9 +63,9 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     // selected cell coordinates
     // TODO: convert this into a Selection object
-    private Position selectedCell;
-    private MazeImage selectedImage;
-    private SelectionType selectionType;
+    public static Position selectedCell;
+    public static MazeImage selectedImage;
+    public static SelectionType selectionType;
 
 
     public void changeSolutionColor(Color color){
@@ -134,6 +133,10 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
                     }
                     selectionChanged();
+                    displayOptions.setSelectedType(selectionType);
+                    displayOptions.setSelectionCell(selectedCell);
+                    displayOptions.setSelectedImage(selectedImage);
+
 
                     repaint();
                     revalidate();
@@ -177,14 +180,18 @@ public class MazeDisplay extends JPanel implements Scrollable {
         return showGrid;
     }
 
+    MazeDisplayOptions displayOptions = new MazeDisplayOptions();
+    Selection selection = new Selection(selectedCell, selectedImage, selectionType);
 
     public void setShowSolution(boolean showSolution) {
         this.showSolution = showSolution;
+        displayOptions.setSolution(showSolution);
         repaint();
     }
 
     public void setShowGrid(boolean showGrid) {
         this.showGrid = showGrid;
+        displayOptions.setGrid(showGrid);
         repaint();
     }
     public void addImage (boolean addImage){
@@ -246,111 +253,9 @@ public class MazeDisplay extends JPanel implements Scrollable {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // gets important maze data for rendering
-        int nCols = maze.getCols();
-        int nRows = maze.getRows();
-        int[][] mazeGrid = maze.getMazeGrid();
-        LinkedList<Position> solution = maze.getSolution();
+        BufferedImage bufferedImage = MazeDrawer.drawMaze(maze, displayOptions, selection);
 
-
-        // draws the grid if showGrid grid option is enabled
-        if (showGrid) {
-            g.setStroke(new BasicStroke(2));
-            g.setColor(new Color(192, 192, 192, 200));
-
-            for (int i = 0; i < nRows + 1; i++) {
-                int rowHt = cellSize;
-                g.drawLine(0 + margin, (i * rowHt) + margin, (cellSize * nCols) + margin, (i * rowHt) + margin);
-            }
-            for (int i = 0; i < nCols + 1; i++) {
-                int rowWid = cellSize;
-                g.drawLine((i * rowWid) + margin, 0 + margin, (i * rowWid) + margin, (cellSize * nRows) + margin);
-            }
-        }
-
-        g.setStroke(new BasicStroke(2));
-        g.setColor(Color.black);
-
-        // draw maze
-        for (int r = 0; r < nRows; r++) {
-            for (int c = 0; c < nCols; c++) {
-
-                int x = margin + c * cellSize;
-                int y = margin + r * cellSize;
-
-                if ((mazeGrid[r][c] & 1) == 0) // N
-                    g.drawLine(x, y, x + cellSize, y);
-
-                if ((mazeGrid[r][c] & 2) == 0) // S
-                    g.drawLine(x, y + cellSize, x + cellSize, y + cellSize);
-
-                if ((mazeGrid[r][c] & 4) == 0) // E
-                    g.drawLine(x + cellSize, y, x + cellSize, y + cellSize);
-
-                if ((mazeGrid[r][c] & 8) == 0) // W
-                    g.drawLine(x, y, x, y + cellSize);
-            }
-        }
-
-
-        // draw images
-        for (MazeImage image : maze.getImages()) {
-            // get top left coordinate
-            Position topLeft = image.getTopLeft();
-
-            // get width and height of image in pixels
-            int width = image.getWidth() * cellSize;
-            int height = image.getHeight() * cellSize;
-
-            // get x and y position of image top left corner in pixels
-            int xPos = (topLeft.getX() * cellSize) + margin;
-            int yPos = (topLeft.getY() * cellSize) + margin;
-
-            image.resize(width, height);
-            g.drawImage(image.getImage(), xPos, yPos, null);
-            g.drawRect(xPos, yPos, width, height);
-        }
-
-        // draw pathfinding animation
-        int offset = margin + cellSize / 2;
-
-        Path2D path = new Path2D.Float();
-        path.moveTo(offset, offset);
-
-        // draws the solution if showSolution is true
-        if (showSolution) {
-            for (Position pos : solution) {
-                int x = pos.getX() * cellSize + offset;
-                int y = pos.getY() * cellSize + offset;
-                path.lineTo(x, y);
-            }
-        }
-
-
-        g.setColor(solutionLineColor);
-        g.draw(path);
-
-        g.setColor(Color.blue);
-        g.fillOval(offset - 5, offset - 5, 10, 10);
-
-        g.setColor(Color.green);
-        int x = offset + (nCols - 1) * cellSize;
-        int y = offset + (nRows - 1) * cellSize;
-        g.fillOval(x - 5, y - 5, 10, 10);
-
-        // draws selected object
-        g.setColor(new Color(0, 128, 128, 128));
-        if (selectionType == SelectionType.CELL) {
-            g.fillRect(selectedCell.getX() * cellSize + margin,
-                    selectedCell.getY() * cellSize + margin,
-                    cellSize, cellSize);
-        }
-        else if (selectionType == SelectionType.IMAGE) {
-            g.fillRect(selectedImage.getTopLeft().getX() * cellSize + margin,
-                    selectedImage.getTopLeft().getY() * cellSize + margin,
-                    selectedImage.getWidth() * cellSize,
-                    selectedImage.getHeight() * cellSize);
-        }
+        g.drawImage(bufferedImage, null, 0, 0);
 
         g.dispose();
     }

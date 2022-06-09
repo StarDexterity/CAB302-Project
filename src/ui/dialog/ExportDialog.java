@@ -43,7 +43,6 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
      */
     public Maze generatedMaze;
 
-    //private String ExportString = "Export";
     private String CancelString = "Cancel";
 
     public static void storedMazes(Maze maze){

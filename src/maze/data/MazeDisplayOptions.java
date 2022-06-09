@@ -1,5 +1,7 @@
 package maze.data;
 
+import maze.enums.SelectionType;
+
 import java.awt.*;
 
 public class MazeDisplayOptions {
@@ -9,6 +11,10 @@ public class MazeDisplayOptions {
 
     private boolean isSolution = false;
     private boolean isGrid = false;
+
+    private SelectionType selectedType;
+    private Position selectedCell;
+    private MazeImage selectedImage;
 
     private Color backgroundColour = Color.white;
     private Color mazeColour = Color.black;
@@ -24,6 +30,31 @@ public class MazeDisplayOptions {
     public MazeDisplayOptions() {
 
     }
+
+    public SelectionType getSelectedType() {
+        return selectedType;
+    }
+
+    public void setSelectedType(SelectionType selectedType) {
+        this.selectedType = selectedType;
+    }
+
+    public Position getSelectionCell() {
+        return selectedCell;
+    }
+
+    public void setSelectionCell(Position selectedCell) {
+        this.selectedCell = selectedCell;
+    }
+
+    public MazeImage getSelectedImage() {
+        return selectedImage;
+    }
+
+    public void setSelectedImage(MazeImage selectedImage) {
+        this.selectedImage = selectedImage;
+    }
+
 
     public int getCellSize() {
         return cellSize;
