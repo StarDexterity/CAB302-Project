@@ -8,9 +8,7 @@ import org.junit.jupiter.api.Test;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.testng.AssertJUnit.assertEquals;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;

@@ -3,7 +3,7 @@ package tests;
 import maze.data.Position;
 import org.junit.jupiter.api.Test;
 
-import static org.testng.AssertJUnit.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestVarious {
     Position position = new Position(3,3);
