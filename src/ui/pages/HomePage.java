@@ -1,12 +1,12 @@
 package ui.pages;
 
 import database.DatabaseConnection;
-import maze.data.MazeData;
 import maze.enums.GenerationOption;
 import maze.data.Maze;
 import ui.App;
 import maze.data.MazeTableModel;
 import ui.dialog.DatabaseErrorHandler;
+import ui.pages.homepage.HomeButtons;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -34,6 +34,8 @@ public class HomePage extends JPanel {
     private JPopupMenu popupMenu;
 
     public EditPage editPage;
+    HomeButtons homeButtons;
+
 
     public HomePage(App app) {
         super();
@@ -42,10 +44,11 @@ public class HomePage extends JPanel {
     }
 
     private void createGUI() {
-        //TODO: Why testing?
-        new JLabel("testing");
 
         setLayout(new BorderLayout());
+
+        homeButtons = new HomeButtons();
+        add(homeButtons, BorderLayout.NORTH);
 
         MazeTableModel mazeTableModel = new MazeTableModel();
         table = new JTable(mazeTableModel);
@@ -84,7 +87,6 @@ public class HomePage extends JPanel {
         columnModel.getColumn(3).setPreferredWidth(100);
         columnModel.getColumn(4).setPreferredWidth(1);
 
-
         scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);
         table.setDefaultEditor(Object.class, null);
@@ -95,7 +97,7 @@ public class HomePage extends JPanel {
 
         // border code
         Border innerBorder = BorderFactory.createBevelBorder(BevelBorder.LOWERED);
-        Border outerBorder = BorderFactory.createEmptyBorder(120,100,100,100);
+        Border outerBorder = BorderFactory.createEmptyBorder(100,100,100,100);
         setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
 
         // layout code

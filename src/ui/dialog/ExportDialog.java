@@ -64,9 +64,9 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
         png = new JButton("PNG");
         showSolution = new JCheckBox();
         showGrid = new JCheckBox();
-        labelSolution = new JLabel("Show solution: ");
-        labelGrid = new JLabel("Show grid: ");;
-        labelColour = new JLabel("Select a colour: ");
+        labelSolution = new JLabel(" Show solution:");
+        labelGrid = new JLabel(" Show grid:");
+        labelColour = new JLabel(" Select a colour:");
 
 
         JPanel myPanel = new JPanel();
