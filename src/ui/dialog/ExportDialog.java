@@ -143,8 +143,7 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
     public void propertyChange(PropertyChangeEvent e) {
 
         showSolution.addActionListener(f -> {
-            ifSolution = true;
-            MazeSolver.solve(current);
+            ifSolution = MazeSolver.solve(current);
         });
 
         showGrid.addActionListener(f -> {
