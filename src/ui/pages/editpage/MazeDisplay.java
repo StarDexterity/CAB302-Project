@@ -250,8 +250,9 @@ public class MazeDisplay extends JPanel implements Scrollable {
     public void paintComponent(Graphics gg) {
         super.paintComponent(gg);
         Graphics2D g = (Graphics2D) gg;
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
         BufferedImage bufferedImage = MazeDrawer.drawMaze(maze, displayOptions, selection);
 

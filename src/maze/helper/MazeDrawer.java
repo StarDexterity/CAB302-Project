@@ -32,10 +32,9 @@ public class MazeDrawer {
 
         Graphics2D g = bufferedImage.createGraphics();
 
-        //super.paintComponent(gg);
-        //Graphics2D g = (Graphics2D) gg;
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
         Position selectedCell = displayOptions.getSelectionCell();
         MazeImage selectedImage = displayOptions.getSelectedImage();
