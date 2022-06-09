@@ -1,3 +1,4 @@
 url=localhost:3307
+schema=mazeco
 username=root
-password=secre
+password=secret

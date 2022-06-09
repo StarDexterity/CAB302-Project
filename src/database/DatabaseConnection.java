@@ -10,7 +10,7 @@ import java.io.*;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Properties;
 
 /**
@@ -21,6 +21,7 @@ public class DatabaseConnection {
 
     private static final String DRIVER = "jdbc:mariadb://";
     private static Connection connection;
+    private static String schema;
 
     /**
      * Instantiates the connection with the database
@@ -38,8 +39,8 @@ public class DatabaseConnection {
 
             Statement create = connection.createStatement();
 
-            create.execute("CREATE DATABASE IF NOT EXISTS MazeCo;");
-            create.execute("USE MazeCo;");
+            create.execute("CREATE DATABASE IF NOT EXISTS " + schema + ";");
+            create.execute("USE " + schema + ";");
             create.execute("CREATE TABLE IF NOT EXISTS Maze (\n" +
                     "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
                     "\tauthor VARCHAR(32) NOT NULL,\n" +
@@ -64,7 +65,6 @@ public class DatabaseConnection {
         Triplet<String, String, String> values = Triplet.with("", "", "");
 
         try {
-
             input = new FileInputStream("src/database/db.props");
 
             // load a properties file
@@ -74,6 +74,7 @@ public class DatabaseConnection {
             values = values.setAt0(DRIVER + props.getProperty("url"));
             values = values.setAt1(props.getProperty("username"));
             values = values.setAt2(props.getProperty("password"));
+            schema = props.getProperty("schema");
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -293,8 +294,8 @@ public class DatabaseConnection {
 
             Statement create = connection.createStatement();
 
-            create.execute("CREATE DATABASE IF NOT EXISTS TestMazeCo;");
-            create.execute("USE TestMazeCo;");
+            create.execute("CREATE DATABASE IF NOT EXISTS testmazeco;");
+            create.execute("USE testmazeco;");
             create.execute("DROP TABLE IF EXISTS Maze");
             create.execute("CREATE TABLE Maze (\n" +
                     "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
