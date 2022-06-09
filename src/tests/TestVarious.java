@@ -15,7 +15,7 @@ public class TestVarious {
     }
 
     @Test
-    public void testString(){
+    public void testPositionString(){
         assertEquals(position.toString(),"{x=3, y=3}");
     }
 }

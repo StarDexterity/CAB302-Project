@@ -2,6 +2,7 @@ package tests;
 
 import maze.data.Maze;
 import maze.enums.Direction;
+import maze.enums.GenerationOption;
 import maze.enums.SolveStatus;
 import maze.helper.MazeSolver;
 import maze.data.Position;
@@ -73,5 +74,11 @@ public class TestMazeSolver {
         assertEquals(maze.getSolveStatus(), SolveStatus.UNSOLVED);
         MazeSolver.solve(maze);
         assertEquals(maze.getSolveStatus(), SolveStatus.SOLVED);
+    }
+
+    @Test
+    public void mazeExists(){
+        Maze maze = new Maze(5,5, GenerationOption.ALDOUS);
+        assertNotNull(maze.getMazeGrid());
     }
 }
