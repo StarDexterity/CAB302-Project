@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class Export {
     private static int nRows;
@@ -20,7 +21,7 @@ public class Export {
     private static int[][] mazeGrid;
     private static boolean solved = false;
     private static boolean grid = false;
-    static private String title;
+    static private String title = "mazeImage";
 
     static int cellSize = 25;
     static int margin = 25;
@@ -45,8 +46,6 @@ public class Export {
         displayOptions.setSolution(ifSolution);
         displayOptions.setGrid(ifGrid);
 
-
-
         // BufferedImage of one of the predefined image types.
         BufferedImage bufferedImage = MazeDrawer.drawMaze(maze, displayOptions);
 
@@ -58,28 +57,44 @@ public class Export {
 
         export.drawImage(bufferedImage, null, 0, 0);
 
-
-
-
         // deletes this graphics
         export.dispose();
 
 
-        if (Imagetype == "png"){
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        if (Imagetype == "png") {
             // save as PNG
             String fileName = title + ".png";
             File file = new File("mazeImage.png");
-            ImageIO.write(bufferedImage, "png", file);
+
+
+            int returnVal = fc.showOpenDialog(null);
+
+            // if file chooser aproved
+            String path;
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                path = fc.getSelectedFile().getAbsolutePath();
+                ImageIO.write(bufferedImage, "png", new File(path+"/img.png"));
+            }
+
+
         }
 
         if (Imagetype == "jpg"){
             // save as PNG
             String fileName = title + ".jpg";
             File file = new File("mazeImage.jpg");
-            ImageIO.write(bufferedImage, "jpg", file);
+
+            int returnVal = fc.showOpenDialog(null);
+            String path;
+            if (returnVal == JFileChooser.APPROVE_OPTION){
+                path = fc.getSelectedFile().getAbsolutePath();
+                ImageIO.write(bufferedImage, "jpg", new File(path+"/img.jpg"));
+            }
+
+
         }
-
-        // save as PDF (may not implement) (needs to be implemented differently to other exports)
-
     }
 }
