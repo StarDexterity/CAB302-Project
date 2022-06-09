@@ -78,11 +78,11 @@ public class HomePage extends JPanel {
 
         // manually set column size
         TableColumnModel columnModel = table.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(170);
-        columnModel.getColumn(1).setPreferredWidth(170);
+        columnModel.getColumn(0).setPreferredWidth(1);
+        columnModel.getColumn(1).setPreferredWidth(100);
         columnModel.getColumn(2).setPreferredWidth(100);
         columnModel.getColumn(3).setPreferredWidth(100);
-        columnModel.getColumn(4).setPreferredWidth(1);
+        columnModel.getColumn(4).setPreferredWidth(100);
 
 
         scrollPane = new JScrollPane(table);
