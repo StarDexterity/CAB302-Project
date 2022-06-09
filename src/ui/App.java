@@ -5,6 +5,7 @@ import maze.data.Maze;
 import maze.enums.SelectionType;
 import ui.dialog.DatabaseErrorHandler;
 import ui.dialog.NewMazeDialog;
+import ui.dialog.SaveDialog;
 import ui.pages.EditPage;
 import ui.pages.HomePage;
 
@@ -118,6 +119,12 @@ public class App extends JFrame {
             if (m != null) {
                 showEditPage(m);
             }
+        });
+
+        save.addActionListener(e -> {
+            SaveDialog saveDialog = new SaveDialog(new JFrame());
+            saveDialog.setLocationRelativeTo(getContentPane());
+            saveDialog.setVisible(true);
         });
 
         export.addActionListener(new ActionListener() {
