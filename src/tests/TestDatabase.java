@@ -6,10 +6,12 @@ import maze.data.Maze;
 import maze.data.MazeData;
 import org.junit.jupiter.api.*;
 
+import javax.xml.crypto.Data;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +19,7 @@ public class TestDatabase {
 
     private static DatabaseConnection connection;
 
-    public static void createDummyMazes(DatabaseConnection connection) {
+    public static void createDummyMazes() {
         Maze mikesMaze = new Maze(4, 4, false);
         mikesMaze.setMazeGrid(DummyMazes.random);
         mikesMaze.setData("Mike Gmail")
@@ -26,35 +28,29 @@ public class TestDatabase {
         connection.save(mikesMaze);
 
         Maze himsMaze = new Maze(4, 4, false);
-        himsMaze.setMazeGrid(DummyMazes.random);
+        himsMaze.setMazeGrid(DummyMazes.full);
         himsMaze.setData("Him Jogan")
                 .title("Him's Cloud Maze")
                 .description("It's stored exclusively in the cloud");
         connection.save(himsMaze);
+
+        Maze longOnMazeShortOnData = new Maze(4, 6, false);
+        longOnMazeShortOnData.setMazeGrid(DummyMazes.x_long);
+        connection.save(longOnMazeShortOnData);
+//
+        Maze failMaze = new Maze(4, 4, false);
+        failMaze.setMazeGrid(DummyMazes.lateFail);
+        failMaze.setData("Moon Microsystems, Inc").title("It almost works!");
+        connection.save(failMaze);
     }
 
     @BeforeAll
     public static void PopulateDatabase () throws SQLException {
+        DatabaseConnection.instantiateTestDatabase();
+
         connection = new DatabaseConnection();
 
-        Statement create = connection.testConnection().createStatement();
-
-        create.execute("CREATE DATABASE IF NOT EXISTS TestMazeCo;");
-        create.execute("USE TestMazeCo;");
-        create.execute("DROP TABLE IF EXISTS Maze;");
-        create.execute("CREATE TABLE Maze (\n" +
-                "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
-                "\tauthor VARCHAR(32) NOT NULL,\n" +
-                "\ttitle VARCHAR(32) NOT NULL,\n" +
-                "\tdescription TEXT NOT NULL,\n" +
-                "\tcreationDate TIMESTAMP NOT NULL,\n" +
-                "\tlastEditDate TIMESTAMP NOT NULL,\n" +
-                "\tmazeGrid BLOB NOT NULL,\n" +
-                "\tnCols INT NOT NULL,\n" +
-                "\tnRows INT NOT NULL\n" +
-                ");");
-
-        createDummyMazes(connection);
+        createDummyMazes();
     }
 
     @Test
@@ -62,12 +58,16 @@ public class TestDatabase {
         Maze maze = connection.retrieveMaze(1);
         assertEquals("Mike Gmail", maze.mazeData.getAuthor());
         assertEquals("Mike's Maze", maze.mazeData.getTitle());
+
+        maze = connection.retrieveMaze(2);
+        assertEquals("Him Jogan", maze.mazeData.getAuthor());
+        assertEquals("Him's Cloud Maze", maze.mazeData.getTitle());
     }
 
     @Test
     public void RetrievesMazeGrid() throws SQLDataException {
         Maze maze = connection.retrieveMaze(1);
-        assertEquals(maze.getMazeGrid(), DummyMazes.random);
+        assertEquals(Arrays.deepToString(maze.getMazeGrid()), Arrays.deepToString(DummyMazes.random));
     }
 
     @Test
@@ -81,7 +81,9 @@ public class TestDatabase {
     public void TestRetrieveMazeCatalog() throws SQLException {
         ArrayList<MazeData> mazes = connection.retrieveMazeCatalogue();
         for (MazeData m : mazes) {
+            System.out.println(m.getAuthor());
             System.out.println(m.getTitle());
+            System.out.println(m.getDescription());;
             System.out.println(m.getCreationDate());
             System.out.println(m.getLastEditDate());
         }
@@ -91,7 +93,7 @@ public class TestDatabase {
     public void AssignsId() {
         Maze roboMaze = new Maze(4, 4, false);
         roboMaze.setMazeGrid(DummyMazes.random);
-        roboMaze.setData("Robot Kevin").title("Robot Maze");
+        roboMaze.setData("Robot Kevin").title("Robot Maze").description("Beep, Boop!");
 
         assertEquals(roboMaze.mazeData.getId(), 0);
 

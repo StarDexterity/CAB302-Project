@@ -3,39 +3,100 @@ package database;
 import maze.data.Maze;
 import maze.data.MazeData;
 import maze.data.MazeImage;
+import org.javatuples.Triplet;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.*;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import java.util.Properties;
 
 /**
  * This static class provides functionality for interacting with the maze database,
  * including storing, retrieving, updating and deleting records from the maze table.
  */
 public class DatabaseConnection {
-    public static String url = "jdbc:mariadb://localhost:3307";;
-    public static String username = "root";
-    public static String password = "secret";
 
-    private Connection connection;
+    private static final String DRIVER = "jdbc:mariadb://";
+    private static Connection connection;
+    private static String schema;
 
     /**
      * Instantiates the connection with the database
      */
-    public DatabaseConnection() {
+    public static void instantiate() throws SQLException {
+        Triplet<String, String, String> values = readProperties();
+        String url = values.getValue0();
+        String username = values.getValue1();
+        String password = values.getValue2();
+
+        // Can throw SQLException
+        connection = DriverManager.getConnection(url, username, password);
+
         try {
-            connection = DriverManager.getConnection(url, username, password);
+
+            Statement create = connection.createStatement();
+
+            create.execute("CREATE DATABASE IF NOT EXISTS " + schema + ";");
+            create.execute("USE " + schema + ";");
+            create.execute("CREATE TABLE IF NOT EXISTS Maze (\n" +
+                    "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                    "\tauthor VARCHAR(32) NOT NULL,\n" +
+                    "\ttitle VARCHAR(32) NOT NULL,\n" +
+                    "\tdescription TEXT NOT NULL,\n" +
+                    "\tcreationDate TIMESTAMP NOT NULL,\n" +
+                    "\tlastEditDate TIMESTAMP NOT NULL,\n" +
+                    "\tmazeGrid BLOB NOT NULL,\n" +
+                    "\tnCols INT NOT NULL,\n" +
+                    "\tnRows INT NOT NULL\n" +
+                    ");");
+
+            create.close();
         } catch (SQLException e) {
             e.printStackTrace();;
         }
     }
 
-    public Connection testConnection() {
-        return connection;
+    private static Triplet readProperties() {
+        Properties props = new Properties();
+        InputStream input = null;
+        Triplet<String, String, String> values = Triplet.with("", "", "");
+
+        try {
+            input = new FileInputStream("src/database/db.props");
+
+            // load a properties file
+            props.load(input);
+
+            // get the property value and set
+            values = values.setAt0(DRIVER + props.getProperty("url"));
+            values = values.setAt1(props.getProperty("username"));
+            values = values.setAt2(props.getProperty("password"));
+            schema = props.getProperty("schema");
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return values;
+        }
     }
+
+    public DatabaseConnection() throws SQLException {
+        if (connection == null) {
+            System.err.println("No database connection instantiated. Instantiating new connection.");
+            instantiate();
+        }
+    }
+
 
     /**
      * Deletes a maze record from the database
@@ -43,10 +104,12 @@ public class DatabaseConnection {
      */
     public void delete(int mazeID){
             try {
-                PreparedStatement select = connection.prepareStatement("DELETE FROM Maze WHERE mazeID = ?");
-                select.clearParameters();
-                select.setInt(1, mazeID);
-                select.executeUpdate();
+                PreparedStatement delete = connection.prepareStatement("DELETE FROM Maze WHERE mazeID = ?");
+                delete.clearParameters();
+                delete.setInt(1, mazeID);
+                delete.executeUpdate();
+
+                delete.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -58,38 +121,58 @@ public class DatabaseConnection {
      * @param maze The {@link Maze} object to be saved
      */
     public void save(Maze maze) {
-        try {
-            MazeData mazeData = maze.mazeData;
 
-            if (mazeData.getId() == 0) {
-                // If the maze doesn't have an ID, create a new entry in the database.
+        MazeData mazeData = maze.mazeData;
 
-                PreparedStatement insert = connection.prepareStatement("INSERT INTO Maze\n" +
-                        "(author, title, description, creationDate, lastEditDate, mazeGrid, nCols, nRows)\n" +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+        if (mazeData.getId() == 0) {
+            // If the maze doesn't have an ID, create a new entry in the database.
+
+            try {
+            PreparedStatement insert = connection.prepareStatement("INSERT INTO Maze\n" +
+                    "(author, title, description, creationDate, lastEditDate, mazeGrid, nCols, nRows)\n" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+
                 insert.clearParameters();
                 insert.setString(1, mazeData.getAuthor());
                 insert.setString(2, mazeData.getTitle());
                 insert.setString(3, mazeData.getDescription());
                 insert.setTimestamp(4, Timestamp.from(mazeData.getCreationDate()));
-                insert.setTimestamp(5, Timestamp.from(mazeData.getLastEditDate()));
+                insert.setTimestamp(5, Timestamp.from(Instant.now()));
                 insert.setBlob(6, mazeGridToBlob(maze.getMazeGrid()));
                 insert.setInt(7, maze.getCols());
                 insert.setInt(8, maze.getRows());
                 insert.executeUpdate();
 
-                ResultSet result = insert.getGeneratedKeys();
-                result.next();
-                maze.mazeData.setId(result.getInt(1));
+                ResultSet generatedID = insert.getGeneratedKeys();
+                generatedID.next();
+                maze.mazeData.setId(generatedID.getInt(1));
 
-            } else {
-                // If the maze has an ID, update its entry in the database.
+                insert.close();
+                generatedID.close();
 
-                PreparedStatement insert = connection.prepareStatement("UPDATE Maze\n" +
-                        "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeData = ?, nCols = ?, nRows = ?;");
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            // If the maze has an ID, update its entry in the database.
+            try {
+                PreparedStatement update = connection.prepareStatement("UPDATE Maze\n" +
+                        "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeGrid = ?, nCols = ?, nRows = ?;");
+                update.setString(1, mazeData.getAuthor());
+                update.setString(2, mazeData.getTitle());
+                update.setString(3, mazeData.getDescription());
+                update.setTimestamp(4, Timestamp.from(mazeData.getCreationDate()));
+                update.setTimestamp(5, Timestamp.from(Instant.now()));
+                update.setBlob(6, mazeGridToBlob(maze.getMazeGrid()));
+                update.setInt(7, maze.getCols());
+                update.setInt(8, maze.getRows());
+                update.executeUpdate();
+
+                update.close();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -118,6 +201,9 @@ public class DatabaseConnection {
 
             ArrayList logos = retrieveLogos();
 
+            select.close();
+            result.close();
+
             return new Maze(nCols, nRows, mazeGrid, mazeData, logos);
 
         } catch (SQLDataException e) {
@@ -128,38 +214,36 @@ public class DatabaseConnection {
         }
     }
 
-    private ArrayList<MazeImage> retrieveLogos() {
+    private static ArrayList<MazeImage> retrieveLogos() {
         return new ArrayList<MazeImage>();
     }
 
-    public ArrayList<MazeData> retrieveMazeCatalogue() throws SQLException {
-        Statement select = connection.createStatement();
-        ResultSet result = select.executeQuery("SELECT mazeID, author, title, description, creationDate, lastEditDate FROM Maze");
+    public ArrayList<MazeData> retrieveMazeCatalogue() {
+        try {
+            Statement select = connection.createStatement();
+            ResultSet result = select.executeQuery("SELECT mazeID, author, title, description, creationDate, lastEditDate FROM Maze");
 
-        ArrayList<MazeData> mazes = new ArrayList<>();
+            ArrayList<MazeData> mazes = new ArrayList<>();
 
-        while (result.next()) {
-            int mazeID = result.getInt(1);
-            String author = result.getString(2);
-            String title = result.getString(3);
-            String description = result.getString(4);
-            Instant creationDate = result.getTimestamp(5).toInstant();
-            Instant lastEditDate = result.getTimestamp(6).toInstant();
+            while (result.next()) {
+                int mazeID = result.getInt(1);
+                String author = result.getString(2);
+                String title = result.getString(3);
+                String description = result.getString(4);
+                Instant creationDate = result.getTimestamp(5).toInstant();
+                Instant lastEditDate = result.getTimestamp(6).toInstant();
 
-            mazes.add(new MazeData(mazeID, author, title, description, creationDate, lastEditDate));
+                mazes.add(new MazeData(mazeID, author, title, description, creationDate, lastEditDate));
+            }
+
+            select.close();
+            result.close();
+
+            return mazes;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
-
-        return mazes;
-    }
-
-    /**
-     *
-     * @param password
-     * @param username
-     * @param url
-     */
-    public static void editDatabaseProperties(String password, String username, String url){
-
     }
 
     public static Blob mazeGridToBlob(int[][] mazeGrid) {
@@ -189,6 +273,44 @@ public class DatabaseConnection {
         } catch (Exception e) {
             System.err.println(e);
             return null;
+        }
+    }
+
+
+    // Testing Methods
+
+    /**
+     * Debug command
+     */
+    public static void instantiateTestDatabase() {
+        Triplet<String, String, String> values = readProperties();
+        String url = values.getValue0();
+        String username = values.getValue1();
+        String password = values.getValue2();
+
+        try {
+
+            connection = DriverManager.getConnection(url, username, password);
+
+            Statement create = connection.createStatement();
+
+            create.execute("CREATE DATABASE IF NOT EXISTS testmazeco;");
+            create.execute("USE testmazeco;");
+            create.execute("DROP TABLE IF EXISTS Maze");
+            create.execute("CREATE TABLE Maze (\n" +
+                    "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                    "\tauthor VARCHAR(32) NOT NULL,\n" +
+                    "\ttitle VARCHAR(32) NOT NULL,\n" +
+                    "\tdescription TEXT NOT NULL,\n" +
+                    "\tcreationDate TIMESTAMP NOT NULL,\n" +
+                    "\tlastEditDate TIMESTAMP NOT NULL,\n" +
+                    "\tmazeGrid BLOB NOT NULL,\n" +
+                    "\tnCols INT NOT NULL,\n" +
+                    "\tnRows INT NOT NULL\n" +
+                    ");");
+            create.close();
+        } catch (SQLException e) {
+            e.printStackTrace();;
         }
     }
 }
