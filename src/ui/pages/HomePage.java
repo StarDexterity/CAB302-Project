@@ -6,6 +6,7 @@ import maze.enums.GenerationOption;
 import maze.data.Maze;
 import ui.App;
 import maze.data.MazeTableModel;
+import ui.dialog.DatabaseErrorHandler;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -19,9 +20,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 
 import static maze.Export.displayMaze;
 
@@ -100,8 +101,13 @@ public class HomePage extends JPanel {
         MazeTableModel tableModel = (MazeTableModel) table.getModel();
         tableModel.clear();
 
-        tableModel.addRows(new DatabaseConnection().retrieveMazeCatalogue());
+        try {
+            tableModel.addRows(new DatabaseConnection().retrieveMazeCatalogue());
+        } catch (SQLException e) {
+            DatabaseErrorHandler.handle(e, false);
+        }
     }
+
 
     private ArrayList<MazeData> getDummyMazeData() {
         int id = 0;

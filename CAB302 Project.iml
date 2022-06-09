@@ -25,5 +25,6 @@
     </orderEntry>
     <orderEntry type="library" name="mariadb.jdbc.java.client" level="project" />
     <orderEntry type="library" name="mariadb-java-client-2.7.5" level="project" />
+    <orderEntry type="library" name="flipkart.utils.javatuples" level="project" />
   </component>
 </module>

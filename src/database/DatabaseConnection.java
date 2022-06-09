@@ -3,6 +3,7 @@ package database;
 import maze.data.Maze;
 import maze.data.MazeData;
 import maze.data.MazeImage;
+import org.javatuples.Triplet;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.*;
@@ -10,24 +11,30 @@ import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
 
 /**
  * This static class provides functionality for interacting with the maze database,
  * including storing, retrieving, updating and deleting records from the maze table.
  */
 public class DatabaseConnection {
-    public static String url = "jdbc:mariadb://localhost:3307";;
-    public static String username = "root";
-    public static String password = "secret";
 
+    private static final String DRIVER = "jdbc:mariadb://";
     private static Connection connection;
 
     /**
      * Instantiates the connection with the database
      */
-    public static void instantiate() {
+    public static void instantiate() throws SQLException {
+        Triplet<String, String, String> values = readProperties();
+        String url = values.getValue0();
+        String username = values.getValue1();
+        String password = values.getValue2();
+
+        // Can throw SQLException
+        connection = DriverManager.getConnection(url, username, password);
+
         try {
-            connection = DriverManager.getConnection(url, username, password);
 
             Statement create = connection.createStatement();
 
@@ -51,41 +58,44 @@ public class DatabaseConnection {
         }
     }
 
-    public DatabaseConnection() {
+    private static Triplet readProperties() {
+        Properties props = new Properties();
+        InputStream input = null;
+        Triplet<String, String, String> values = Triplet.with("", "", "");
+
+        try {
+
+            input = new FileInputStream("src/database/db.props");
+
+            // load a properties file
+            props.load(input);
+
+            // get the property value and set
+            values = values.setAt0(DRIVER + props.getProperty("url"));
+            values = values.setAt1(props.getProperty("username"));
+            values = values.setAt2(props.getProperty("password"));
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return values;
+        }
+    }
+
+    public DatabaseConnection() throws SQLException {
         if (connection == null) {
             System.err.println("No database connection instantiated. Instantiating new connection.");
             instantiate();
         }
     }
 
-    /**
-     * Debug command used for deleting all mazes in the Maze table
-     */
-    public static void instantiateTestDatabase() {
-        try {
-            connection = DriverManager.getConnection(url, username, password);
-
-            Statement create = connection.createStatement();
-
-            create.execute("CREATE DATABASE IF NOT EXISTS TestMazeCo;");
-            create.execute("USE TestMazeCo;");
-            create.execute("DROP TABLE IF EXISTS Maze");
-            create.execute("CREATE TABLE Maze (\n" +
-                    "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
-                    "\tauthor VARCHAR(32) NOT NULL,\n" +
-                    "\ttitle VARCHAR(32) NOT NULL,\n" +
-                    "\tdescription TEXT NOT NULL,\n" +
-                    "\tcreationDate TIMESTAMP NOT NULL,\n" +
-                    "\tlastEditDate TIMESTAMP NOT NULL,\n" +
-                    "\tmazeGrid BLOB NOT NULL,\n" +
-                    "\tnCols INT NOT NULL,\n" +
-                    "\tnRows INT NOT NULL\n" +
-                    ");");
-            create.close();
-        } catch (SQLException e) {
-            e.printStackTrace();;
-        }
-    }
 
     /**
      * Deletes a maze record from the database
@@ -235,16 +245,6 @@ public class DatabaseConnection {
         }
     }
 
-    /**
-     *
-     * @param password
-     * @param username
-     * @param url
-     */
-    public static void editDatabaseProperties(String password, String username, String url){
-
-    }
-
     public static Blob mazeGridToBlob(int[][] mazeGrid) {
         try {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
@@ -272,6 +272,44 @@ public class DatabaseConnection {
         } catch (Exception e) {
             System.err.println(e);
             return null;
+        }
+    }
+
+
+    // Testing Methods
+
+    /**
+     * Debug command
+     */
+    public static void instantiateTestDatabase() {
+        Triplet<String, String, String> values = readProperties();
+        String url = values.getValue0();
+        String username = values.getValue1();
+        String password = values.getValue2();
+
+        try {
+
+            connection = DriverManager.getConnection(url, username, password);
+
+            Statement create = connection.createStatement();
+
+            create.execute("CREATE DATABASE IF NOT EXISTS TestMazeCo;");
+            create.execute("USE TestMazeCo;");
+            create.execute("DROP TABLE IF EXISTS Maze");
+            create.execute("CREATE TABLE Maze (\n" +
+                    "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                    "\tauthor VARCHAR(32) NOT NULL,\n" +
+                    "\ttitle VARCHAR(32) NOT NULL,\n" +
+                    "\tdescription TEXT NOT NULL,\n" +
+                    "\tcreationDate TIMESTAMP NOT NULL,\n" +
+                    "\tlastEditDate TIMESTAMP NOT NULL,\n" +
+                    "\tmazeGrid BLOB NOT NULL,\n" +
+                    "\tnCols INT NOT NULL,\n" +
+                    "\tnRows INT NOT NULL\n" +
+                    ");");
+            create.close();
+        } catch (SQLException e) {
+            e.printStackTrace();;
         }
     }
 }

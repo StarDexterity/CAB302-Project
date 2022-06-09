@@ -47,6 +47,7 @@ public class TestDatabase {
     @BeforeAll
     public static void PopulateDatabase () throws SQLException {
         DatabaseConnection.instantiateTestDatabase();
+
         connection = new DatabaseConnection();
 
         createDummyMazes();
