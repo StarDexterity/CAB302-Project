@@ -14,7 +14,7 @@ import java.util.LinkedList;
  * Maze drawer class draws a maze to a buffered image
  */
 public class MazeDrawer {
-    public static BufferedImage drawMaze(Maze maze, MazeDisplayOptions displayOptions, Selection selection) {
+    public static BufferedImage drawMaze(Maze maze, MazeDisplayOptions displayOptions) {
 
         // gets important maze data for rendering
         int nCols = maze.getCols();
@@ -141,9 +141,6 @@ public class MazeDrawer {
             g.fillRect(selectedCell.getX() * cellSize + margin,
                     selectedCell.getY() * cellSize + margin,
                     cellSize, cellSize);
-            System.out.print(selectedCell.getX());
-            System.out.print(selectedCell.getY());
-
         }
         else if (selectionType == SelectionType.IMAGE) {
             g.fillRect(selectedImage.getTopLeft().getX() * cellSize + margin,

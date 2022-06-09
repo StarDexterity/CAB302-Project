@@ -139,7 +139,7 @@ public class HomePage extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    displayMaze(editPage.currentMaze, "imageType");
+                    displayMaze(editPage.currentMaze, false, false, "imageType");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

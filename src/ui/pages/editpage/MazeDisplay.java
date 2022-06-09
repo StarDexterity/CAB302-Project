@@ -254,8 +254,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-        BufferedImage bufferedImage = MazeDrawer.drawMaze(maze, displayOptions, selection);
-
+        BufferedImage bufferedImage = MazeDrawer.drawMaze(maze, displayOptions);
         g.drawImage(bufferedImage, null, 0, 0);
 
         g.dispose();

@@ -1,9 +1,9 @@
 package ui.dialog;
 
-import maze.data.Maze;
+import maze.data.*;
 import maze.enums.GenerationOption;
+import maze.helper.MazeSolver;
 import ui.pages.EditPage;
-
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +31,9 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
     private final JLabel labelSolution;
     private final JLabel labelGrid;
     private final JLabel labelColour;
+
+    private boolean ifSolution = false;
+    private boolean ifGrid = false;
 
 
     public EditPage editPage;
@@ -139,12 +142,21 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
      */
     public void propertyChange(PropertyChangeEvent e) {
 
+        showSolution.addActionListener(f -> {
+            ifSolution = true;
+            MazeSolver.solve(current);
+        });
+
+        showGrid.addActionListener(f -> {
+            ifGrid = true;
+
+        });
         jpg.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (current != null) {
-                        displayMaze(current, "jpg");
+                        displayMaze(current, ifSolution, ifGrid, "jpg");
                     }
                 }
                 catch (IOException ex) {
@@ -160,7 +172,7 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (current != null) {
-                        displayMaze(current, "png");
+                        displayMaze(current, ifSolution, ifGrid, "png");
                     }
                 }
                 catch (IOException ex) {
