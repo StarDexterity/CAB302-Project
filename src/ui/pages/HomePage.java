@@ -42,7 +42,6 @@ public class HomePage extends JPanel {
     }
 
     private void createGUI() {
-        //TODO: Why testing?
         new JLabel("testing");
 
         setLayout(new BorderLayout());
@@ -106,27 +105,13 @@ public class HomePage extends JPanel {
         MazeTableModel tableModel = (MazeTableModel) table.getModel();
         tableModel.clear();
 
+        //TODO: Refresh on page load
         try {
             tableModel.addRows(new DatabaseConnection().retrieveMazeCatalogue());
         } catch (SQLException e) {
             DatabaseErrorHandler.handle(e, false);
         }
     }
-
-
-//    private ArrayList<MazeData> getDummyMazeData() {
-//        int id = 0;
-//        ArrayList<MazeData> data = new ArrayList<>();
-//
-//        String[] authors = {"Dave", "Jane", "Richard", "Mary", "Sally", "Bob"};
-//        String[] titles = {"Cool maze", "Great maze", "Amazing maze", "Bad maze", "Test maze", ":("};
-//
-//        for (int i = 0; i < 6; i++) {
-//            data.add(new MazeData(id, authors[i], titles[i], "", Instant.now(), Instant.now()));
-//            id++;
-//        }
-//        return data;
-//    }
 
     private JPopupMenu createPopupMenu(JTable table) {
         JPopupMenu popupMenu = new JPopupMenu();
@@ -144,7 +129,6 @@ public class HomePage extends JPanel {
         popupMenu.add(exportItem);
         popupMenu.add(editItem);
         popupMenu.add(deleteItem);
-
 
         //DOES NOT WORK YET
         exportItem.addActionListener(new ActionListener() {

@@ -127,7 +127,7 @@ public class DatabaseConnection {
             insert.setString(2, mazeData.getTitle());
             insert.setString(3, mazeData.getDescription());
             insert.setTimestamp(4, Timestamp.from(mazeData.getCreationDate()));
-            insert.setTimestamp(5, Timestamp.from(Instant.now()));
+            insert.setTimestamp(5, Timestamp.from(mazeData.getLastEditDate()));
             insert.setBlob(6, mazeGridToBlob(maze.getMazeGrid()));
             insert.setInt(7, maze.getCols());
             insert.setInt(8, maze.getRows());

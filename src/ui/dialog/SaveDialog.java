@@ -1,7 +1,9 @@
 package ui.dialog;
 
+import database.DatabaseConnection;
 import maze.data.Maze;
 import maze.enums.GenerationOption;
+import tests.DummyMazes;
 import ui.pages.EditPage;
 import ui.pages.editpage.MazeDisplay;
 import ui.pages.editpage.options.image.InsertImage;
@@ -11,6 +13,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.SQLException;
 
 /**
  * Tutorial:
@@ -26,16 +29,20 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
     private JButton save;
 
     /**
-     * The maze object instantiated by this pop up
+     * The maze object input into this pop up
      */
-    public Maze generatedMaze;
+    //TODO: Make edits to these
+    private Maze inputMaze = new Maze(4, 4, false); // TODO: Remove placeholder!
+    private String author = null;
+    private String title = null;
+    private String description = null;
 
 
     private String SaveString = "Save";
     private String CancelString = "Cancel";
 
     /**
-     * Displays a dialog offering to be able to save an image
+     * Displays a dialog offering to be able to save a maze
      *
      * @param frame
      */
@@ -127,18 +134,23 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
                     JOptionPane.UNINITIALIZED_VALUE);
 
             if ("Save".equals(value)) {
-                System.out.println("Lets Get Saving");
-                clearAndHide();
+                // Sets the data from the JTextField into the Maze object.
+                inputMaze.setData(author).title(title).description(description);
+
+                // Saves the maze to the database.
+                try {
+                    new DatabaseConnection().save(inputMaze);
+                } catch (SQLException ex) {
+                    DatabaseErrorHandler.handle(ex, false);
+                } finally {
+                    clearAndHide();
+                }
             }
          else { //user closed dialog or clicked cancel
                 clearAndHide();
             }
         }
 
-    }
-
-    public Maze getGeneratedMaze() {
-        return generatedMaze;
     }
 
 
