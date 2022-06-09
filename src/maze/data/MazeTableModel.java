@@ -2,6 +2,9 @@ package maze.data;
 
 import javax.swing.table.AbstractTableModel;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
@@ -88,6 +91,8 @@ public class MazeTableModel extends AbstractTableModel {
         return TableHeaders.getById(col).getName();
     }
 
+    private DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss z");
+
     public Object getValueAt(int row, int col) {
         MazeData record = data.get(row);
 
@@ -102,10 +107,10 @@ public class MazeTableModel extends AbstractTableModel {
                 return record.getAuthor();
             }
             case LAST_EDITED -> {
-                return record.getLastEditDate();
+                return record.getLastEditDate().atZone(ZoneId.systemDefault()).format(dateTimeFormat);
             }
             case CREATED -> {
-                return record.getCreationDate();
+                return record.getCreationDate().atZone(ZoneId.systemDefault()).format(dateTimeFormat);
             }
             default -> {
                 return null;

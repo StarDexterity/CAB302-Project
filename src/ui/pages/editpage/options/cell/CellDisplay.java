@@ -3,6 +3,7 @@ package ui.pages.editpage.options.cell;
 import maze.data.Maze;
 import maze.data.Position;
 import maze.enums.Direction;
+import maze.interfaces.MazeListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -237,7 +238,7 @@ public class CellDisplay extends JComponent {
 
     public void setMaze(Maze maze) {
         this.maze = maze;
-        maze.addListener(new Maze.MazeListener() {
+        maze.addListener(new MazeListener() {
             @Override
             public void mazeChanged() {
                 repaint();

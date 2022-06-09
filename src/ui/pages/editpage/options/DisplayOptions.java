@@ -3,6 +3,7 @@ package ui.pages.editpage.options;
 import maze.data.Maze;
 import maze.data.Position;
 import maze.enums.SolveStatus;
+import maze.interfaces.MazeListener;
 import ui.helper.GridBagHelper;
 import ui.helper.UIHelper;
 import ui.pages.EditPage;
@@ -68,7 +69,7 @@ public class DisplayOptions extends JPanel {
     }
 
     public void setMaze(Maze maze) {
-        maze.addListener(new Maze.MazeListener() {
+        maze.addListener(new MazeListener() {
             @Override
             public void solveStatusChanged(SolveStatus status) {
                 switch (status) {

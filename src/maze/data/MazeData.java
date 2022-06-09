@@ -14,8 +14,8 @@ public class MazeData {
 
     public MazeData() {
         id = 0;
-        title = "Unnamed Maze";
         author = "Anonymous";
+        title = "Unnamed Maze";
         description = "A maze.";
 
         // Gets current date
@@ -33,7 +33,9 @@ public class MazeData {
     }
 
     public void updateData(String author) {
-        this.author = author;
+        if (author != null) {
+            this.author = author;
+        }
         // Updates with current date
         lastEditDate = Instant.now();
     }
@@ -78,11 +80,16 @@ public class MazeData {
 
 
     public MazeData title(String title) {
-        this.title = title;
+        if (title != null) {
+            this.title = title;
+        }
         return this;
     }
+
     public MazeData description(String description) {
-        this.description = description;
+        if (description != null) {
+            this.description = description;
+        }
         return this;
     }
 

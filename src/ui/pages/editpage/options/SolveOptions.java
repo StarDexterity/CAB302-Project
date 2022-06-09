@@ -4,6 +4,7 @@ import maze.data.Maze;
 import maze.data.Position;
 import maze.enums.SolveStatus;
 import maze.helper.MazeSolver;
+import maze.interfaces.MazeListener;
 import ui.helper.GridBagHelper;
 import ui.pages.EditPage;
 
@@ -77,7 +78,7 @@ public class SolveOptions extends JPanel {
 
     public void setMaze(Maze maze) {
         this.maze = maze;
-        this.maze.addListener(new Maze.MazeListener() {
+        this.maze.addListener(new MazeListener() {
             @Override
             public void solveStatusChanged(SolveStatus status) {
                 solveStatus.setText(status.getName());

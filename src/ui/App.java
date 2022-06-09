@@ -4,8 +4,11 @@ import database.DatabaseConnection;
 import maze.data.Maze;
 import maze.enums.SelectionType;
 import ui.dialog.DatabaseErrorHandler;
+
 import ui.dialog.NewMazeDialog;
+import ui.dialog.SaveDialog;
 import ui.dialog.ExportDialog;
+
 import ui.pages.EditPage;
 import ui.pages.HomePage;
 
@@ -92,6 +95,10 @@ public class App extends JFrame {
 
         JMenuItem newMaze = new JMenuItem("New Maze");
         JMenuItem save = new JMenuItem("Save");
+        save.setEnabled(false);
+        editPage.mazeDisplay.addListener(cce -> {
+            save.setEnabled(editPage.mazeDisplay.isEnabled());
+        });
         JMenuItem export = new JMenuItem("Export");
         JMenuItem close = new JMenuItem("Home");
         JMenuItem exit = new JMenuItem("Exit");
@@ -119,6 +126,12 @@ public class App extends JFrame {
             if (m != null) {
                 showEditPage(m);
             }
+        });
+
+        save.addActionListener(e -> {
+            SaveDialog saveDialog = new SaveDialog(new JFrame());
+            saveDialog.setLocationRelativeTo(getContentPane());
+            saveDialog.setVisible(true);
         });
 
         export.addActionListener(new ActionListener() {
