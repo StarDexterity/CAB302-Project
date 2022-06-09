@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ui.dialog.DatabaseErrorHandler.handle;
 
 public class TestDatabase {
 
@@ -25,23 +26,39 @@ public class TestDatabase {
         mikesMaze.setData("Mike Gmail")
                 .title("Mike's Maze")
                 .description("It's a very fun and good maze");
-        connection.save(mikesMaze);
+        try {
+            connection.save(mikesMaze);
+        } catch (SQLException e) {
+            handle(e, false);
+        }
 
         Maze himsMaze = new Maze(4, 4, false);
         himsMaze.setMazeGrid(DummyMazes.full);
         himsMaze.setData("Him Jogan")
                 .title("Him's Cloud Maze")
                 .description("It's stored exclusively in the cloud");
-        connection.save(himsMaze);
+        try {
+            connection.save(himsMaze);
+        } catch (SQLException e) {
+            handle(e, false);
+        }
 
         Maze longOnMazeShortOnData = new Maze(4, 6, false);
         longOnMazeShortOnData.setMazeGrid(DummyMazes.x_long);
-        connection.save(longOnMazeShortOnData);
+        try {
+            connection.save(longOnMazeShortOnData);
+        } catch (SQLException e) {
+            handle(e, false);
+        }
 //
         Maze failMaze = new Maze(4, 4, false);
         failMaze.setMazeGrid(DummyMazes.lateFail);
         failMaze.setData("Moon Microsystems, Inc").title("It almost works!");
-        connection.save(failMaze);
+        try {
+            connection.save(failMaze);
+        } catch (SQLException e) {
+            handle(e, false);
+        }
     }
 
     @BeforeAll
@@ -66,7 +83,12 @@ public class TestDatabase {
 
     @Test
     public void RetrievesMazeGrid() throws SQLDataException {
-        Maze maze = connection.retrieveMaze(1);
+        Maze maze = null;
+        try {
+            maze = connection.retrieveMaze(1);
+        } catch (SQLException e) {
+            handle(e, false);
+        }
         assertEquals(Arrays.deepToString(maze.getMazeGrid()), Arrays.deepToString(DummyMazes.random));
     }
 
@@ -97,7 +119,11 @@ public class TestDatabase {
 
         assertEquals(roboMaze.mazeData.getId(), 0);
 
-        connection.save(roboMaze);
+        try {
+            connection.save(roboMaze);
+        } catch (SQLException e) {
+            handle(e, false);
+        }
 
         assertNotEquals(roboMaze.mazeData.getId(), 0);
     }
