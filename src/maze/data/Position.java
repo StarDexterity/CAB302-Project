@@ -67,10 +67,11 @@ public class Position {
         return false;
     }
 
-    @Override
     /**
      * Turns this object into a String
      */
+    @Override
+
     public String toString() {
         return "{" +
                 "x=" + x +

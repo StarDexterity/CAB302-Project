@@ -20,12 +20,18 @@ import java.beans.PropertyChangeListener;
  */
 public class NewMazeDialog extends JDialog implements ActionListener, PropertyChangeListener {
     private JOptionPane optionPane;
+
+    //TODO: Never Used, Delete?
     private JPanel myPanel;
 
     private JSpinner sizeX;
     private JSpinner sizeY;
+
+    //TODO: Never Used, Delete?
     private JLabel generateLabel;
     private JComboBox generationCBox;
+
+    //TODO: Never Used, Delete?
     private EditPage editPage;
 
     /**

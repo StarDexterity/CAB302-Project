@@ -186,6 +186,7 @@ public class CellDisplay extends JComponent {
 
     }
 
+    //TODO: Never Used, Delete?
    public void setPath(Direction dir, boolean isPath) {
         if (selectedCell == null) return;
         maze.setPath(selectedCell, dir, isPath);

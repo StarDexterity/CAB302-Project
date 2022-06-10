@@ -1,5 +1,6 @@
 package maze.enums;
 
+
 /**
  * List of accepted image types for the purpose of printing a maze
  */

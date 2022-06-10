@@ -173,7 +173,7 @@ public final class MazeSolver {
      */
     public static double TotalDeadEnds(Maze maze) {
 
-        int mazeGrid[][] = maze.getMazeGrid();
+        int[][] mazeGrid = maze.getMazeGrid();
         double count = 0;
 
         for (int y = 0; y < maze.getRows(); y++) {			//loop through array[this][]
@@ -184,8 +184,7 @@ public final class MazeSolver {
             }
         }
 
-        double deadEnd =((((count) / (maze.getRows() * maze.getCols())) * 100));
-        return deadEnd;
+        return ((((count) / (maze.getRows() * maze.getCols())) * 100));
     }
 
     /**
@@ -207,7 +206,6 @@ public final class MazeSolver {
     public static double TotalPassThrough(Maze maze) {
         double count = maze.getSolution().size();
 
-        double passThrough = ((count) / (maze.getRows() * maze.getCols())) * 100;
-        return passThrough;
+        return ((count) / (maze.getRows() * maze.getCols())) * 100;
     }
 }

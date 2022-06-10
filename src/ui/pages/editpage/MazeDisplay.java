@@ -174,6 +174,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         this.showGrid = showGrid;
         repaint();
     }
+    //TODO: Delete?
     public void addImage (boolean addImage){
         this.addImage = addImage;
         repaint();

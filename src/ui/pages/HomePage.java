@@ -60,8 +60,6 @@ public class HomePage extends JPanel {
         table.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent mouseEvent) {
                 JTable table =(JTable) mouseEvent.getSource();
-                // Point point = mouseEvent.getPoint(); // this code seems redundant
-                //int row = table.rowAtPoint(point);
                 int row = table.getSelectedRow();
                 if (mouseEvent.getClickCount() == 2 && row != -1) {
                     int mazeID = (int) table.getModel().getValueAt(row, 0);

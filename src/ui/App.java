@@ -109,6 +109,7 @@ public class App extends JFrame {
             deselect.setEnabled(cce.selectionType != SelectionType.NONE);
         });
 
+        //TODO: Never Used, Delete?
         JMenuItem insert = new JMenuItem("Insert Image");
 
         newMaze.addActionListener(e -> {
@@ -134,9 +135,6 @@ public class App extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    //NewMazeDialog nmd = new NewMazeDialog(new JFrame());
-                    //System.out.print(nmd);
-                    //Maze maze = nmd.getGeneratedMaze();
                     displayMaze(editPage.currentMaze);
                 } catch (IOException ex) {
                     ex.printStackTrace();

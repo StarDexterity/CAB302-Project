@@ -16,6 +16,7 @@ public class Export {
      * @param hasSolution Whether the images will have a solution line
      * @param imageType Which filetype the mazes will be exported as
      */
+    //TODO: Never Used, Delete?
     public static void export(ArrayList<Maze> mazes, String filepath, boolean hasSolution, ImageType imageType) {
 
     }
@@ -24,6 +25,7 @@ public class Export {
      * Transforms given @{@link Maze} object into an exportable image object.
      * Image object is unknown at the moment, so this method returns void.
      */
+    //TODO: Never Used, Delete?
     public static void printImage(Maze maze) {
 
     }

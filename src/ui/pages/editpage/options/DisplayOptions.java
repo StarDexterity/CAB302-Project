@@ -22,6 +22,7 @@ public class DisplayOptions extends JPanel {
     public JButton colorButton;
 
 
+    //TODO: Never Used, Delete?
     private Maze maze;
 
 

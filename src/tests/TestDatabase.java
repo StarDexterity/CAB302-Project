@@ -105,7 +105,7 @@ public class TestDatabase {
         for (MazeData m : mazes) {
             System.out.println(m.getAuthor());
             System.out.println(m.getTitle());
-            System.out.println(m.getDescription());;
+            System.out.println(m.getDescription());
             System.out.println(m.getCreationDate());
             System.out.println(m.getLastEditDate());
         }

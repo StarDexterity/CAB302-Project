@@ -26,10 +26,7 @@ public class Export {
         nRows = maze.getRows();
         mazeGrid = maze.getMazeGrid();
 
-        //LinkedList<Position> solution;
 
-        //boolean solved = true;
-        //boolean grid = true;
 
     }
 

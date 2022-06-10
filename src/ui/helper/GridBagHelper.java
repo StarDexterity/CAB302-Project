@@ -26,6 +26,8 @@ public final class GridBagHelper {
      * @param anchor
      * @return
      */
+
+    //TODO: Never Used, Delete?
     public static GridBagConstraints createGBC(double weightx, double weighty, int fill, int anchor) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = weightx;
@@ -45,6 +47,7 @@ public final class GridBagHelper {
         addToPanel(jp, c, constraints, x, y, w, h, i, -1);
     }
 
+    //TODO: Never Used, Delete?
     public static void addToPanel(JPanel jp,Component c, GridBagConstraints
             constraints,int x, int y, int w, int h, int anchor) {
         addToPanel(jp, c, constraints, x, y, w, h, null, anchor);
