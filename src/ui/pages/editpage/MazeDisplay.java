@@ -4,44 +4,18 @@ import maze.data.*;
 import maze.enums.SelectionType;
 import maze.helper.MazeDrawer;
 import maze.interfaces.MazeListener;
-import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
- * This maze generator and solver was taken from:
- * https://rosettacode.org/wiki/Maze_solving#Animated_version
- * This is currently more of a placeholder for the algorithm
- * for the purposes of displaying the prototype properly.
+ * Displays the maze to the screen, using the mazeDrawer function to do the heavy lifting drawing the maze,
+ * this class mainly handles the intermediate data and interactions with other UI classes
  */
-
 public class MazeDisplay extends JPanel implements Scrollable {
-    /**
-     * Indicates the direction of one or more neighboring vertices a vertex connects with (shares an edge)
-     * Can be used like bits aka
-     *          (If a vertex has both South and East neighbors this can be represented with a bit value of 6)
-     */
-
-
-    /**
-     * Number of columns in the maze
-     */
-    private int nCols;
-    /**
-     * Number of rows in the maze
-     */
-    private int nRows;
-
-    // These two values are for rendering
-    final int cellSize = 25;
-    final int margin = 25;
-
     private final MazeDisplay ref = this;
 
     /**
@@ -49,26 +23,15 @@ public class MazeDisplay extends JPanel implements Scrollable {
      */
     private Maze maze;
 
-    private boolean showSolution;
-    private boolean showGrid;
+    /**
+     * The current selection, stores what object type is being selected and a reference to that object
+     */
+    private Selection selection = new Selection();
 
-    public static boolean addImage;
-
-    // color settings
-    // TODO: Hook these up below
-    public Color solutionLineColor = Color.ORANGE;
-
-    // selected cell coordinates
-    Selection selection = new Selection();
-
+    /**
+     * The current maze display configurations, including colours, sizes and other options
+     */
     MazeDisplayOptions displayOptions = new MazeDisplayOptions();
-
-
-    public void changeSolutionColor(Color color){
-        displayOptions.setSolutionColour(color);
-        repaint();
-        revalidate();
-    }
 
     public MazeDisplay() {
         // graphics code
@@ -76,6 +39,10 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
         // set a placeholder maze
         this.maze = new Maze();
+
+        int margin = displayOptions.getMargin();
+        int cellSize = displayOptions.getCellSize();
+
 
         // adapted from https://stackoverflow.com/questions/31171502/scroll-jscrollpane-by-dragging-mouse-java-swing
         MouseAdapter ma = new MouseAdapter() {
@@ -166,28 +133,22 @@ public class MazeDisplay extends JPanel implements Scrollable {
         addMouseMotionListener(ma);
     }
 
-    public boolean isShowSolution() {
-        return showSolution;
-    }
-
-    public boolean isShowGrid() {
-        return showGrid;
+    public void setSolutionColour(Color color){
+        displayOptions.setSolutionColour(color);
+        repaint();
+        revalidate();
     }
 
     public void setShowSolution(boolean showSolution) {
-        this.showSolution = showSolution;
         displayOptions.setSolution(showSolution);
         repaint();
+        revalidate();
     }
 
     public void setShowGrid(boolean showGrid) {
-        this.showGrid = showGrid;
         displayOptions.setGrid(showGrid);
         repaint();
-    }
-    public void addImage (boolean addImage){
-        this.addImage = addImage;
-        repaint();
+        revalidate();
     }
 
     public void setMaze(Maze maze) {
@@ -229,6 +190,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     @Override
     public Dimension getPreferredSize() {
+        int margin = displayOptions.getMargin();
+        int cellSize = displayOptions.getCellSize();
         return new Dimension(maze.getCols() * cellSize + margin * 2, maze.getRows() * cellSize + margin * 2);
     }
 
@@ -253,23 +216,12 @@ public class MazeDisplay extends JPanel implements Scrollable {
     }
 
 
-    void animate() {
-        try {
-            Thread.sleep(50L);
-        } catch (InterruptedException ignored) {
-        }
-        repaint();
-    }
-
     // Observer design pattern
     public interface MazeDisplayListener {
         void selectedCellChanged(Selection cce);
     }
 
-
-
-
-    private ArrayList<MazeDisplayListener> listeners = new ArrayList<MazeDisplayListener>();
+    private ArrayList<MazeDisplayListener> listeners = new ArrayList();
 
     public void addListener(MazeDisplayListener ml) { listeners.add(ml); }
 

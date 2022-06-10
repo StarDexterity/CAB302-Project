@@ -162,8 +162,6 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
                 GenerationOption option = GenerationOption.getOption((String) generationCBox.getSelectedItem());
 
                 generatedMaze = new Maze(cols, rows, option);
-                MazeDisplay.addImage = false;
-                InsertImage.newMazeClear();
                 clearAndHide();
             }
          else { //user closed dialog or clicked cancel

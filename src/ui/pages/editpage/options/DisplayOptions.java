@@ -1,29 +1,21 @@
 package ui.pages.editpage.options;
 
 import maze.data.Maze;
-import maze.data.Position;
 import maze.enums.SolveStatus;
 import maze.interfaces.MazeListener;
 import ui.helper.GridBagHelper;
 import ui.helper.UIHelper;
 import ui.pages.EditPage;
-import ui.pages.editpage.options.cell.CellDisplay;
-import ui.pages.editpage.options.image.InsertImage;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class DisplayOptions extends JPanel {
     private final JCheckBox showSolution;
     private final JCheckBox showGrid;
 
     public JButton colorButton;
-
-
-    private Maze maze;
-
 
     public DisplayOptions(EditPage editPage) {
 
@@ -40,7 +32,7 @@ public class DisplayOptions extends JPanel {
         colorButton.addActionListener(e -> {
             Color changeColor = JColorChooser.showDialog(null, "Change Color",Color.RED);
             if (changeColor != null){
-                editPage.mazeDisplay.changeSolutionColor(changeColor);
+                editPage.mazeDisplay.setSolutionColour(changeColor);
             }
         });
 
