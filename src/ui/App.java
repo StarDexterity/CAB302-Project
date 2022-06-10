@@ -13,14 +13,10 @@ import ui.pages.EditPage;
 import ui.pages.HomePage;
 
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.sql.SQLException;
-
-import static maze.Export.displayMaze;
 
 public class App extends JFrame {
     public static final int WIDTH = 1200;

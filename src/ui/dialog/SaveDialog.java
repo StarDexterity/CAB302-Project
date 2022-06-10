@@ -3,7 +3,7 @@ package ui.dialog;
 import database.DatabaseConnection;
 import maze.data.Maze;
 import maze.enums.GenerationOption;
-import tests.DummyMazes;
+//import tests.DummyMazes;
 import ui.pages.EditPage;
 import ui.pages.editpage.MazeDisplay;
 import ui.pages.editpage.options.image.InsertImage;
@@ -32,7 +32,7 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
      * The maze object input into this pop up
      */
     //TODO: Make edits to these
-    private Maze inputMaze = new Maze(4, 4, false); // TODO: Remove placeholder!
+    private Maze inputMaze = new Maze(4, 4, true); // TODO: Remove placeholder!
     private String author = null;
     private String title = null;
     private String description = null;

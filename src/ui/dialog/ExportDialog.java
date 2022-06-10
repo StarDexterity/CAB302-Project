@@ -1,18 +1,16 @@
 package ui.dialog;
 
 import maze.data.*;
-import maze.enums.GenerationOption;
 import maze.helper.MazeSolver;
 import ui.pages.EditPage;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 
-import static maze.Export.displayMaze;
+import static maze.Export.exportMaze;
 
 /**
  * Tutorial:
@@ -22,7 +20,6 @@ import static maze.Export.displayMaze;
  */
 public class ExportDialog extends JDialog implements ActionListener, PropertyChangeListener {
     private JOptionPane optionPane;
-    private JPanel myPanel;
 
     private final JButton jpg;
     private final JButton png;
@@ -31,6 +28,9 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
     private final JLabel labelSolution;
     private final JLabel labelGrid;
     private final JLabel labelColour;
+    private final JTextField mazeName;
+    private final JLabel mazeNameLabel;
+    private final JButton colorButton;
 
     private boolean ifSolution = false;
     private boolean ifGrid = false;
@@ -67,6 +67,11 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
         labelSolution = new JLabel(" Show solution:");
         labelGrid = new JLabel(" Show grid:");
         labelColour = new JLabel(" Select a colour:");
+        mazeName = new JTextField("MazeImage");
+        mazeNameLabel = new JLabel(" Name of maze:");
+
+        colorButton = new JButton("Choose Color");
+        colorButton.setEnabled(false);
 
 
         JPanel myPanel = new JPanel();
@@ -74,10 +79,11 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
 
         JPanel row1 = new JPanel();
         JPanel row2 = new JPanel();
+        JPanel row3 = new JPanel();
 
-        row1.add(jpg);
-        row1.add(Box.createHorizontalStrut(15)); // a spacer
-        row1.add(png);
+        row3.add(jpg);
+        row3.add(Box.createHorizontalStrut(15)); // a spacer
+        row3.add(png);
 
         row2.add(labelSolution);
         row2.add(showSolution);
@@ -85,9 +91,14 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
         row2.add(showGrid);
         row2.add(labelColour);
 
+        row1.add(mazeNameLabel);
+        row1.add(mazeName);
+
 
         myPanel.add(row1);
         myPanel.add(row2);
+        myPanel.add(row3);
+
 
         //Create an array specifying the number of dialog buttons
         //and their text.
@@ -148,14 +159,15 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
 
         showGrid.addActionListener(f -> {
             ifGrid = true;
-
         });
+
         jpg.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (current != null) {
-                        displayMaze(current, ifSolution, ifGrid, "jpg");
+                        String mazeNameValue = mazeName.getText();
+                        exportMaze(current, ifSolution, ifGrid, "jpg", mazeNameValue);
                     }
                 }
                 catch (IOException ex) {
@@ -171,7 +183,8 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (current != null) {
-                        displayMaze(current, ifSolution, ifGrid, "png");
+                        String mazeNameValue = mazeName.getText();
+                        exportMaze(current, ifSolution, ifGrid, "png", mazeNameValue);
                     }
                 }
                 catch (IOException ex) {

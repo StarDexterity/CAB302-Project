@@ -6,7 +6,6 @@ import maze.data.Position;
 import maze.helper.MazeDrawer;
 
 import java.awt.*;
-import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,19 +28,8 @@ public class Export {
 
     static MazeDisplayOptions displayOptions = new MazeDisplayOptions();
 
-    //maze values to export selected maze
-    public static void mazeValues(Maze maze) {
-        nCols = maze.getCols();
-        nRows = maze.getRows();
-        mazeGrid = maze.getMazeGrid();
-        solution = maze.getSolution();
-    }
-
     //placeholder export (will replace with maze display)
-    public static void displayMaze(Maze maze, boolean ifSolution, boolean ifGrid, String Imagetype) throws IOException {
-
-        //get maze values
-        mazeValues(maze);
+    public static void exportMaze(Maze maze, boolean ifSolution, boolean ifGrid, String Imagetype, String fileName) throws IOException {
 
         displayOptions.setSolution(ifSolution);
         displayOptions.setGrid(ifGrid);
@@ -64,11 +52,13 @@ public class Export {
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
+        if (fileName.isBlank()) {
+            fileName = "mazeImage";
+        }
+
         if (Imagetype == "png") {
             // save as PNG
-            String fileName = title + ".png";
-            File file = new File("mazeImage.png");
-
+            fileName = fileName + ".png";
 
             int returnVal = fc.showOpenDialog(null);
 
@@ -76,7 +66,7 @@ public class Export {
             String path;
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 path = fc.getSelectedFile().getAbsolutePath();
-                ImageIO.write(bufferedImage, "png", new File(path+"/img.png"));
+                ImageIO.write(bufferedImage, "png", new File(path+"/" + fileName));
             }
 
 
@@ -84,14 +74,13 @@ public class Export {
 
         if (Imagetype == "jpg"){
             // save as PNG
-            String fileName = title + ".jpg";
-            File file = new File("mazeImage.jpg");
+            fileName = fileName + ".jpg";
 
             int returnVal = fc.showOpenDialog(null);
             String path;
             if (returnVal == JFileChooser.APPROVE_OPTION){
                 path = fc.getSelectedFile().getAbsolutePath();
-                ImageIO.write(bufferedImage, "jpg", new File(path+"/img.jpg"));
+                ImageIO.write(bufferedImage, "jpg", new File(path+"/" + fileName));
             }
 
 
