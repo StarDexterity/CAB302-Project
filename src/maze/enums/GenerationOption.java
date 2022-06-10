@@ -1,5 +1,8 @@
 package maze.enums;
 
+/**
+ * This enum is used to make a selection of maze generation type
+ */
 public enum GenerationOption {
     DFS("DFS"),
     PRIM("Prim"),

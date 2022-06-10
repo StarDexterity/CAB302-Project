@@ -197,11 +197,6 @@ public class Maze {
         return (x >= 0 && x < nCols) && (y >= 0 && y < nRows);
     }
 
-    public static boolean withinBounds(Position p, int nCols, int nRows) {
-        int x = p.getX();
-        int y = p.getY();
-        return withinBounds(x, y, nCols, nRows);
-    }
 
     /**
      * Predicate function checks whether a cell at the given (x, y) coordinate in the grid can pass in the given direction
@@ -403,17 +398,6 @@ public class Maze {
         }
     }
 
-    /**
-     * Set or clears the enabled bit within the integer at grid position (x, y) within the mazeGrid based off isEnabled.
-     * @param pos The position of the cell within the mazeGrid
-     * @param isEnabled if true, set bit, else clear bit
-     */
-    public void setCellEnabled(Position pos, boolean isEnabled) {
-        int x = pos.getX();
-        int y = pos.getY();
-        setCellEnabled(x, y, isEnabled);
-    }
-
 
     // Based on the Build Pattern. Have to use this method to edit maze data
     public MazeData setData(String author) {
@@ -485,13 +469,22 @@ public class Maze {
     // Observer design pattern
 
 
-
+    /**
+     * An ArrayList to hold the listeners for the maze
+     */
     private final ArrayList<MazeListener> listeners = new ArrayList<>();
 
+    /**
+     * A function to add listeners to the list of maze listeners
+     * @param ml
+     */
     public void addListener(MazeListener ml) {
         listeners.add(ml);
     }
 
+    /**
+     * A function to change the current solve status of the maze
+     */
     private void mazeChanged() {
         setSolveStatus(SolveStatus.UNSOLVED);
         for (MazeListener l : listeners) {
@@ -526,9 +519,6 @@ public class Maze {
      * @return
      */
     private boolean validateImage(MazeImage image) {
-        Position topLeft = image.getTopLeft();
-        Position botomRight = image.getBottomRight();
-
         return (withinBounds(image.getTopLeft())
             && withinBounds(image.getBottomRight()));
     }

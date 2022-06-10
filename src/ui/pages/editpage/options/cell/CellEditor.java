@@ -40,8 +40,6 @@ public class CellEditor extends JPanel {
             ImageIO.getReaderFileSuffixes());
 
 
-    InsertImage insertImage = new InsertImage();
-
     public CellEditor(EditPage editPage) {
 
         // create components

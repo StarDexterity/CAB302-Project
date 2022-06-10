@@ -32,6 +32,10 @@ public class MazeData {
         this.lastEditDate = lastEditDate;
     }
 
+    /**
+     * A function used to update the 'Author' data for a maze
+     * @param author A string for the name of the author
+     */
     public void updateData(String author) {
         if (author != null) {
             this.author = author;

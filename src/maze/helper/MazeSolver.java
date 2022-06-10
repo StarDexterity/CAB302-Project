@@ -32,6 +32,11 @@ public final class MazeSolver {
         return solvable;
     }
 
+    /**
+     * Solves a supplied maze through the use of a breadth first search, as this will find the most optimal solution if there is more than one
+     * @param maze The maze the method is trying to solve
+     * @return True if the maze is solvable
+     */
     private static boolean solveBFS(Maze maze) {
         // get start and end positions
         Position startPosition = maze.getStart();
@@ -88,6 +93,7 @@ public final class MazeSolver {
         return false;
     }
 
+    //TODO: JavaDoc - what is this function?
     private static LinkedList<Position> reconstructPath(Position endPosition) {
         // init solution and add first position
         LinkedList<Position> solution = new LinkedList<>();
@@ -102,6 +108,7 @@ public final class MazeSolver {
         return solution;
     }
 
+    //TODO: Delete
     /**
      * Recursive depth first search solving algorithm, using black magic
      * @param pos
@@ -161,7 +168,8 @@ public final class MazeSolver {
 
     /**
      * For a given maze, finds the total cells with dead ends
-     * @return
+     * @param maze The maze to check
+     * @return A Double value to represent as a percentage
      */
     public static double TotalDeadEnds(Maze maze) {
 
@@ -183,7 +191,7 @@ public final class MazeSolver {
     /**
      * Counts the bits that are set in the supplied integer
      * @param n An integer
-     * @return
+     * @return The total count of bits that are set
      */
     private static int countSetBits(int n) {
         if (n == 0) return 0;
@@ -193,6 +201,8 @@ public final class MazeSolver {
 
     /**
      * For a given maze, finds the total cells required to pass through, for the optimal solution
+     * @param maze The maze to check
+     * @returnA Double value to represent as a percentage
      */
     public static double TotalPassThrough(Maze maze) {
         double count = maze.getSolution().size();

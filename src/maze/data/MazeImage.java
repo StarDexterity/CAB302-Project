@@ -41,18 +41,10 @@ public class MazeImage {
         return bottomRight;
     }
 
-    /**
-     * Gets the width of the Image
-     * @return The width as amount of cells
-     */
     public int getWidth() {
         return bottomRight.getX() - topLeft.getX() + 1;
     }
 
-    /**
-     * Gets the height of the Image
-     * @return The height as amount of cells
-     */
     public int getHeight() {
         return bottomRight.getY() - topLeft.getY() + 1;
     }

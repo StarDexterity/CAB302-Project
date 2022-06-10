@@ -6,7 +6,6 @@ import maze.data.Position;
 import maze.data.Selection;
 import maze.enums.SelectionType;
 import maze.interfaces.MazeListener;
-import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,21 +22,6 @@ import java.util.LinkedList;
  */
 
 public class MazeDisplay extends JPanel implements Scrollable {
-    /**
-     * Indicates the direction of one or more neighboring vertices a vertex connects with (shares an edge)
-     * Can be used like bits aka
-     *          (If a vertex has both South and East neighbors this can be represented with a bit value of 6)
-     */
-
-
-    /**
-     * Number of columns in the maze
-     */
-    private int nCols;
-    /**
-     * Number of rows in the maze
-     */
-    private int nRows;
 
     // These two values are for rendering
     final int cellSize = 25;
@@ -53,7 +37,6 @@ public class MazeDisplay extends JPanel implements Scrollable {
     private boolean showSolution;
     private boolean showGrid;
 
-    InsertImage insertImage = new InsertImage();
     public static boolean addImage;
 
     // color settings

@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static maze.Export.displayMaze;
 
-
+//TODO: Delete??
 public class SaveOptions extends JPanel {
     private JLabel titleLabel;
     private JTextField titleField;
