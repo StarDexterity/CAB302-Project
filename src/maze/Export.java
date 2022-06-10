@@ -29,10 +29,11 @@ public class Export {
     static MazeDisplayOptions displayOptions = new MazeDisplayOptions();
 
     //placeholder export (will replace with maze display)
-    public static void exportMaze(Maze maze, boolean ifSolution, boolean ifGrid, String Imagetype, String fileName) throws IOException {
+    public static void exportMaze(Maze maze, boolean ifSolution, boolean ifGrid, String Imagetype, String fileName, Color colour) throws IOException {
 
         displayOptions.setSolution(ifSolution);
         displayOptions.setGrid(ifGrid);
+        displayOptions.setSolutionColour(colour);
 
         // BufferedImage of one of the predefined image types.
         BufferedImage bufferedImage = MazeDrawer.drawMaze(maze, displayOptions);

@@ -5,6 +5,7 @@ import maze.helper.MazeSolver;
 import ui.pages.EditPage;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -27,14 +28,13 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
     private final JCheckBox showGrid;
     private final JLabel labelSolution;
     private final JLabel labelGrid;
-    private final JLabel labelColour;
     private final JTextField mazeName;
     private final JLabel mazeNameLabel;
     private final JButton colorButton;
 
     private boolean ifSolution = false;
     private boolean ifGrid = false;
-
+    private Color colour;
 
     public EditPage editPage;
 
@@ -66,13 +66,9 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
         showGrid = new JCheckBox();
         labelSolution = new JLabel(" Show solution:");
         labelGrid = new JLabel(" Show grid:");
-        labelColour = new JLabel(" Select a colour:");
+        colorButton = new JButton("Solution line colour");
         mazeName = new JTextField("MazeImage");
         mazeNameLabel = new JLabel(" Name of maze:");
-
-        colorButton = new JButton("Choose Color");
-        colorButton.setEnabled(false);
-
 
         JPanel myPanel = new JPanel();
         myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
@@ -89,7 +85,7 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
         row2.add(showSolution);
         row2.add(labelGrid);
         row2.add(showGrid);
-        row2.add(labelColour);
+        row2.add(colorButton);
 
         row1.add(mazeNameLabel);
         row1.add(mazeName);
@@ -161,13 +157,20 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
             ifGrid = true;
         });
 
+        colorButton.addActionListener(f -> {
+            Color changeColor = JColorChooser.showDialog(null, "Change Color",Color.RED);
+            if (changeColor != null){
+                colour = changeColor;
+            }
+        });
+
         jpg.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (current != null) {
                         String mazeNameValue = mazeName.getText();
-                        exportMaze(current, ifSolution, ifGrid, "jpg", mazeNameValue);
+                        exportMaze(current, ifSolution, ifGrid, "jpg", mazeNameValue, colour);
                     }
                 }
                 catch (IOException ex) {
@@ -184,7 +187,7 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
                 try {
                     if (current != null) {
                         String mazeNameValue = mazeName.getText();
-                        exportMaze(current, ifSolution, ifGrid, "png", mazeNameValue);
+                        exportMaze(current, ifSolution, ifGrid, "png", mazeNameValue, colour);
                     }
                 }
                 catch (IOException ex) {
