@@ -6,6 +6,7 @@ import maze.data.Maze;
 import ui.App;
 import maze.data.MazeTableModel;
 import ui.dialog.DatabaseErrorHandler;
+import ui.dialog.ExportDialog;
 import ui.pages.homepage.HomeButtons;
 
 import javax.swing.*;
@@ -152,10 +153,14 @@ public class HomePage extends JPanel {
         exportItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            int row = table.getSelectedRow();
+            int mazeID = (int) table.getModel().getValueAt(row, 0);
                 try {
-                    displayMaze(editPage.currentMaze, false, false, "imageType");
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                    ExportDialog.storedMazes(new DatabaseConnection().retrieveMaze(mazeID));
+                    ExportDialog get = new ExportDialog(new JFrame());
+                    get.setVisible(true);
+                } catch (SQLException f) {
+                    DatabaseErrorHandler.handle(f, false);
                 }
 
 

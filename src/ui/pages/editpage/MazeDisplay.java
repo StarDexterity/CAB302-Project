@@ -3,6 +3,7 @@ package ui.pages.editpage;
 import maze.data.*;
 import maze.enums.SelectionType;
 import maze.helper.MazeDrawer;
+import maze.interfaces.MazeListener;
 import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
@@ -204,7 +205,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         deselect();
 
         // when maze is altered in any way this component is repainted
-        maze.addListener(new Maze.MazeListener() {
+        maze.addListener(new MazeListener() {
             @Override
             public void mazeChanged() {
                 repaint();
