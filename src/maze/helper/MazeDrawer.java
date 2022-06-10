@@ -3,6 +3,7 @@ package maze.helper;
 import maze.data.*;
 import maze.enums.SelectionType;
 
+
 import ui.pages.editpage.MazeDisplay;
 
 import java.awt.*;
@@ -14,7 +15,7 @@ import java.util.LinkedList;
  * Maze drawer class draws a maze to a buffered image
  */
 public class MazeDrawer {
-    public static BufferedImage drawMaze(Maze maze, MazeDisplayOptions displayOptions) {
+    public static BufferedImage drawMaze(Maze maze, MazeDisplayOptions displayOptions, Selection selection) {
 
         // gets important maze data for rendering
         int nCols = maze.getCols();
@@ -36,9 +37,9 @@ public class MazeDrawer {
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-        Position selectedCell = displayOptions.getSelectionCell();
-        MazeImage selectedImage = displayOptions.getSelectedImage();
-        SelectionType selectionType = displayOptions.getSelectedType();
+        Position selectedCell = selection.selectedCell;
+        MazeImage selectedImage = selection.selectedImage;
+        SelectionType selectionType = selection.selectionType;
 
         g.setColor(Color.white);
         g.fillRect(0, 0, sizeW, sizeH);
@@ -152,7 +153,7 @@ public class MazeDrawer {
         return bufferedImage;
     }
 
-//    public static BufferedImage drawMaze(Maze maze) {
-//        return drawMaze(maze, new MazeDisplayOptions());
-//    }
+    public static BufferedImage drawMaze(Maze maze, MazeDisplayOptions displayOptions) {
+        return drawMaze(maze, displayOptions, new Selection());
+    }
 }

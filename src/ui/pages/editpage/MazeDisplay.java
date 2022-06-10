@@ -64,9 +64,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     // selected cell coordinates
     // TODO: convert this into a Selection object
-    public static Position selectedCell;
-    public static MazeImage selectedImage;
-    public static SelectionType selectionType;
+    Selection selection = new Selection();
 
 
     public void changeSolutionColor(Color color){
@@ -98,11 +96,11 @@ public class MazeDisplay extends JPanel implements Scrollable {
                 // below code gets selected cell if any
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     // set to defaults
-                    Position oldSelectedCell = selectedCell;
-                    MazeImage oldSelectedImage = selectedImage;
-                    selectedCell = null;
-                    selectedImage = null;
-                    selectionType = SelectionType.NONE;
+                    Position oldSelectedCell = selection.selectedCell;
+                    MazeImage oldSelectedImage = selection.selectedImage;
+                    selection.selectedCell = null;
+                    selection.selectedImage = null;
+                    selection.selectionType = SelectionType.NONE;
 
                     // get mouse position in grid coordinates
                     int x = (e.getX() - margin) / cellSize;
@@ -119,24 +117,22 @@ public class MazeDisplay extends JPanel implements Scrollable {
                                 withinImage = true;
                                 // only make a selection if a different image is selected
                                 if (!image.equals(oldSelectedImage)) {
-                                    selectionType = SelectionType.IMAGE;
-                                    selectedImage = image;
+                                    selection.selectionType = SelectionType.IMAGE;
+                                    selection.selectedImage = image;
                                 }
                             }
                         }
                         if (!withinImage) {
                             // only make a selection if a different cell is selected
                             if (!newSelectedCell.equals(oldSelectedCell)) {
-                                selectionType = SelectionType.CELL;
-                                selectedCell = newSelectedCell;
+                                selection.selectionType = SelectionType.CELL;
+                                selection.selectedCell = newSelectedCell;
                             }
                         }
 
                     }
                     selectionChanged();
-                    displayOptions.setSelectedType(selectionType);
-                    displayOptions.setSelectionCell(selectedCell);
-                    displayOptions.setSelectedImage(selectedImage);
+
 
 
                     repaint();
@@ -182,7 +178,6 @@ public class MazeDisplay extends JPanel implements Scrollable {
     }
 
     MazeDisplayOptions displayOptions = new MazeDisplayOptions();
-    Selection selection = new Selection(selectedCell, selectedImage, selectionType);
 
     public void setShowSolution(boolean showSolution) {
         this.showSolution = showSolution;
@@ -219,8 +214,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
             @Override
             public void addedImage(MazeImage image) {
-                selectionType = SelectionType.IMAGE;
-                selectedImage = image;
+                selection.selectionType = SelectionType.IMAGE;
+                selection.selectedImage = image;
                 selectionChanged();
             }
         });
@@ -231,9 +226,9 @@ public class MazeDisplay extends JPanel implements Scrollable {
     }
 
     public void deselect() {
-        selectedCell = null;
-        selectedImage = null;
-        selectionType = SelectionType.NONE;
+        selection.selectedCell = null;
+        selection.selectedImage = null;
+        selection.selectionType = SelectionType.NONE;
         selectionChanged();
     }
 
@@ -289,7 +284,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
         revalidate();
 
         for (int i = 0; i < listeners.size(); i++) {
-            listeners.get(i).selectedCellChanged(new Selection(selectedCell, selectedImage, selectionType));
+            listeners.get(i).selectedCellChanged(new Selection(selection.selectedCell, selection.selectedImage, selection.selectionType));
         }
     }
 
