@@ -43,9 +43,6 @@ public class HomePage extends JPanel {
 
         setLayout(new BorderLayout());
 
-        homeButtons = new HomeButtons();
-        add(homeButtons, BorderLayout.NORTH);
-
         MazeTableModel mazeTableModel = new MazeTableModel();
         table = new JTable(mazeTableModel);
         getMazes();
@@ -55,6 +52,7 @@ public class HomePage extends JPanel {
         table.setFocusable(false);
         table.setRowHeight(32);
         table.setAutoCreateRowSorter(true);
+
 
         // double click event that opens up the maze for editing
         table.addMouseListener(new MouseAdapter() {
@@ -74,6 +72,9 @@ public class HomePage extends JPanel {
                 }
             }
         });
+
+        homeButtons = new HomeButtons(table);
+        add(homeButtons, BorderLayout.NORTH);
 
         // manually set column size
         TableColumnModel columnModel = table.getColumnModel();
@@ -144,7 +145,6 @@ public class HomePage extends JPanel {
         popupMenu.add(deleteItem);
 
 
-        //DOES NOT WORK YET
         exportItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
