@@ -1,17 +1,10 @@
 package ui.pages.editpage.options;
 
-import maze.data.Maze;
 import ui.helper.GridBagHelper;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-
-
-import static maze.Export.displayMaze;
 
 //TODO: Delete??
 public class SaveOptions extends JPanel {
