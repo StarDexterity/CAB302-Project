@@ -6,6 +6,7 @@ import maze.data.Position;
 import maze.data.Selection;
 import maze.enums.SelectionType;
 import maze.interfaces.MazeListener;
+import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,6 +37,8 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
     private boolean showSolution;
     private boolean showGrid;
+
+    InsertImage insertImage = new InsertImage(); //TODO: DO NOT DELETE!!! BREAKS PROGRAM, DONT KNOW WHY
 
     public static boolean addImage;
 
