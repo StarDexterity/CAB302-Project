@@ -52,19 +52,16 @@ public class MazeDisplay extends JPanel implements Scrollable {
     private boolean showSolution;
     private boolean showGrid;
 
-    InsertImage insertImage = new InsertImage();
     public static boolean addImage;
 
     // color settings
     // TODO: Hook these up below
     public Color solutionLineColor = Color.ORANGE;
-    private Color gridColor = new Color(192, 192, 192, 200);
-    private Color mazeColor = Color.BLACK;
-    private Color background = Color.WHITE;
 
     // selected cell coordinates
-    // TODO: convert this into a Selection object
     Selection selection = new Selection();
+
+    MazeDisplayOptions displayOptions = new MazeDisplayOptions();
 
 
     public void changeSolutionColor(Color color){
@@ -177,8 +174,6 @@ public class MazeDisplay extends JPanel implements Scrollable {
         return showGrid;
     }
 
-    MazeDisplayOptions displayOptions = new MazeDisplayOptions();
-
     public void setShowSolution(boolean showSolution) {
         this.showSolution = showSolution;
         displayOptions.setSolution(showSolution);
@@ -250,8 +245,9 @@ public class MazeDisplay extends JPanel implements Scrollable {
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-        BufferedImage bufferedImage = MazeDrawer.drawMaze(maze, displayOptions);
+        BufferedImage bufferedImage = MazeDrawer.drawMaze(maze, displayOptions, selection);
         g.drawImage(bufferedImage, null, 0, 0);
+
 
         g.dispose();
     }
