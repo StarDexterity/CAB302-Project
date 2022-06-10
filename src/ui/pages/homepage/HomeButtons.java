@@ -3,6 +3,7 @@ package ui.pages.homepage;
 import database.DatabaseConnection;
 import ui.dialog.DatabaseErrorHandler;
 import ui.dialog.ExportDialog;
+import ui.dialog.ExportSelectedDialog;
 import ui.helper.GridBagHelper;
 
 import javax.swing.*;
@@ -51,15 +52,33 @@ public class HomeButtons extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int[] row = table.getSelectedRows();
+                if (row.length != 0) {
 
-                for (int i = row.length - 1; i >= 0; i--) {
-                    int mazeID = (int) table.getModel().getValueAt(row[i], 0);
+                    int mazeID = (int) table.getModel().getValueAt(row[row.length - 1], 0);
                     try {
-                        ExportDialog.storedMazes(new DatabaseConnection().retrieveMaze(mazeID));
-                        ExportDialog get = new ExportDialog(new JFrame());
+                        ExportSelectedDialog.storedMazes(new DatabaseConnection().retrieveMaze(mazeID));
+                        ExportSelectedDialog get = new ExportSelectedDialog(new JFrame());
                         get.setVisible(true);
                     } catch (SQLException f) {
                         DatabaseErrorHandler.handle(f, false);
+                    }
+
+
+                    boolean pathCheck;
+
+                    for (int i = row.length - 1; i >= 1; i--) {
+                        mazeID = (int) table.getModel().getValueAt(row[i - 1], 0);
+                        try {
+                            ExportSelectedDialog.storedMazes(new DatabaseConnection().retrieveMaze(mazeID));
+                            if (row.length == 1) {
+                                pathCheck = false;
+                            } else {
+                                pathCheck = true;
+                            }
+                            ExportSelectedDialog.afterFirst(i, pathCheck);
+                        } catch (SQLException f) {
+                            DatabaseErrorHandler.handle(f, false);
+                        }
                     }
                 }
 

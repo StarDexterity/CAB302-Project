@@ -21,6 +21,8 @@ public class Export {
     private static boolean solved = false;
     private static boolean grid = false;
     static private String title = "mazeImage";
+    private static String path;
+
 
     static int cellSize = 25;
     static int margin = 25;
@@ -29,7 +31,7 @@ public class Export {
     static MazeDisplayOptions displayOptions = new MazeDisplayOptions();
 
     //placeholder export (will replace with maze display)
-    public static void exportMaze(Maze maze, boolean ifSolution, boolean ifGrid, String Imagetype, String fileName, Color colour) throws IOException {
+    public static void exportMaze(Maze maze, boolean pathCheck, boolean ifSolution, boolean ifGrid, String Imagetype, String fileName, Color colour) throws IOException {
 
         displayOptions.setSolution(ifSolution);
         displayOptions.setGrid(ifGrid);
@@ -61,15 +63,16 @@ public class Export {
             // save as PNG
             fileName = fileName + ".png";
 
-            int returnVal = fc.showOpenDialog(null);
-
-            // if file chooser aproved
-            String path;
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                path = fc.getSelectedFile().getAbsolutePath();
+            if (pathCheck == false) {
+                int returnVal = fc.showOpenDialog(null);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    path = fc.getSelectedFile().getAbsolutePath();
+                    ImageIO.write(bufferedImage, "png", new File(path+"/" + fileName));
+                }
+            }
+            else {
                 ImageIO.write(bufferedImage, "png", new File(path+"/" + fileName));
             }
-
 
         }
 
@@ -77,10 +80,14 @@ public class Export {
             // save as PNG
             fileName = fileName + ".jpg";
 
-            int returnVal = fc.showOpenDialog(null);
-            String path;
-            if (returnVal == JFileChooser.APPROVE_OPTION){
-                path = fc.getSelectedFile().getAbsolutePath();
+            if ((pathCheck == false)){
+                int returnVal = fc.showOpenDialog(null);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    path = fc.getSelectedFile().getAbsolutePath();
+                    ImageIO.write(bufferedImage, "jpg", new File(path+"/" + fileName));
+                }
+            }
+            else {
                 ImageIO.write(bufferedImage, "jpg", new File(path+"/" + fileName));
             }
 

@@ -65,7 +65,7 @@ public class MazeDisplay extends JPanel implements Scrollable {
 
 
     public void changeSolutionColor(Color color){
-        solutionLineColor = color;
+        displayOptions.setSolutionColour(color);
         repaint();
         revalidate();
     }

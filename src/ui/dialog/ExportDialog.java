@@ -34,7 +34,7 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
 
     private boolean ifSolution = false;
     private boolean ifGrid = false;
-    private Color colour;
+    private Color colour = Color.ORANGE;
 
     public EditPage editPage;
 
@@ -150,11 +150,21 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
     public void propertyChange(PropertyChangeEvent e) {
 
         showSolution.addActionListener(f -> {
-            ifSolution = MazeSolver.solve(current);
+            if (showSolution.isSelected()) {
+                ifSolution = MazeSolver.solve(current);
+            }
+            else {
+                ifSolution = false;
+            }
         });
 
         showGrid.addActionListener(f -> {
-            ifGrid = true;
+            if (showGrid.isSelected()) {
+                ifGrid = true;
+            }
+            else {
+                ifGrid = false;
+            }
         });
 
         colorButton.addActionListener(f -> {
@@ -170,7 +180,7 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
                 try {
                     if (current != null) {
                         String mazeNameValue = mazeName.getText();
-                        exportMaze(current, ifSolution, ifGrid, "jpg", mazeNameValue, colour);
+                        exportMaze(current, false, ifSolution, ifGrid, "jpg", mazeNameValue, colour);
                     }
                 }
                 catch (IOException ex) {
@@ -180,14 +190,13 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
             }
         });
 
-        //export mazes (if multiple selected export all in for loop)
         png.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (current != null) {
                         String mazeNameValue = mazeName.getText();
-                        exportMaze(current, ifSolution, ifGrid, "png", mazeNameValue, colour);
+                        exportMaze(current, false, ifSolution, ifGrid, "png", mazeNameValue, colour);
                     }
                 }
                 catch (IOException ex) {

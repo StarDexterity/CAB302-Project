@@ -104,13 +104,14 @@ public class MazeDisplayOptions {
         this.mazeColour = mazeColour;
     }
 
+    public void setSolutionColour(Color solutionColour) {
+        this.solutionColour = solutionColour;
+    }
+
     public Color getSolutionColour() {
         return solutionColour;
     }
 
-    public void setSolutionColour(Color solutionColour) {
-        this.solutionColour = solutionColour;
-    }
 
     public Color getGridColour() {
         return gridColour;

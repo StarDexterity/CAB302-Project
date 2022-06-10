@@ -153,6 +153,7 @@ public class HomePage extends JPanel {
                 try {
                     ExportDialog.storedMazes(new DatabaseConnection().retrieveMaze(mazeID));
                     ExportDialog get = new ExportDialog(new JFrame());
+
                     get.setVisible(true);
                 } catch (SQLException f) {
                     DatabaseErrorHandler.handle(f, false);

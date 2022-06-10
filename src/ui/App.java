@@ -97,6 +97,7 @@ public class App extends JFrame {
             save.setEnabled(editPage.mazeDisplay.isEnabled());
         });
 
+
         JMenuItem export = new JMenuItem("Export");
         export.setEnabled(false);
         editPage.mazeDisplay.addListener(cce -> {
