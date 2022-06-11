@@ -165,35 +165,14 @@ public class DatabaseConnection {
             insert.close();
             generatedID.close();
 
-            PreparedStatement insertImage = connection.prepareStatement("INSERT INTO MazeImage\n" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?);");
-
-            for (MazeImage image : maze.getImages()) {
-                ByteArrayOutputStream imageData = new ByteArrayOutputStream();
-                try {
-                    ImageIO.write(image.getImage(), "png", imageData);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                insertImage.clearParameters();
-                insertImage.setInt(1, 105);
-                insertImage.setInt(2, maze.mazeData.getId());
-                insertImage.setBlob(3, objectToBlob(imageData));
-                insertImage.setInt(4, image.getTopLeft().getX());
-                insertImage.setInt(5, image.getTopLeft().getY());
-                insertImage.setInt(6, image.getBottomRight().getX());
-                insertImage.setInt(7, image.getBottomRight().getY());
-                insertImage.executeUpdate();
-            }
-
-            insertImage.close();
+            insertImages(maze);
 
 
         } else {
             // If the maze has an ID, update its entry in the database.
             PreparedStatement update = connection.prepareStatement("UPDATE Maze\n" +
-                    "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeGrid = ?, nCols = ?, nRows = ?;");
+                    "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeGrid = ?, nCols = ?, nRows = ?\n" +
+                    "WHERE mazeID = ?;");
             update.setString(1, mazeData.getAuthor());
             update.setString(2, mazeData.getTitle());
             update.setString(3, mazeData.getDescription());
@@ -202,10 +181,43 @@ public class DatabaseConnection {
             update.setBlob(6, objectToBlob(maze.getMazeGrid()));
             update.setInt(7, maze.getCols());
             update.setInt(8, maze.getRows());
+            update.setInt(9, mazeData.getId());
             update.executeUpdate();
 
             update.close();
+
+            PreparedStatement deleteImage = connection.prepareStatement("DELETE FROM MazeImages\n" +
+                    "WHERE mazeID = ?");
+            deleteImage.clearParameters();
+            deleteImage.setInt(1, mazeData.getId());
+
+            insertImages(maze);
         }
+    }
+
+    private void insertImages (Maze maze) throws SQLException {
+        PreparedStatement insertImage = connection.prepareStatement("INSERT INTO MazeImage\n" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?);");
+
+        for (MazeImage image : maze.getImages()) {
+            ByteArrayOutputStream imageData = new ByteArrayOutputStream();
+            try {
+                ImageIO.write(image.getImage(), "png", imageData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            insertImage.clearParameters();
+            insertImage.setInt(1, 105);
+            insertImage.setInt(2, maze.mazeData.getId());
+            insertImage.setBlob(3, objectToBlob(imageData));
+            insertImage.setInt(4, image.getTopLeft().getX());
+            insertImage.setInt(5, image.getTopLeft().getY());
+            insertImage.setInt(6, image.getBottomRight().getX());
+            insertImage.setInt(7, image.getBottomRight().getY());
+            insertImage.executeUpdate();
+        }
+        insertImage.close();
     }
 
     public Maze retrieveMaze(int mazeID) throws SQLException {
@@ -235,6 +247,12 @@ public class DatabaseConnection {
 
         Maze maze = new Maze(nCols, nRows, mazeGrid, mazeData);
 
+        placeImages(maze);
+
+        return maze;
+    }
+
+    private static void placeImages(Maze maze) throws SQLException {
         PreparedStatement selectImages = connection.prepareStatement("SELECT * FROM MazeImage\n" +
                 "WHERE mazeID = ?;");
 
@@ -245,19 +263,14 @@ public class DatabaseConnection {
         ResultSet resultImages = selectImages.getResultSet();
 
         while (resultImages.next()) {
+            long id = resultImages.getLong(1);
             ByteArrayInputStream imageData = blobToByteStream(resultImages.getBlob(3));
             Position topLeft = new Position(resultImages.getInt(4), resultImages.getInt(5));
             Position bottomRight = new Position(resultImages.getInt(6), resultImages.getInt(7));
 
-            MazeImage mazeImage = new MazeImage(topLeft, bottomRight, imageData);
+            MazeImage mazeImage = new MazeImage(id, topLeft, bottomRight, imageData);
             maze.placeImage(mazeImage);
         }
-
-        return maze;
-    }
-
-    private static ArrayList<MazeImage> retrieveLogos() {
-        return new ArrayList<MazeImage>();
     }
 
     public ArrayList<MazeData> retrieveMazeCatalogue() throws SQLException{

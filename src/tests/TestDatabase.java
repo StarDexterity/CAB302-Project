@@ -47,8 +47,8 @@ public class TestDatabase {
                 .description("It's stored exclusively in the cloud");
 
         // Image
-        Position topLeft = new Position(0,4);
-        Position bottomRight = new Position(4,0);
+        Position topLeft = new Position(2,2);
+        Position bottomRight = new Position(3,3);
 
         File file = new File("src/tests/TestImage.jpg");
 
@@ -98,6 +98,7 @@ public class TestDatabase {
         maze = connection.retrieveMaze(2);
         assertEquals("Him Jogan", maze.mazeData.getAuthor());
         assertEquals("Him's Cloud Maze", maze.mazeData.getTitle());
+
         System.out.println(maze.getImages().get(0).getTopLeft().getX());
         System.out.println(maze.getImages().get(0).getTopLeft().getY());
         System.out.println(maze.getImages().get(0).getBottomRight().getX());

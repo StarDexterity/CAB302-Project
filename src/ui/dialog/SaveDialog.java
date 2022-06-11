@@ -166,8 +166,6 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
                         .title(titleField.getText())
                         .description(descriptionField.getText());
 
-
-
                 // Saves the maze to the database.
                 try {
                     new DatabaseConnection().save(maze);
