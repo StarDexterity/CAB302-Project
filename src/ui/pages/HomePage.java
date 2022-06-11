@@ -71,7 +71,7 @@ public class HomePage extends JPanel {
             }
         });
 
-        homeButtons = new HomeButtons(table);
+        homeButtons = new HomeButtons(table, this);
         add(homeButtons, BorderLayout.NORTH);
 
         // manually set column size
@@ -142,8 +142,20 @@ public class HomePage extends JPanel {
                 } catch (SQLException f) {
                     DatabaseErrorHandler.handle(f, false);
                 }
+            }
+        });
 
-
+        deleteItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = table.getSelectedRow();
+                int mazeID = (int) table.getModel().getValueAt(row, 0);
+                try {
+                    new DatabaseConnection().delete(mazeID);
+                } catch (SQLException f) {
+                    DatabaseErrorHandler.handle(f, false);
+                }
+                updateTable();
             }
         });
 

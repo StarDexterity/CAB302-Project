@@ -5,13 +5,17 @@ import ui.dialog.DatabaseErrorHandler;
 import ui.dialog.ExportDialog;
 import ui.dialog.ExportSelectedDialog;
 import ui.helper.GridBagHelper;
+import ui.pages.EditPage;
+import ui.pages.HomePage;
 
+import javax.sound.midi.ShortMessage;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Console;
 import java.sql.SQLException;
 
 
@@ -21,7 +25,9 @@ public class HomeButtons extends JPanel {
     private JButton exportSelected;
     private JButton deleteSelected;
 
-    public HomeButtons(JTable table) {
+    private HomePage homePage;
+
+    public HomeButtons(JTable table, HomePage homePage) {
 
         Dimension dim = getPreferredSize();
         dim.height = 50;
@@ -33,6 +39,8 @@ public class HomeButtons extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 
         layoutComponents(table);
+
+        this.homePage = homePage;
     }
 
     public void layoutComponents(JTable table) {
@@ -81,9 +89,32 @@ public class HomeButtons extends JPanel {
                         }
                     }
                 }
+            }
+        });
 
+        deleteSelected.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int[] row = table.getSelectedRows();
+                if (row.length != 0) {
+                    int mazeID = (int) table.getModel().getValueAt(row[row.length - 1], 0);
+                    try {
+                        new DatabaseConnection().delete(mazeID);
+                    } catch (SQLException f) {
+                        DatabaseErrorHandler.handle(f, false);
+                    }
 
-
+                    for (int i = row.length - 1; i >= 1; i--) {
+                        mazeID = (int) table.getModel().getValueAt(row[i - 1], 0);
+                        try {
+                            System.out.println("hellp");
+                            new DatabaseConnection().delete(mazeID);
+                        } catch (SQLException f) {
+                            DatabaseErrorHandler.handle(f, false);
+                        }
+                    }
+                    homePage.updateTable();
+                }
             }
         });
     }
