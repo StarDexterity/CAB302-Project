@@ -6,18 +6,13 @@ import maze.data.Maze;
 import maze.data.MazeData;
 import maze.data.MazeImage;
 import maze.data.Position;
-import org.javatuples.Triplet;
+
 import org.junit.jupiter.api.*;
 
-import javax.xml.crypto.Data;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.sql.SQLDataException;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -82,6 +77,12 @@ public class TestDatabase {
     @BeforeAll
     public static void PopulateDatabase () throws SQLException {
 
+        Connection testConnection = DriverManager.getConnection("jdbc:mariadb://localhost:3307", "root", "secret");
+        Statement reset = testConnection.createStatement();
+        reset.execute("DROP DATABASE testmazeco");
+        reset.close();
+        testConnection.close();
+
         DatabaseConnection.instantiate();
 
         connection = new DatabaseConnection();
@@ -99,10 +100,10 @@ public class TestDatabase {
         assertEquals("Him Jogan", maze.mazeData.getAuthor());
         assertEquals("Him's Cloud Maze", maze.mazeData.getTitle());
 
-        System.out.println(maze.getImages().get(0).getTopLeft().getX());
-        System.out.println(maze.getImages().get(0).getTopLeft().getY());
-        System.out.println(maze.getImages().get(0).getBottomRight().getX());
-        System.out.println(maze.getImages().get(0).getBottomRight().getY());
+        assertEquals(2, maze.getImages().get(0).getTopLeft().getX());
+        assertEquals(2, maze.getImages().get(0).getTopLeft().getY());
+        assertEquals(3, maze.getImages().get(0).getBottomRight().getX());
+        assertEquals(3, maze.getImages().get(0).getBottomRight().getY());
     }
 
     @Test
@@ -124,18 +125,6 @@ public class TestDatabase {
     }
 
     @Test
-    public void TestRetrieveMazeCatalog() throws SQLException {
-        ArrayList<MazeData> mazes = connection.retrieveMazeCatalogue();
-        for (MazeData m : mazes) {
-            System.out.println(m.getAuthor());
-            System.out.println(m.getTitle());
-            System.out.println(m.getDescription());
-            System.out.println(m.getCreationDate());
-            System.out.println(m.getLastEditDate());
-        }
-    }
-
-    @Test
     public void AssignsId() {
         Maze roboMaze = new Maze(4, 4, false);
         roboMaze.setMazeGrid(DummyMazes.random);
@@ -150,5 +139,17 @@ public class TestDatabase {
         }
 
         assertNotEquals(roboMaze.mazeData.getId(), 0);
+    }
+
+    @Test
+    public void ViewRetrieveMazeCatalog() throws SQLException {
+        ArrayList<MazeData> mazes = connection.retrieveMazeCatalogue();
+        for (MazeData m : mazes) {
+            System.out.println(m.getAuthor());
+            System.out.println(m.getTitle());
+            System.out.println(m.getDescription());
+            System.out.println(m.getCreationDate());
+            System.out.println(m.getLastEditDate());
+        }
     }
 }
