@@ -4,6 +4,7 @@ import maze.data.Maze;
 import maze.data.MazeImage;
 import maze.data.Position;
 import maze.data.Selection;
+import maze.enums.Direction;
 import maze.enums.SelectionType;
 import ui.helper.GridBagHelper;
 import ui.pages.EditPage;
@@ -16,6 +17,8 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 public class CellEditor extends JPanel {
@@ -148,6 +151,24 @@ public class CellEditor extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 
         layoutComponents();
+        addKeyBindings();
+    }
+
+    public void addKeyBindings() {
+        // key bindings
+        InputMap inputMap = getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),"removeImage");
+
+        actionMap.put("removeImage",
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        removeImage.doClick();
+                    }
+                }
+        );
     }
 
     public void layoutComponents() {
