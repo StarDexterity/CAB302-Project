@@ -1,5 +1,8 @@
 package maze.enums;
 
+/**
+ * An enum that provides cardinal directions
+ */
 public enum Direction {
     //N = north; S = south; E = east; W = west;
     N(1, 0, -1),
