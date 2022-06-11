@@ -18,4 +18,8 @@ public class Selection {
         this.selectedImage = selectedImage;
         this.selectionType = selectionType;
     }
+
+    public Selection() {
+        this.selectionType = SelectionType.NONE;
+    }
 }

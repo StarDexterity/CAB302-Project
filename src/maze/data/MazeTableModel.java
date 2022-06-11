@@ -3,34 +3,48 @@ package maze.data;
 import javax.swing.table.AbstractTableModel;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
-
+/**
+ * This class allows easy editing of the maze table, found on the home page in the application
+ */
 public class MazeTableModel extends AbstractTableModel {
     public MazeTableModel() {
         super();
         data = new ArrayList<MazeData>();
     }
 
+    /**
+     * Adds a row of data to the table
+     * @param mazeData The data of a maze to be added to the table
+     */
     public void addRow(MazeData mazeData) {
         data.add(mazeData);
         fireTableDataChanged();
     }
 
+    /**
+     * Adds multiple rows of data to the table
+     * @param data The ArrayList of data to  be added to the table
+     */
     public void addRows(ArrayList<MazeData> data) {
         for (MazeData datum : data) {
             addRow(datum);
         }
     }
 
+    /**
+     * Used to clear the data held within the table
+     */
     public void clear() {
         data.clear();
     }
 
-
+    /**
+     * An enum to specify the names of the headers of the table
+     */
     public enum TableHeaders {
         ID(0, "Id"),
         TITLE(1,"Title"),
@@ -63,6 +77,7 @@ public class MazeTableModel extends AbstractTableModel {
             return null;
         }
 
+        //TODO: Never Used, Delete?
         public static TableHeaders getByName(String s) {
             for (TableHeaders option : TableHeaders.values()) {
                 if (option.name == s) return option;
@@ -75,6 +90,8 @@ public class MazeTableModel extends AbstractTableModel {
     // a lot of data to show the scroll bar
     private ArrayList<MazeData> data;
 
+
+    //TODO: Never Used, Delete?
     public ArrayList<MazeData> getData() {
         return data;
     }

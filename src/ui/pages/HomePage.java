@@ -1,12 +1,13 @@
 package ui.pages;
 
 import database.DatabaseConnection;
-import maze.data.MazeData;
 import maze.enums.GenerationOption;
 import maze.data.Maze;
 import ui.App;
 import maze.data.MazeTableModel;
 import ui.dialog.DatabaseErrorHandler;
+import ui.dialog.ExportDialog;
+import ui.pages.homepage.HomeButtons;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -19,12 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.util.ArrayList;
-
-import static maze.Export.displayMaze;
 
 public class HomePage extends JPanel {
     private App app;
@@ -34,6 +30,8 @@ public class HomePage extends JPanel {
     private JPopupMenu popupMenu;
 
     public EditPage editPage;
+    HomeButtons homeButtons;
+
 
     public HomePage(App app) {
         super();
@@ -42,7 +40,6 @@ public class HomePage extends JPanel {
     }
 
     private void createGUI() {
-        new JLabel("testing");
 
         setLayout(new BorderLayout());
 
@@ -56,12 +53,11 @@ public class HomePage extends JPanel {
         table.setRowHeight(32);
         table.setAutoCreateRowSorter(true);
 
+
         // double click event that opens up the maze for editing
         table.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent mouseEvent) {
                 JTable table =(JTable) mouseEvent.getSource();
-                // Point point = mouseEvent.getPoint(); // this code seems redundant
-                //int row = table.rowAtPoint(point);
                 int row = table.getSelectedRow();
                 if (mouseEvent.getClickCount() == 2 && row != -1) {
                     int mazeID = (int) table.getModel().getValueAt(row, 0);
@@ -75,14 +71,16 @@ public class HomePage extends JPanel {
             }
         });
 
+        homeButtons = new HomeButtons(table);
+        add(homeButtons, BorderLayout.NORTH);
+
         // manually set column size
         TableColumnModel columnModel = table.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(1);
-        columnModel.getColumn(1).setPreferredWidth(100);
+        columnModel.getColumn(0).setPreferredWidth(170);
+        columnModel.getColumn(1).setPreferredWidth(170);
         columnModel.getColumn(2).setPreferredWidth(100);
         columnModel.getColumn(3).setPreferredWidth(100);
-        columnModel.getColumn(4).setPreferredWidth(100);
-
+        columnModel.getColumn(4).setPreferredWidth(1);
 
         scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);
@@ -94,7 +92,7 @@ public class HomePage extends JPanel {
 
         // border code
         Border innerBorder = BorderFactory.createBevelBorder(BevelBorder.LOWERED);
-        Border outerBorder = BorderFactory.createEmptyBorder(120,100,100,100);
+        Border outerBorder = BorderFactory.createEmptyBorder(100,100,100,100);
         setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
 
         // layout code
@@ -105,13 +103,27 @@ public class HomePage extends JPanel {
         MazeTableModel tableModel = (MazeTableModel) table.getModel();
         tableModel.clear();
 
-        //TODO: Refresh on page load
         try {
             tableModel.addRows(new DatabaseConnection().retrieveMazeCatalogue());
         } catch (SQLException e) {
             DatabaseErrorHandler.handle(e, false);
         }
     }
+
+
+//    private ArrayList<MazeData> getDummyMazeData() {
+//        int id = 0;
+//        ArrayList<MazeData> data = new ArrayList<>();
+//
+//        String[] authors = {"Dave", "Jane", "Richard", "Mary", "Sally", "Bob"};
+//        String[] titles = {"Cool maze", "Great maze", "Amazing maze", "Bad maze", "Test maze", ":("};
+//
+//        for (int i = 0; i < 6; i++) {
+//            data.add(new MazeData(id, authors[i], titles[i], "", Instant.now(), Instant.now()));
+//            id++;
+//        }
+//        return data;
+//    }
 
     private JPopupMenu createPopupMenu(JTable table) {
         JPopupMenu popupMenu = new JPopupMenu();
@@ -130,15 +142,19 @@ public class HomePage extends JPanel {
         popupMenu.add(editItem);
         popupMenu.add(deleteItem);
 
-        //DOES NOT WORK YET
+
         exportItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("testing button");
+            int row = table.getSelectedRow();
+            int mazeID = (int) table.getModel().getValueAt(row, 0);
                 try {
-                    displayMaze(editPage.currentMaze);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                    ExportDialog.storedMazes(new DatabaseConnection().retrieveMaze(mazeID));
+                    ExportDialog get = new ExportDialog(new JFrame());
+
+                    get.setVisible(true);
+                } catch (SQLException f) {
+                    DatabaseErrorHandler.handle(f, false);
                 }
 
 

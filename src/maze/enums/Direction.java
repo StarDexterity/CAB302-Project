@@ -57,4 +57,4 @@ public enum Direction {
         this.dx = dx;
         this.dy = dy;
     }
-};
+}

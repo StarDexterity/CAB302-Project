@@ -23,6 +23,7 @@ public enum SolveStatus {
         return name;
     }
 
+    //TODO: Never Used, Delete?
     public static SolveStatus getOption(String s) {
         for (SolveStatus option : SolveStatus.values()) {
             if (option.name == s) return option;

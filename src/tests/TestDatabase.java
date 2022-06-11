@@ -98,6 +98,10 @@ public class TestDatabase {
         maze = connection.retrieveMaze(2);
         assertEquals("Him Jogan", maze.mazeData.getAuthor());
         assertEquals("Him's Cloud Maze", maze.mazeData.getTitle());
+        System.out.println(maze.getImages().get(0).getTopLeft().getX());
+        System.out.println(maze.getImages().get(0).getTopLeft().getY());
+        System.out.println(maze.getImages().get(0).getBottomRight().getX());
+        System.out.println(maze.getImages().get(0).getBottomRight().getY());
     }
 
     @Test
@@ -124,7 +128,7 @@ public class TestDatabase {
         for (MazeData m : mazes) {
             System.out.println(m.getAuthor());
             System.out.println(m.getTitle());
-            System.out.println(m.getDescription());;
+            System.out.println(m.getDescription());
             System.out.println(m.getCreationDate());
             System.out.println(m.getLastEditDate());
         }

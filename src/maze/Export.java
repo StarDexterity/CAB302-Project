@@ -1,97 +1,97 @@
 package maze;
 
 import maze.data.Maze;
+import maze.data.MazeDisplayOptions;
 import maze.data.Position;
+import maze.helper.MazeDrawer;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class Export {
     private static int nRows;
     private static int nCols;
     private static int[][] mazeGrid;
+    private static boolean solved = false;
+    private static boolean grid = false;
+    static private String title = "mazeImage";
+    private static String path;
+
 
     static int cellSize = 25;
     static int margin = 25;
+    static LinkedList<Position> solution;
 
-    //maze values to export selected maze
-    public static void mazeValues(Maze maze){
-        nCols = maze.getCols();
-        nRows = maze.getRows();
-        mazeGrid = maze.getMazeGrid();
-
-        //LinkedList<Position> solution;
-
-        //boolean solved = true;
-        //boolean grid = true;
-
-    }
+    static MazeDisplayOptions displayOptions = new MazeDisplayOptions();
 
     //placeholder export (will replace with maze display)
-    public static void displayMaze(Maze maze) throws IOException {
+    public static void exportMaze(Maze maze, boolean pathCheck, boolean ifSolution, boolean ifGrid, String Imagetype, String fileName, Color colour) throws IOException {
 
-        //get maze values
-        mazeValues(maze);
-
-        //placeholders (this should maybe change depending on the maze???)
-        int width = nCols * cellSize + margin * 2;
-        int height = nRows * cellSize + margin * 2;
+        displayOptions.setSolution(ifSolution);
+        displayOptions.setGrid(ifGrid);
+        displayOptions.setSolutionColour(colour);
 
         // BufferedImage of one of the predefined image types.
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = MazeDrawer.drawMaze(maze, displayOptions);
 
         Graphics2D export = bufferedImage.createGraphics();
 
+        export.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        export.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        export.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-        export.setColor(Color.white);
-        export.fillRect(0, 0, width, height);
-
-        Color gridColor = new Color(0, 0, 0);
-        Color solutionColor = new Color(255, 0, 0);
-        Color startColor = new Color(0, 0, 255);
-        Color endColor = new Color(0, 255, 0);
-
-
-        export.setColor(gridColor);
-
-        // draw maze
-        for (int r = 0; r < nRows; r++) {
-            for (int c = 0; c < nCols; c++) {
-
-                int x = margin + c * cellSize;
-                int y = margin + r * cellSize;
-
-                if ((mazeGrid[r][c] & 1) == 0) // N
-                    export.drawLine(x, y, x + cellSize, y);
-
-                if ((mazeGrid[r][c] & 2) == 0) // S
-                    export.drawLine(x, y + cellSize, x + cellSize, y + cellSize);
-
-                if ((mazeGrid[r][c] & 4) == 0) // E
-                    export.drawLine(x + cellSize, y, x + cellSize, y + cellSize);
-
-                if ((mazeGrid[r][c] & 8) == 0) // W
-                    export.drawLine(x, y, x, y + cellSize);
-            }
-        }
+        export.drawImage(bufferedImage, null, 0, 0);
 
         // deletes this graphics
         export.dispose();
 
-        //could make this a dropdown as user submits???
 
-        // save as PNG
-        File file = new File("mazeImage.png");
-        ImageIO.write(bufferedImage, "png", file);
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-        // save as JPG
-        file = new File("mazeImage.jpg");
-        ImageIO.write(bufferedImage, "jpg", file);
+        if (fileName.isBlank()) {
+            fileName = "mazeImage";
+        }
+
+        if (Imagetype == "png") {
+            // save as PNG
+            fileName = fileName + ".png";
+
+            if (pathCheck == false) {
+                int returnVal = fc.showOpenDialog(null);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    path = fc.getSelectedFile().getAbsolutePath();
+                    ImageIO.write(bufferedImage, "png", new File(path+"/" + fileName));
+                }
+            }
+            else {
+                ImageIO.write(bufferedImage, "png", new File(path+"/" + fileName));
+            }
+
+        }
+
+        if (Imagetype == "jpg"){
+            // save as PNG
+            fileName = fileName + ".jpg";
+
+            if ((pathCheck == false)){
+                int returnVal = fc.showOpenDialog(null);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    path = fc.getSelectedFile().getAbsolutePath();
+                    ImageIO.write(bufferedImage, "jpg", new File(path+"/" + fileName));
+                }
+            }
+            else {
+                ImageIO.write(bufferedImage, "jpg", new File(path+"/" + fileName));
+            }
+
+
+        }
     }
 }

@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
+//TODO: Dead class?
 public class RegenerateOptions extends JPanel {
     private JLabel sizeLabel;
     private JLabel sizeXLabel;
@@ -19,6 +20,8 @@ public class RegenerateOptions extends JPanel {
     private JCheckBox seedCheck;
     private JTextField seedInput;
     private JButton generateButton;
+
+    //TODO: Never Used, Delete?
 
     public RegenerateOptions() {
         sizeLabel = new JLabel("Size");

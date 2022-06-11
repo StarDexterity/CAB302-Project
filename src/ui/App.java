@@ -4,8 +4,11 @@ import database.DatabaseConnection;
 import maze.data.Maze;
 import maze.enums.SelectionType;
 import ui.dialog.DatabaseErrorHandler;
+
 import ui.dialog.NewMazeDialog;
 import ui.dialog.SaveDialog;
+import ui.dialog.ExportDialog;
+
 import ui.pages.EditPage;
 import ui.pages.HomePage;
 
@@ -13,10 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.sql.SQLException;
-
-import static maze.Export.displayMaze;
 
 public class App extends JFrame {
     public static final int WIDTH = 1200;
@@ -90,12 +90,20 @@ public class App extends JFrame {
         JMenu edit = new JMenu(("Edit"));
 
         JMenuItem newMaze = new JMenuItem("New Maze");
+
         JMenuItem save = new JMenuItem("Save");
         save.setEnabled(false);
         editPage.mazeDisplay.addListener(cce -> {
             save.setEnabled(editPage.mazeDisplay.isEnabled());
         });
+
+
         JMenuItem export = new JMenuItem("Export");
+        export.setEnabled(false);
+        editPage.mazeDisplay.addListener(cce -> {
+            export.setEnabled(editPage.mazeDisplay.isEnabled());
+        });
+
         JMenuItem close = new JMenuItem("Home");
         JMenuItem exit = new JMenuItem("Exit");
 
@@ -109,7 +117,6 @@ public class App extends JFrame {
             deselect.setEnabled(cce.selectionType != SelectionType.NONE);
         });
 
-        JMenuItem insert = new JMenuItem("Insert Image");
 
         newMaze.addActionListener(e -> {
             // create and display and new dialog window
@@ -125,23 +132,20 @@ public class App extends JFrame {
         });
 
         save.addActionListener(e -> {
-            SaveDialog saveDialog = new SaveDialog(new JFrame());
-            saveDialog.setLocationRelativeTo(getContentPane());
-            saveDialog.setVisible(true);
+            editPage.saveDialog.setLocationRelativeTo(getContentPane());
+            editPage.saveDialog.setVisible(true);
         });
 
         export.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    //NewMazeDialog nmd = new NewMazeDialog(new JFrame());
-                    //System.out.print(nmd);
-                    //Maze maze = nmd.getGeneratedMaze();
-                    displayMaze(editPage.currentMaze);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                // create and display and new dialog window
+                Maze m = editPage.currentMaze;
+                ExportDialog.storedMazes(m);
 
+                ExportDialog get = new ExportDialog(new JFrame());
+                get.setLocationRelativeTo(getContentPane());
+                get.setVisible(true);
 
             }
         });

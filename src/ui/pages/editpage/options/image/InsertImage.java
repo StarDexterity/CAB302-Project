@@ -31,6 +31,7 @@ public class InsertImage extends JPanel {
 
     public static int imageCount = -1;
 
+    //TODO:Delete?
     public void setImageCell(Position cell) {
         this.imageCell = cell;
     }
@@ -42,6 +43,8 @@ public class InsertImage extends JPanel {
     }
 
     FileFilter imageFilter = new FileNameExtensionFilter("Image Files", ImageIO.getReaderFileSuffixes());
+
+    //TODO: Never Used, Delete?
     public BufferedImage getImage(){
         final JFileChooser fc = new JFileChooser();
         fc.setFileFilter(imageFilter);
@@ -95,17 +98,6 @@ public class InsertImage extends JPanel {
         int[][] x = currentMaze.getMazeGrid();
         for (int i = x1; i<=x2; i++){
             for (int j = y1; j<=y2; j++){
-                /*x[j][i] = 15;
-                if (i==x1){
-                    x[j][i]=x[j][i]&0b0111;
-                }else if(i==x2){
-                    x[j][i]=x[j][i]&0b1011;
-                }
-                if (j==y1){
-                    x[j][i]=x[j][i]&0b1110;
-                }else if (j==y2){
-                    x[j][i]=x[j][i]&0b1101;
-                }*/
                 currentMaze.setCellEnabled(i,j,false);
 
             }
@@ -114,6 +106,7 @@ public class InsertImage extends JPanel {
         return currentMaze;
     }
 
+    //TODO: Never Used, Delete?
     public Maze resetPassable(Position topLeft, Position bottomRight){
         int x1 = topLeft.getX();
         int y1 = topLeft.getY();

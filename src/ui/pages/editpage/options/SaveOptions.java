@@ -1,19 +1,12 @@
 package ui.pages.editpage.options;
 
-import maze.data.Maze;
 import ui.helper.GridBagHelper;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 
-
-import static maze.Export.displayMaze;
-
-
+//TODO: Delete??
 public class SaveOptions extends JPanel {
     private JLabel titleLabel;
     private JTextField titleField;
@@ -26,6 +19,7 @@ public class SaveOptions extends JPanel {
     private JButton exportButton;
     private JButton deleteButton;
 
+    //TODO: Never Used, Delete?
     public SaveOptions() {
         //The status labels will need to be reactive in later stages of the project
         titleLabel = new JLabel("Title");
@@ -74,26 +68,6 @@ public class SaveOptions extends JPanel {
         GridBagHelper.addToPanel(this, saveButton, gbc, 0, y, 1, 1);
         GridBagHelper.addToPanel(this, exportButton, gbc, 1, y, 1, 1);
         GridBagHelper.addToPanel(this, deleteButton, gbc, 2, y, 1, 1);
-
-
-//        exportButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                System.out.println("testing button");
-//                try {
-//                    Maze maze = null;
-//                    exportMaze(maze);
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//
-//
-//            }
-//        });
-
-        //if (exportButton) {
-
-       // }
 
     }
 }

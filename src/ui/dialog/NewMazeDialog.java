@@ -20,12 +20,18 @@ import java.beans.PropertyChangeListener;
  */
 public class NewMazeDialog extends JDialog implements ActionListener, PropertyChangeListener {
     private JOptionPane optionPane;
+
+    //TODO: Never Used, Delete?
     private JPanel myPanel;
 
     private JSpinner sizeX;
     private JSpinner sizeY;
+
+    //TODO: Never Used, Delete?
     private JLabel generateLabel;
     private JComboBox generationCBox;
+
+    //TODO: Never Used, Delete?
     private EditPage editPage;
 
     /**
@@ -162,8 +168,6 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
                 GenerationOption option = GenerationOption.getOption((String) generationCBox.getSelectedItem());
 
                 generatedMaze = new Maze(cols, rows, option);
-                MazeDisplay.addImage = false;
-                InsertImage.newMazeClear();
                 clearAndHide();
             }
          else { //user closed dialog or clicked cancel
