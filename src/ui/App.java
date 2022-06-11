@@ -18,11 +18,8 @@ import java.sql.SQLException;
 
 
 public class App extends JFrame {
-    public static final int WIDTH = 1200;
-    public static final int HEIGHT = 700;
-
-    public static final int MIN_WIDTH = 1000;
-    public static final int MIN_HEIGHT = 500;
+    public static final int MIN_WIDTH = 900;
+    public static final int MIN_HEIGHT = 800;
 
 
 
@@ -39,7 +36,7 @@ public class App extends JFrame {
     private NewMazeDialog nmd;
 
     // may change in the future
-    public static final boolean RESIZEABLE = false;
+    public static final boolean RESIZEABLE = true;
 
     // menu ui
     private JMenuBar mb;
@@ -98,16 +95,16 @@ public class App extends JFrame {
         // displays homepage on startup
         showHomePage();
 
-        // show window
-        setVisible(true);
-
         // sets closing behaviour
         setCloseOperation();
 
         // Window size settings
         setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
         setResizable(RESIZEABLE);
-        setSize(WIDTH, HEIGHT);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // show window
+        setVisible(true);
     }
 
     private void setCloseOperation() {
