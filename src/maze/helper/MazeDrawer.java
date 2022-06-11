@@ -4,8 +4,6 @@ import maze.data.*;
 import maze.enums.SelectionType;
 
 
-import ui.pages.editpage.MazeDisplay;
-
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
@@ -28,6 +26,8 @@ public class MazeDrawer {
         int sizeW = nCols * cellSize + margin * 2;
         int sizeH = nRows * cellSize + margin * 2;
 
+
+
         // BufferedImage of one of the predefined image types.
         BufferedImage bufferedImage = new BufferedImage(sizeW, sizeH, BufferedImage.TYPE_INT_RGB);
 
@@ -41,20 +41,16 @@ public class MazeDrawer {
         MazeImage selectedImage = selection.selectedImage;
         SelectionType selectionType = selection.selectionType;
 
-        g.setColor(Color.white);
+        g.setColor(displayOptions.getBackgroundColour());
         g.fillRect(0, 0, sizeW, sizeH);
 
-        // gets colours
-        Color solutionLineColor = displayOptions.getSolutionColour();
 
-        // gets if statements
-        boolean showGrid = displayOptions.isGrid();
-        boolean showSolution = displayOptions.isSolution();
 
         // draws the grid if showGrid grid option is enabled
-        if (showGrid) {
-            g.setStroke(new BasicStroke(2));
-            g.setColor(new Color(192, 192, 192, 200));
+        if (displayOptions.isGrid()) {
+            g.setColor(displayOptions.getGridColour());
+            g.setStroke(new BasicStroke(displayOptions.getGridLineThickness()));
+
 
             for (int i = 0; i < nRows + 1; i++) {
                 int rowHt = cellSize;
@@ -66,10 +62,9 @@ public class MazeDrawer {
             }
         }
 
-        g.setStroke(new BasicStroke(2));
-        g.setColor(Color.black);
-
         // draw maze
+        g.setColor(displayOptions.getMazeColour());
+        g.setStroke(new BasicStroke(displayOptions.getMazeLineThickness()));
         for (int r = 0; r < nRows; r++) {
             for (int c = 0; c < nCols; c++) {
 
@@ -116,28 +111,29 @@ public class MazeDrawer {
         path.moveTo(offset, offset);
 
         // draws the solution if showSolution is true
-        if (showSolution) {
+        if (displayOptions.isSolution()) {
             for (Position pos : solution) {
                 int x = pos.getX() * cellSize + offset;
                 int y = pos.getY() * cellSize + offset;
                 path.lineTo(x, y);
             }
+
+            g.setColor(displayOptions.getSolutionColour());
+            g.setStroke(new BasicStroke(displayOptions.getSolutionLineThickness()));
+            g.draw(path);
         }
 
 
-        g.setColor(solutionLineColor);
-        g.draw(path);
-
-        g.setColor(Color.blue);
+        g.setColor(displayOptions.getStartColour());
         g.fillOval(offset - 5, offset - 5, 10, 10);
 
-        g.setColor(Color.green);
+        g.setColor(displayOptions.getEndColour());
         int x = offset + (nCols - 1) * cellSize;
         int y = offset + (nRows - 1) * cellSize;
         g.fillOval(x - 5, y - 5, 10, 10);
 
         // draws selected object
-        g.setColor(new Color(0, 128, 128, 128));
+        g.setColor(displayOptions.getSelectedColour());
         if (selectionType == SelectionType.CELL) {
             g.fillRect(selectedCell.getX() * cellSize + margin,
                     selectedCell.getY() * cellSize + margin,
