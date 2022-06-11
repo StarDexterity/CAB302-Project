@@ -2,9 +2,6 @@ package ui.dialog;
 
 import maze.enums.GenerationOption;
 import maze.data.Maze;
-import ui.pages.EditPage;
-import ui.pages.editpage.MazeDisplay;
-import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,18 +18,11 @@ import java.beans.PropertyChangeListener;
 public class NewMazeDialog extends JDialog implements ActionListener, PropertyChangeListener {
     private JOptionPane optionPane;
 
-    //TODO: Never Used, Delete?
-    private JPanel myPanel;
-
     private JSpinner sizeX;
     private JSpinner sizeY;
 
-    //TODO: Never Used, Delete?
-    private JLabel generateLabel;
     private JComboBox generationCBox;
 
-    //TODO: Never Used, Delete?
-    private EditPage editPage;
 
     /**
      * The maze object instantiated by this pop up
@@ -51,8 +41,8 @@ public class NewMazeDialog extends JDialog implements ActionListener, PropertyCh
     public NewMazeDialog(JFrame frame) {
         super(frame);
 
-        SpinnerNumberModel xModel = new SpinnerNumberModel(4, 4, 100, 1);
-        SpinnerNumberModel yModel = new SpinnerNumberModel(4, 4, 100, 1);
+        SpinnerNumberModel xModel = new SpinnerNumberModel(10, 4, 100, 1);
+        SpinnerNumberModel yModel = new SpinnerNumberModel(10, 4, 100, 1);
 
         sizeX = new JSpinner(xModel);
         sizeY = new JSpinner(yModel);
