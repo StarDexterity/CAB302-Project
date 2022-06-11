@@ -9,7 +9,6 @@ import maze.enums.SelectionType;
 import ui.helper.GridBagHelper;
 import ui.pages.EditPage;
 import ui.pages.editpage.MazeDisplay;
-import ui.pages.editpage.options.image.InsertImage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

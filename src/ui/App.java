@@ -37,8 +37,23 @@ public class App extends JFrame {
 
     JMenuItem save;
 
+    // new maze dialog
+    private NewMazeDialog nmd;
+
     // may change in the future
     public static final boolean RESIZEABLE = false;
+
+    // menu ui
+    private JMenuBar mb;
+
+    private JMenu file;
+    private JMenu edit;
+
+    private JMenuItem deselect;
+    private JMenuItem close;
+    private JMenuItem newMaze;
+    private JMenuItem exit;
+    private JMenuItem export;
 
     public App(String s) {
         super(s);
@@ -66,10 +81,11 @@ public class App extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new CardLayout());
 
-
-
         editPage = new EditPage();
         homePage = new HomePage(this);
+
+        // create new maze dialog
+        nmd = new NewMazeDialog(new JFrame());
 
         // create and set menubar
         menuBar = createMenu();
@@ -91,11 +107,10 @@ public class App extends JFrame {
     }
 
     private JMenuBar createMenu() {
-        JMenuBar mb = new JMenuBar();
-        JMenu file = new JMenu("File");
-        JMenu edit = new JMenu(("Edit"));
+        mb = new JMenuBar();
+        file = new JMenu("File");
+        edit = new JMenu(("Edit"));
 
-        JMenuItem newMaze = new JMenuItem("New Maze");
 
         save = new JMenuItem("Save");
         save.setEnabled(false);
@@ -104,16 +119,16 @@ public class App extends JFrame {
         });
 
 
-        JMenuItem export = new JMenuItem("Export");
+        export = new JMenuItem("Export");
         export.setEnabled(false);
         editPage.mazeDisplay.addListener(cce -> {
             export.setEnabled(editPage.mazeDisplay.isEnabled());
         });
 
-        JMenuItem close = new JMenuItem("Home");
-        JMenuItem exit = new JMenuItem("Exit");
+        close = new JMenuItem("Home");
+        exit = new JMenuItem("Exit");
 
-        JMenuItem deselect = new JMenuItem("Deselect");
+        deselect = new JMenuItem("Deselect");
         deselect.setEnabled(false);
         deselect.addActionListener(e -> {
             editPage.mazeDisplay.deselect();
@@ -124,9 +139,9 @@ public class App extends JFrame {
         });
 
 
+        newMaze = new JMenuItem("New Maze");
         newMaze.addActionListener(e -> {
             // create and display and new dialog window
-            NewMazeDialog nmd = new NewMazeDialog(new JFrame());
             nmd.setLocationRelativeTo(getContentPane());
             nmd.setVisible(true);
 
@@ -182,12 +197,22 @@ public class App extends JFrame {
         ActionMap actionMap = j.getActionMap();
 
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK),"saveMaze");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK),"newMaze");
 
         actionMap.put("saveMaze",
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         save.doClick();
+                    }
+                }
+        );
+
+        actionMap.put("newMaze",
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        newMaze.doClick();
                     }
                 }
         );
@@ -202,10 +227,10 @@ public class App extends JFrame {
     }
 
     public void showEditPage(Maze maze) {
+        editPage.setMaze(maze);
+
         Container c = getContentPane();
         CardLayout cardLayout = (CardLayout)c.getLayout();
-
-        editPage.setMaze(maze);
         cardLayout.show(c, editPageID);
     }
 }
