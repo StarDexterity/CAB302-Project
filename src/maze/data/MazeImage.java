@@ -6,11 +6,13 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 
 /**
  * This class holds the information of an image to be placed within a maze, including its file path, coordinate within the maze, and its dimensions.
  */
 public class MazeImage {
+    private int id;
     private Position topLeft;
     private Position bottomRight;
     private BufferedImage image;
@@ -24,6 +26,8 @@ public class MazeImage {
      * @param file The image file to be inserted into the maze
      */
     public MazeImage(Position topLeft, Position bottomRight, File file) {
+        // Random seed for id
+        this.id = Instant.now().getNano();
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
 
@@ -40,7 +44,8 @@ public class MazeImage {
      * @param bottomRight The bottom right position of the image
      * @param imageData The data of the image to be inserted into the maze
      */
-    public MazeImage(Position topLeft, Position bottomRight, ByteArrayInputStream imageData) {
+    public MazeImage(int id, Position topLeft, Position bottomRight, ByteArrayInputStream imageData) {
+        this.id = id;
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
 
@@ -49,6 +54,10 @@ public class MazeImage {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Position getTopLeft() {

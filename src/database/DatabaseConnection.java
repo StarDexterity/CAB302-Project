@@ -208,7 +208,7 @@ public class DatabaseConnection {
             }
 
             insertImage.clearParameters();
-            insertImage.setInt(1, 105);
+            insertImage.setInt(1, image.getId());
             insertImage.setInt(2, maze.mazeData.getId());
             insertImage.setBlob(3, objectToBlob(imageData));
             insertImage.setInt(4, image.getTopLeft().getX());
@@ -263,7 +263,7 @@ public class DatabaseConnection {
         ResultSet resultImages = selectImages.getResultSet();
 
         while (resultImages.next()) {
-            long id = resultImages.getLong(1);
+            int id = resultImages.getInt(1);
             ByteArrayInputStream imageData = blobToByteStream(resultImages.getBlob(3));
             Position topLeft = new Position(resultImages.getInt(4), resultImages.getInt(5));
             Position bottomRight = new Position(resultImages.getInt(6), resultImages.getInt(7));
