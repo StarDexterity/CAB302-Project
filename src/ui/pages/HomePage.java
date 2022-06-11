@@ -45,7 +45,7 @@ public class HomePage extends JPanel {
 
         MazeTableModel mazeTableModel = new MazeTableModel();
         table = new JTable(mazeTableModel);
-        getMazes();
+        updateTable();
 
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setResizingAllowed(false);
@@ -99,7 +99,7 @@ public class HomePage extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    private void getMazes() {
+    public void updateTable() {
         MazeTableModel tableModel = (MazeTableModel) table.getModel();
         tableModel.clear();
 
@@ -110,20 +110,6 @@ public class HomePage extends JPanel {
         }
     }
 
-
-//    private ArrayList<MazeData> getDummyMazeData() {
-//        int id = 0;
-//        ArrayList<MazeData> data = new ArrayList<>();
-//
-//        String[] authors = {"Dave", "Jane", "Richard", "Mary", "Sally", "Bob"};
-//        String[] titles = {"Cool maze", "Great maze", "Amazing maze", "Bad maze", "Test maze", ":("};
-//
-//        for (int i = 0; i < 6; i++) {
-//            data.add(new MazeData(id, authors[i], titles[i], "", Instant.now(), Instant.now()));
-//            id++;
-//        }
-//        return data;
-//    }
 
     private JPopupMenu createPopupMenu(JTable table) {
         JPopupMenu popupMenu = new JPopupMenu();

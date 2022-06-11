@@ -6,7 +6,6 @@ import maze.enums.SelectionType;
 import ui.dialog.DatabaseErrorHandler;
 
 import ui.dialog.NewMazeDialog;
-import ui.dialog.SaveDialog;
 import ui.dialog.ExportDialog;
 
 import ui.pages.EditPage;
@@ -16,7 +15,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+
 
 public class App extends JFrame {
     public static final int WIDTH = 1200;
@@ -33,6 +34,8 @@ public class App extends JFrame {
 
     private final String editPageID = "EditPage";
     private final String homePageID = "HomePage";
+
+    JMenuItem save;
 
     // may change in the future
     public static final boolean RESIZEABLE = false;
@@ -72,6 +75,9 @@ public class App extends JFrame {
         menuBar = createMenu();
         setJMenuBar(menuBar);
 
+        // set key bindings
+        addKeyBindings();
+
         add(homePage, homePageID);
         add(editPage, editPageID);
 
@@ -91,7 +97,7 @@ public class App extends JFrame {
 
         JMenuItem newMaze = new JMenuItem("New Maze");
 
-        JMenuItem save = new JMenuItem("Save");
+        save = new JMenuItem("Save");
         save.setEnabled(false);
         editPage.mazeDisplay.addListener(cce -> {
             save.setEnabled(editPage.mazeDisplay.isEnabled());
@@ -169,8 +175,27 @@ public class App extends JFrame {
         return mb;
     }
 
+    public void addKeyBindings() {
+        // key bindings
+        JRootPane j = getRootPane();
+        InputMap inputMap = j.getInputMap(j.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = j.getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK),"saveMaze");
+
+        actionMap.put("saveMaze",
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        save.doClick();
+                    }
+                }
+        );
+    }
 
     public void showHomePage() {
+        homePage.updateTable();
+
         Container c = getContentPane();
         CardLayout cardLayout = (CardLayout)c.getLayout();
         cardLayout.show(c, homePageID);
