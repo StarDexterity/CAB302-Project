@@ -186,10 +186,11 @@ public class DatabaseConnection {
 
             update.close();
 
-            PreparedStatement deleteImage = connection.prepareStatement("DELETE FROM MazeImages\n" +
+            PreparedStatement deleteImage = connection.prepareStatement("DELETE FROM MazeImage\n" +
                     "WHERE mazeID = ?");
             deleteImage.clearParameters();
             deleteImage.setInt(1, mazeData.getId());
+            deleteImage.executeUpdate();
 
             insertImages(maze);
         }

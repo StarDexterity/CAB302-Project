@@ -192,5 +192,8 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
 
     public void setMaze(Maze maze) {
         this.maze = maze;
+        authorField.setText(maze.mazeData.getAuthor());
+        titleField.setText(maze.mazeData.getTitle());
+        descriptionField.setText(maze.mazeData.getDescription());
     }
 }
