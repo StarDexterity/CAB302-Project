@@ -47,8 +47,8 @@ public class TestDatabase {
                 .description("It's stored exclusively in the cloud");
 
         // Image
-        Position topLeft = new Position(2,2);
-        Position bottomRight = new Position(3,3);
+        Position topLeft = new Position(0,4);
+        Position bottomRight = new Position(4,0);
 
         File file = new File("src/tests/TestImage.jpg");
 

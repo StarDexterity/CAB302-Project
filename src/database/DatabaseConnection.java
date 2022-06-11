@@ -3,11 +3,13 @@ package database;
 import maze.data.Maze;
 import maze.data.MazeData;
 import maze.data.MazeImage;
+import maze.data.Position;
 import org.javatuples.Triplet;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 import javax.sql.rowset.serial.SerialBlob;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.*;
 import java.time.Instant;
@@ -228,12 +230,30 @@ public class DatabaseConnection {
 
         MazeData mazeData = new MazeData(mazeID, author, title, description, creationDate, lastEditDate);
 
-        ArrayList logos = retrieveLogos();
-
         select.close();
         result.close();
 
-        return new Maze(nCols, nRows, mazeGrid, mazeData, logos);
+        Maze maze = new Maze(nCols, nRows, mazeGrid, mazeData);
+
+        PreparedStatement selectImages = connection.prepareStatement("SELECT * FROM MazeImage\n" +
+                "WHERE mazeID = ?;");
+
+        selectImages.clearParameters();
+        selectImages.setInt(1, maze.mazeData.getId());
+        selectImages.executeUpdate();
+
+        ResultSet resultImages = selectImages.getResultSet();
+
+        while (resultImages.next()) {
+            ByteArrayInputStream imageData = blobToByteStream(resultImages.getBlob(3));
+            Position topLeft = new Position(resultImages.getInt(4), resultImages.getInt(5));
+            Position bottomRight = new Position(resultImages.getInt(6), resultImages.getInt(7));
+
+            MazeImage mazeImage = new MazeImage(topLeft, bottomRight, imageData);
+            maze.placeImage(mazeImage);
+        }
+
+        return maze;
     }
 
     private static ArrayList<MazeImage> retrieveLogos() {
@@ -289,11 +309,20 @@ public class DatabaseConnection {
         }
     }
 
-    public static Object blobToObject(Blob blob) {
+    private static ByteArrayInputStream blobToByteStream(Blob blob) {
         try {
             byte[] data = blob.getBytes(1, (int) blob.length());
 
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
+            return new ByteArrayInputStream(data);
+        } catch (Exception e) {
+            System.err.println(e);
+            return null;
+        }
+    }
+
+    public static Object blobToObject(Blob blob) {
+        try {
+            ByteArrayInputStream byteStream = blobToByteStream(blob);
             ObjectInputStream objectStream = new ObjectInputStream(byteStream);
             return objectStream.readObject();
 

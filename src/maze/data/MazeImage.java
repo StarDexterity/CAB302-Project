@@ -3,6 +3,7 @@ package maze.data;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -28,6 +29,23 @@ public class MazeImage {
 
         try {
             image = ImageIO.read(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Constructor to create MazeImages from database
+     * @param topLeft The top left position of the image
+     * @param bottomRight The bottom right position of the image
+     * @param imageData The data of the image to be inserted into the maze
+     */
+    public MazeImage(Position topLeft, Position bottomRight, ByteArrayInputStream imageData) {
+        this.topLeft = topLeft;
+        this.bottomRight = bottomRight;
+
+        try {
+            image = ImageIO.read(imageData);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
