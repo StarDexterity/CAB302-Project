@@ -2,14 +2,12 @@ package ui.pages.homepage;
 
 import database.DatabaseConnection;
 import ui.dialog.DatabaseErrorHandler;
-import ui.dialog.ExportDialog;
 import ui.dialog.ExportSelectedDialog;
 import ui.helper.GridBagHelper;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;

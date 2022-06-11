@@ -98,7 +98,6 @@ public class DatabaseConnection {
      * @param mazeID The id of the maze record to be deleted
      */
 
-    //TODO: Never Used, Delete?
     public void delete(int mazeID) throws SQLException{
             PreparedStatement delete = connection.prepareStatement("DELETE FROM Maze WHERE mazeID = ?");
             delete.clearParameters();

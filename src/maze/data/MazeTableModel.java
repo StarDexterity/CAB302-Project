@@ -152,21 +152,11 @@ public class MazeTableModel extends AbstractTableModel {
         MazeData record = data.get(row);
 
         switch(TableHeaders.getById(col)) {
-            case ID -> {
-                record.setId((int) value);
-            }
-            case TITLE -> {
-                record.setTitle((String) value);
-            }
-            case AUTHOR -> {
-                record.setAuthor((String) value);
-            }
-            case LAST_EDITED -> {
-                record.setLastEditDate((Instant) value);
-            }
-            case CREATED -> {
-                record.setCreationDate((Instant) value);
-            }
+            case ID -> record.setId((int) value);
+            case TITLE -> record.setTitle((String) value);
+            case AUTHOR -> record.setAuthor((String) value);
+            case LAST_EDITED -> record.setLastEditDate((Instant) value);
+            case CREATED -> record.setCreationDate((Instant) value);
         }
         fireTableCellUpdated(row, col);
     }

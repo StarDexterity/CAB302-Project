@@ -3,7 +3,6 @@ package ui.dialog;
 import database.DatabaseConnection;
 import maze.data.Maze;
 import ui.helper.GridBagHelper;
-//import tests.DummyMazes;
 
 import javax.swing.*;
 import java.awt.*;

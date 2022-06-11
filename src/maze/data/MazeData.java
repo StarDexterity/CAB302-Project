@@ -1,7 +1,6 @@
 package maze.data;
 
 import java.time.Instant;
-import java.util.Date;
 
 /**
  * Handles the maze properties, such as Author, Title, Description, Creation Date, and Last Edit Date
