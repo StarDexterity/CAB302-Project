@@ -76,22 +76,12 @@ public class MazeTableModel extends AbstractTableModel {
             }
             return null;
         }
-
-        //TODO: Never Used, Delete?
-        public static TableHeaders getByName(String s) {
-            for (TableHeaders option : TableHeaders.values()) {
-                if (option.name == s) return option;
-            }
-            return null;
-        }
     }
 
 
     // a lot of data to show the scroll bar
     private ArrayList<MazeData> data;
 
-
-    //TODO: Never Used, Delete?
     public ArrayList<MazeData> getData() {
         return data;
     }
