@@ -2,11 +2,8 @@ package ui.dialog;
 
 import database.DatabaseConnection;
 import maze.data.Maze;
-import maze.enums.GenerationOption;
+import ui.helper.GridBagHelper;
 //import tests.DummyMazes;
-import ui.pages.EditPage;
-import ui.pages.editpage.MazeDisplay;
-import ui.pages.editpage.options.image.InsertImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,20 +23,22 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
 
     private JPanel myPanel;
 
-    private JButton save;
-
-    /**
-     * The maze object input into this pop up
-     */
-    //TODO: Make edits to these
-    private Maze inputMaze = new Maze(4, 4, true); // TODO: Remove placeholder!
-    private String author = null;
-    private String title = null;
-    private String description = null;
+    private JLabel titleLabel;
+    private JTextField titleField;
+    private JLabel authorLabel;
+    private JTextField authorField;
+    private JLabel descriptionLabel;
+    private JTextArea descriptionField;
+    private JScrollPane descriptionFieldScroller;
 
 
     private String SaveString = "Save";
     private String CancelString = "Cancel";
+
+    /**
+     * Maze object to save
+     */
+    private Maze maze;
 
     /**
      * Displays a dialog offering to be able to save a maze
@@ -49,21 +48,25 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
     public SaveDialog(JFrame frame) {
         super(frame);
 
-        save = new JButton("Save");
+        setSize(400, 300);
+        myPanel = new JPanel();
+        titleLabel = new JLabel("Title");
+        titleField = new JTextField("");
+        authorLabel = new JLabel("Author");
+        authorField = new JTextField("");
+        descriptionLabel = new JLabel("Description");
+        descriptionField = new JTextArea("");
+        descriptionFieldScroller = new JScrollPane(descriptionField);
+        descriptionField.setRows(4);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        JPanel row1 = new JPanel();
-        row1.add(save);
-
-        panel.add(row1);
+        layoutComponents();
 
         //Create an array specifying the number of dialog buttons
         //and their text.
         Object[] options = {SaveString, CancelString};
 
 
-        //Create the JOptionPane
+        // Create the JOptionPane
         optionPane = new JOptionPane(myPanel,
                 JOptionPane.PLAIN_MESSAGE,
                 JOptionPane.YES_NO_OPTION,
@@ -103,6 +106,30 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
         pack();
     }
 
+    public void layoutComponents() {
+        myPanel.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = GridBagHelper.createDefaultGBC();
+        gbc.insets = new Insets(0, 0, 5, 5);
+        int y = 0;
+
+        // row 1
+        GridBagHelper.addToPanel(myPanel, titleLabel, gbc, 0, y, 1, 1);
+        GridBagHelper.addToPanel(myPanel, titleField, gbc, 1, y, 2, 1);
+
+        // row 2
+        y++;
+        GridBagHelper.addToPanel(myPanel, authorLabel, gbc, 0, y, 1, 1);
+        GridBagHelper.addToPanel(myPanel, authorField, gbc, 1, y, 2, 1);
+
+        // row 3
+        y++;
+        GridBagHelper.addToPanel(myPanel, descriptionLabel, gbc, 0, y, 1, 1);
+        GridBagHelper.addToPanel(myPanel, descriptionFieldScroller, gbc, 1, y, 2, 1);
+
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -135,11 +162,15 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
 
             if ("Save".equals(value)) {
                 // Sets the data from the JTextField into the Maze object.
-                inputMaze.setData(author).title(title).description(description);
+                maze.setData(authorField.getText())
+                        .title(titleField.getText())
+                        .description(descriptionField.getText());
+
+
 
                 // Saves the maze to the database.
                 try {
-                    new DatabaseConnection().save(inputMaze);
+                    new DatabaseConnection().save(maze);
                 } catch (SQLException ex) {
                     DatabaseErrorHandler.handle(ex, false);
                 } finally {
@@ -159,5 +190,9 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
      */
     public void clearAndHide() {
         setVisible(false);
+    }
+
+    public void setMaze(Maze maze) {
+        this.maze = maze;
     }
 }

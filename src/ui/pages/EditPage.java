@@ -2,6 +2,7 @@ package ui.pages;
 
 import maze.data.Maze;
 import ui.App;
+import ui.dialog.SaveDialog;
 import ui.pages.editpage.MazeDisplay;
 import ui.pages.editpage.OptionsPanel;
 
@@ -12,6 +13,8 @@ public class EditPage extends JPanel {
     private OptionsPanel optionsPanel;
     private JScrollPane scrollPane;
     public MazeDisplay mazeDisplay;
+
+    public SaveDialog saveDialog;
 
     /**
      * Stores the current maze object being edited
@@ -32,6 +35,9 @@ public class EditPage extends JPanel {
         scrollPane = new JScrollPane();
         scrollPane.setViewportView(mazeDisplay);
 
+        // initialise dialogs
+        saveDialog = new SaveDialog(new JFrame());
+
         // layout code
         add(optionsPanel, BorderLayout.WEST);
         add(scrollPane, BorderLayout.CENTER);
@@ -41,6 +47,8 @@ public class EditPage extends JPanel {
         currentMaze = maze;
         mazeDisplay.setMaze(maze);
         optionsPanel.setMaze(maze);
+
+        saveDialog.setMaze(maze);
 
         // It just works ;)
         scrollPane.revalidate();

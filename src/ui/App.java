@@ -132,9 +132,8 @@ public class App extends JFrame {
         });
 
         save.addActionListener(e -> {
-            SaveDialog saveDialog = new SaveDialog(new JFrame());
-            saveDialog.setLocationRelativeTo(getContentPane());
-            saveDialog.setVisible(true);
+            editPage.saveDialog.setLocationRelativeTo(getContentPane());
+            editPage.saveDialog.setVisible(true);
         });
 
         export.addActionListener(new ActionListener() {
