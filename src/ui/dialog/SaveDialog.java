@@ -3,7 +3,6 @@ package ui.dialog;
 import database.DatabaseConnection;
 import maze.data.Maze;
 import ui.helper.GridBagHelper;
-//import tests.DummyMazes;
 
 import javax.swing.*;
 import java.awt.*;
@@ -166,8 +165,6 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
                         .title(titleField.getText())
                         .description(descriptionField.getText());
 
-
-
                 // Saves the maze to the database.
                 try {
                     new DatabaseConnection().save(maze);
@@ -197,5 +194,8 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
 
     public void setMaze(Maze maze) {
         this.maze = maze;
+        authorField.setText(maze.mazeData.getAuthor());
+        titleField.setText(maze.mazeData.getTitle());
+        descriptionField.setText(maze.mazeData.getDescription());
     }
 }

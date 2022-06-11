@@ -4,7 +4,6 @@ import maze.data.Maze;
 import maze.data.MazeImage;
 import maze.data.Position;
 import maze.data.Selection;
-import maze.enums.Direction;
 import maze.enums.SelectionType;
 import ui.helper.GridBagHelper;
 import ui.pages.EditPage;

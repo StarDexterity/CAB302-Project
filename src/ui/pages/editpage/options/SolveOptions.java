@@ -1,7 +1,6 @@
 package ui.pages.editpage.options;
 
 import maze.data.Maze;
-import maze.data.Position;
 import maze.enums.SolveStatus;
 import maze.helper.MazeSolver;
 import maze.interfaces.MazeListener;

@@ -3,9 +3,13 @@ package database;
 import maze.data.Maze;
 import maze.data.MazeData;
 import maze.data.MazeImage;
+import maze.data.Position;
 import org.javatuples.Triplet;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 import javax.sql.rowset.serial.SerialBlob;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.*;
 import java.time.Instant;
@@ -14,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- * This static class provides functionality for interacting with the maze database,
+ * This class provides functionality for interacting with the maze database,
  * including storing, retrieving, updating and deleting records from the maze table.
  */
 public class DatabaseConnection {
@@ -24,7 +28,9 @@ public class DatabaseConnection {
     private static String schema;
 
     /**
-     * Instantiates the connection with the database
+     * Instantiates the connection with the database and
+     * stores the connection in a static variable to be used globally.
+     * @throws SQLException if the application cannot connect to the database.
      */
     public static void instantiate() throws SQLException {
         Triplet<String, String, String> values = readProperties();
@@ -50,11 +56,26 @@ public class DatabaseConnection {
                 "\tnCols INT NOT NULL,\n" +
                 "\tnRows INT NOT NULL\n" +
                 ");");
+        create.execute("CREATE TABLE IF NOT EXISTS MazeImage (\n" +
+                "\timageID INT NOT NULL,\n" +
+                "\tmazeID INT NOT NULL,\n" +
+                "\timageData LONGBLOB NOT NULL,\n" +
+                "\ttopLeftX INT NOT NULL, \n" +
+                "\ttopLeftY INT NOT NULL,\n" +
+                "\tbottomRightX INT NOT NULL,\n" +
+                "\tbottomRightY INT NOT NULL,\n" +
+                "\tPRIMARY KEY (imageID, mazeID),\n" +
+                "\tFOREIGN KEY (mazeID) REFERENCES Maze(mazeID) ON DELETE CASCADE\n" +
+                ");");
 
         create.close();
     }
 
-    private static Triplet readProperties() {
+    /**
+     * Reads properties from db.props.
+     * @return
+     */
+    public static Triplet readProperties() {
         Properties props = new Properties();
         InputStream input = null;
         Triplet<String, String, String> values = Triplet.with("", "", "");
@@ -85,6 +106,11 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Checks if the application is connected to the database. If not, attempts to instantiate a new connection.
+     * @throws SQLException if the application cannot connect to the database.
+     * The {@link DatabaseConnection} object allows access to run queries on the global {@link Connection} object.
+     */
     public DatabaseConnection() throws SQLException {
         if (connection == null) {
             System.err.println("No database connection instantiated. Instantiating new connection.");
@@ -92,13 +118,10 @@ public class DatabaseConnection {
         }
     }
 
-
     /**
      * Deletes a maze record from the database
      * @param mazeID The id of the maze record to be deleted
      */
-
-    //TODO: Never Used, Delete?
     public void delete(int mazeID) throws SQLException{
             PreparedStatement delete = connection.prepareStatement("DELETE FROM Maze WHERE mazeID = ?");
             delete.clearParameters();
@@ -113,7 +136,7 @@ public class DatabaseConnection {
      * If the maze doesn't have an ID, creates an entry in the database and gives it one
      * @param maze The {@link Maze} object to be saved
      */
-    public void save(Maze maze) throws SQLException {
+    public void save(Maze maze) throws SQLException{
 
         MazeData mazeData = maze.mazeData;
 
@@ -130,7 +153,7 @@ public class DatabaseConnection {
             insert.setString(3, mazeData.getDescription());
             insert.setTimestamp(4, Timestamp.from(mazeData.getCreationDate()));
             insert.setTimestamp(5, Timestamp.from(mazeData.getLastEditDate()));
-            insert.setBlob(6, mazeGridToBlob(maze.getMazeGrid()));
+            insert.setBlob(6, objectToBlob(maze.getMazeGrid()));
             insert.setInt(7, maze.getCols());
             insert.setInt(8, maze.getRows());
             insert.executeUpdate();
@@ -141,22 +164,61 @@ public class DatabaseConnection {
 
             insert.close();
             generatedID.close();
+
+            insertImages(maze);
+
+
         } else {
             // If the maze has an ID, update its entry in the database.
             PreparedStatement update = connection.prepareStatement("UPDATE Maze\n" +
-                    "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeGrid = ?, nCols = ?, nRows = ?;");
+                    "SET author = ?, title = ?, description = ?, creationDate = ?, lastEditDate = ?, mazeGrid = ?, nCols = ?, nRows = ?\n" +
+                    "WHERE mazeID = ?;");
             update.setString(1, mazeData.getAuthor());
             update.setString(2, mazeData.getTitle());
             update.setString(3, mazeData.getDescription());
             update.setTimestamp(4, Timestamp.from(mazeData.getCreationDate()));
             update.setTimestamp(5, Timestamp.from(Instant.now()));
-            update.setBlob(6, mazeGridToBlob(maze.getMazeGrid()));
+            update.setBlob(6, objectToBlob(maze.getMazeGrid()));
             update.setInt(7, maze.getCols());
             update.setInt(8, maze.getRows());
+            update.setInt(9, mazeData.getId());
             update.executeUpdate();
 
             update.close();
+
+            PreparedStatement deleteImage = connection.prepareStatement("DELETE FROM MazeImage\n" +
+                    "WHERE mazeID = ?");
+            deleteImage.clearParameters();
+            deleteImage.setInt(1, mazeData.getId());
+            deleteImage.executeUpdate();
+
+            insertImages(maze);
         }
+    }
+
+    private void insertImages (Maze maze) throws SQLException {
+        PreparedStatement insertImage = connection.prepareStatement("INSERT INTO MazeImage\n" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?);");
+
+        for (MazeImage image : maze.getImages()) {
+            ByteArrayOutputStream imageData = new ByteArrayOutputStream();
+            try {
+                ImageIO.write(image.getImage(), "png", imageData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            insertImage.clearParameters();
+            insertImage.setInt(1, image.getId());
+            insertImage.setInt(2, maze.mazeData.getId());
+            insertImage.setBlob(3, objectToBlob(imageData));
+            insertImage.setInt(4, image.getTopLeft().getX());
+            insertImage.setInt(5, image.getTopLeft().getY());
+            insertImage.setInt(6, image.getBottomRight().getX());
+            insertImage.setInt(7, image.getBottomRight().getY());
+            insertImage.executeUpdate();
+        }
+        insertImage.close();
     }
 
     public Maze retrieveMaze(int mazeID) throws SQLException {
@@ -175,22 +237,41 @@ public class DatabaseConnection {
         String description = result.getString(4);
         Instant creationDate = result.getTimestamp(5).toInstant();
         Instant lastEditDate = result.getTimestamp(6).toInstant();
-        int[][] mazeGrid = blobToMazeGrid(result.getBlob(7));
+        int[][] mazeGrid = (int[][]) blobToObject(result.getBlob(7));
         int nCols = result.getInt(8);
         int nRows = result.getInt(9);
 
         MazeData mazeData = new MazeData(mazeID, author, title, description, creationDate, lastEditDate);
 
-        ArrayList logos = retrieveLogos();
-
         select.close();
         result.close();
 
-        return new Maze(nCols, nRows, mazeGrid, mazeData, logos);
+        Maze maze = new Maze(nCols, nRows, mazeGrid, mazeData);
+
+        placeImages(maze);
+
+        return maze;
     }
 
-    private static ArrayList<MazeImage> retrieveLogos() {
-        return new ArrayList<MazeImage>();
+    private static void placeImages(Maze maze) throws SQLException {
+        PreparedStatement selectImages = connection.prepareStatement("SELECT * FROM MazeImage\n" +
+                "WHERE mazeID = ?;");
+
+        selectImages.clearParameters();
+        selectImages.setInt(1, maze.mazeData.getId());
+        selectImages.executeUpdate();
+
+        ResultSet resultImages = selectImages.getResultSet();
+
+        while (resultImages.next()) {
+            int id = resultImages.getInt(1);
+            ByteArrayInputStream imageData = blobToByteStream(resultImages.getBlob(3));
+            Position topLeft = new Position(resultImages.getInt(4), resultImages.getInt(5));
+            Position bottomRight = new Position(resultImages.getInt(6), resultImages.getInt(7));
+
+            MazeImage mazeImage = new MazeImage(id, topLeft, bottomRight, imageData);
+            maze.placeImage(mazeImage);
+        }
     }
 
     public ArrayList<MazeData> retrieveMazeCatalogue() throws SQLException{
@@ -216,12 +297,12 @@ public class DatabaseConnection {
         return mazes;
     }
 
-    public static Blob mazeGridToBlob(int[][] mazeGrid) {
+    public static Blob objectToBlob(Object object) {
         try {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
             ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
 
-            objectStream.writeObject(mazeGrid);
+            objectStream.writeObject(object);
             byte[] data = byteStream.toByteArray();
 
             return new SerialBlob(data);
@@ -231,56 +312,37 @@ public class DatabaseConnection {
         }
     }
 
-    public static int[][] blobToMazeGrid(Blob blob) {
+    public static Blob objectToBlob(ByteArrayOutputStream byteStream) {
         try {
+            byte[] data = byteStream.toByteArray();
 
-            byte[] data = blob.getBytes(1, (int) blob.length());
-
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
-            ObjectInputStream objectStream = new ObjectInputStream(byteStream);
-            return (int[][]) objectStream.readObject();
-
+            return new SerialBlob(data);
         } catch (Exception e) {
             System.err.println(e);
             return null;
         }
     }
 
-
-    // Testing Methods
-
-    /**
-     * Debug command
-     */
-    public static void instantiateTestDatabase() {
-        Triplet<String, String, String> values = readProperties();
-        String url = values.getValue0();
-        String username = values.getValue1();
-        String password = values.getValue2();
-
+    private static ByteArrayInputStream blobToByteStream(Blob blob) {
         try {
+            byte[] data = blob.getBytes(1, (int) blob.length());
 
-            connection = DriverManager.getConnection(url, username, password);
+            return new ByteArrayInputStream(data);
+        } catch (Exception e) {
+            System.err.println(e);
+            return null;
+        }
+    }
 
-            Statement create = connection.createStatement();
+    public static Object blobToObject(Blob blob) {
+        try {
+            ByteArrayInputStream byteStream = blobToByteStream(blob);
+            ObjectInputStream objectStream = new ObjectInputStream(byteStream);
+            return objectStream.readObject();
 
-            create.execute("CREATE DATABASE IF NOT EXISTS testmazeco;");
-            create.execute("USE testmazeco;");
-            create.execute("DROP TABLE IF EXISTS Maze");
-            create.execute("CREATE TABLE Maze (\n" +
-                    "\tmazeID INT AUTO_INCREMENT PRIMARY KEY,\n" +
-                    "\tauthor VARCHAR(32) NOT NULL,\n" +
-                    "\ttitle VARCHAR(32) NOT NULL,\n" +
-                    "\tdescription TEXT NOT NULL,\n" +
-                    "\tcreationDate TIMESTAMP NOT NULL,\n" +
-                    "\tlastEditDate TIMESTAMP NOT NULL,\n" +
-                    "\tmazeGrid BLOB NOT NULL,\n" +
-                    "\tnCols INT NOT NULL,\n" +
-                    "\tnRows INT NOT NULL\n" +
-                    ");");
-            create.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println(e);
+            return null;
         }
     }
 }

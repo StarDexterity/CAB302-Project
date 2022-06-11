@@ -2,17 +2,20 @@ package ui.pages.homepage;
 
 import database.DatabaseConnection;
 import ui.dialog.DatabaseErrorHandler;
-import ui.dialog.ExportDialog;
 import ui.dialog.ExportSelectedDialog;
 import ui.helper.GridBagHelper;
+import ui.pages.EditPage;
+import ui.pages.HomePage;
 
+import javax.sound.midi.ShortMessage;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Console;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 
 public class HomeButtons extends JPanel {
@@ -21,7 +24,9 @@ public class HomeButtons extends JPanel {
     private JButton exportSelected;
     private JButton deleteSelected;
 
-    public HomeButtons(JTable table) {
+    private HomePage homePage;
+
+    public HomeButtons(JTable table, HomePage homePage) {
 
         Dimension dim = getPreferredSize();
         dim.height = 50;
@@ -33,6 +38,8 @@ public class HomeButtons extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 
         layoutComponents(table);
+
+        this.homePage = homePage;
     }
 
     public void layoutComponents(JTable table) {
@@ -81,9 +88,23 @@ public class HomeButtons extends JPanel {
                         }
                     }
                 }
+            }
+        });
 
+        deleteSelected.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int[] rows = table.getSelectedRows();
 
-
+                for (int i = 0; i < rows.length; i++) {
+                    int mazeID = (int) table.getModel().getValueAt(rows[i], 0);
+                    try {
+                        new DatabaseConnection().delete(mazeID);
+                    } catch (SQLException f) {
+                        DatabaseErrorHandler.handle(f, false);
+                    }
+                }
+                homePage.updateTable();
             }
         });
     }

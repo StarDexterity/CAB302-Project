@@ -115,13 +115,11 @@ public class Maze {
      * @param nRows
      * @param mazeGrid
      * @param mazeData
-     * @param images
      */
-    public Maze(int nCols, int nRows, int[][] mazeGrid, MazeData mazeData, ArrayList<MazeImage> images) {
+    public Maze(int nCols, int nRows, int[][] mazeGrid, MazeData mazeData) {
         this(nCols, nRows, false);
         this.setMazeGrid(mazeGrid);
         this.mazeData = mazeData;
-        this.images = images;
     }
 
     // getters and setters

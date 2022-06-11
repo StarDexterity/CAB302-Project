@@ -18,25 +18,6 @@ public final class GridBagHelper {
         return gbc;
     }
 
-    /**
-     * Convenience method for quickly creating a GridBagConstraint object, with parameters
-     * @param weightx
-     * @param weighty
-     * @param fill
-     * @param anchor
-     * @return
-     */
-
-    //TODO: Never Used, Delete?
-    public static GridBagConstraints createGBC(double weightx, double weighty, int fill, int anchor) {
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.weightx = weightx;
-        gbc.weighty = weighty;
-        gbc.fill = fill;
-        gbc.anchor = GridBagConstraints.CENTER;
-        return gbc;
-    }
-
     public static void addToPanel(JPanel jp, Component c, GridBagConstraints
             constraints, int x, int y, int w, int h) {
         addToPanel(jp, c, constraints, x, y, w, h, null);
@@ -45,12 +26,6 @@ public final class GridBagHelper {
     public static void addToPanel(JPanel jp,Component c, GridBagConstraints
             constraints,int x, int y, int w, int h, Insets i) {
         addToPanel(jp, c, constraints, x, y, w, h, i, -1);
-    }
-
-    //TODO: Never Used, Delete?
-    public static void addToPanel(JPanel jp,Component c, GridBagConstraints
-            constraints,int x, int y, int w, int h, int anchor) {
-        addToPanel(jp, c, constraints, x, y, w, h, null, anchor);
     }
 
     public static void addToPanel(JPanel jp,Component c, GridBagConstraints

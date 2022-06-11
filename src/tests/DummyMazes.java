@@ -13,8 +13,4 @@ public final class DummyMazes {
     public static int[][] x_long = new int[][]{{2, 6, 14, 10}, {3, 7, 15, 11}, {3, 7, 15, 11}, {3, 7, 15, 11}, {3, 7, 15, 11}, {5, 13, 9, 1}};
     public static int[][] y_wide = new int[][]{{4, 12, 12, 12, 12, 10}, {6, 14, 14, 14, 14, 11}, {7, 15, 15, 15, 15, 9}, {5, 13, 13, 13, 13, 8}};
 
-    //TODO: Never Used, Delete?
-    public static int[][] badData = new int [][]{{1, 2, 3},{1, 2, 3, 4 , 5}};
-    public static int[][] emptySet = new int [][]{{},{}};
-
 }

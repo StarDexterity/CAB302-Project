@@ -20,7 +20,6 @@ public class TestInsertImage {
     URL imageUrl = this.getClass().getResource("TestImage.jpg");
     File file = Paths.get(imageUrl.toURI()).toFile();
     MazeImage m = new MazeImage(topLeft, bottomRight, file);
-
     Maze maze = new Maze(5,5, GenerationOption.ALDOUS);
 
     public TestInsertImage() throws URISyntaxException {

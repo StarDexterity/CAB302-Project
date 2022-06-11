@@ -17,11 +17,6 @@ public class Position {
 
     public static final Position ZERO = new Position(0, 0);
 
-    //TODO: delete?
-    public static Position getBottomRight(Maze maze) {
-        return new Position(maze.getCols() - 1, maze.getRows() - 1);
-    }
-
     /**
      * Constructs a new position from an x and y coordinate
      * @param x
