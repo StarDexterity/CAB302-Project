@@ -45,7 +45,6 @@ public class HomePage extends JPanel {
 
         MazeTableModel mazeTableModel = new MazeTableModel();
         table = new JTable(mazeTableModel);
-        updateTable();
 
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setResizingAllowed(false);

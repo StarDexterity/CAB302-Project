@@ -12,7 +12,7 @@ public class MazeDisplayOptions {
 
     // thickness settings
     private int mazeLineThickness = 2;
-    private int solutionLineThickness = 2;
+    private int solutionLineThickness = 3;
     private int gridLineThickness = 2;
 
     // display options

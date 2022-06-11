@@ -13,9 +13,7 @@ import ui.pages.HomePage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.sql.SQLException;
 
 
@@ -78,9 +76,9 @@ public class App extends JFrame {
     }
 
     private void initialize() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new CardLayout());
 
+        // initialise pages
         editPage = new EditPage();
         homePage = new HomePage(this);
 
@@ -97,13 +95,40 @@ public class App extends JFrame {
         add(homePage, homePageID);
         add(editPage, editPageID);
 
+        // displays homepage on startup
+        showHomePage();
 
-
+        // show window
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // sets closing behaviour
+        setCloseOperation();
+
+        // Window size settings
         setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
         setResizable(RESIZEABLE);
         setSize(WIDTH, HEIGHT);
+    }
+
+    private void setCloseOperation() {
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent ev) {
+                if (editPage.isVisible()) {
+                    int confirmed = JOptionPane.showConfirmDialog(getRootPane(),
+                            "Maze may have unsaved changes, are you sure you want to exit the program?",
+                            "Exit Program",
+                            JOptionPane.YES_NO_OPTION
+                    );
+                    if (confirmed == JOptionPane.YES_OPTION) {
+                        System.exit(69);
+                    }
+                }
+                else {
+                    System.exit(420);
+                }
+            }
+        });
     }
 
     private JMenuBar createMenu() {
@@ -113,20 +138,24 @@ public class App extends JFrame {
 
 
         save = new JMenuItem("Save");
-        save.setEnabled(false);
-        editPage.mazeDisplay.addListener(cce -> {
-            save.setEnabled(editPage.mazeDisplay.isEnabled());
+        save.addActionListener(e -> {
+            editPage.saveDialog.setLocationRelativeTo(getContentPane());
+            editPage.saveDialog.setVisible(true);
         });
+
 
 
         export = new JMenuItem("Export");
-        export.setEnabled(false);
-        editPage.mazeDisplay.addListener(cce -> {
-            export.setEnabled(editPage.mazeDisplay.isEnabled());
+        export.addActionListener(e -> {
+            // create and display and new dialog window
+            Maze m = editPage.currentMaze;
+            ExportDialog.storedMazes(m);
+
+            ExportDialog get = new ExportDialog(new JFrame());
+            get.setLocationRelativeTo(getContentPane());
+            get.setVisible(true);
         });
 
-        close = new JMenuItem("Home");
-        exit = new JMenuItem("Exit");
 
         deselect = new JMenuItem("Deselect");
         deselect.setEnabled(false);
@@ -152,28 +181,27 @@ public class App extends JFrame {
             }
         });
 
-        save.addActionListener(e -> {
-            editPage.saveDialog.setLocationRelativeTo(getContentPane());
-            editPage.saveDialog.setVisible(true);
-        });
 
-        export.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // create and display and new dialog window
-                Maze m = editPage.currentMaze;
-                ExportDialog.storedMazes(m);
 
-                ExportDialog get = new ExportDialog(new JFrame());
-                get.setLocationRelativeTo(getContentPane());
-                get.setVisible(true);
 
+        close = new JMenuItem("Home");
+        close.addActionListener(e -> {
+            int confirmed = JOptionPane.showConfirmDialog(getRootPane(),
+                    "Maze may have unsaved changes, are you sure you want to go home?",
+                    "Exit Program",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (confirmed == JOptionPane.YES_OPTION) {
+                showHomePage();
             }
         });
 
-        close.addActionListener(e -> showHomePage());
 
-        exit.addActionListener(e -> System.exit(69));
+        exit = new JMenuItem("Exit");
+        exit.addActionListener(e -> {
+            // triggers a window closing event
+            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        });
 
         file.add(newMaze);
         file.add(save);
@@ -219,7 +247,14 @@ public class App extends JFrame {
     }
 
     public void showHomePage() {
+        // update contents of maze data table
         homePage.updateTable();
+
+        // disable all maze related menu items
+        save.setEnabled(false);
+        export.setEnabled(false);
+        close.setEnabled(false);
+
 
         Container c = getContentPane();
         CardLayout cardLayout = (CardLayout)c.getLayout();
@@ -227,7 +262,13 @@ public class App extends JFrame {
     }
 
     public void showEditPage(Maze maze) {
+        // pass current maze object to all relevant ui
         editPage.setMaze(maze);
+
+        // enable all maze related menu items
+        save.setEnabled(true);
+        export.setEnabled(true);
+        close.setEnabled(true);
 
         Container c = getContentPane();
         CardLayout cardLayout = (CardLayout)c.getLayout();

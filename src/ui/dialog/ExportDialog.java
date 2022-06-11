@@ -207,9 +207,8 @@ public class ExportDialog extends JDialog implements ActionListener, PropertyCha
         });
 
         clearAndHide();
-
         //popup menu activates here printing "Export successful"
-
+        System.out.println("Property changed in export dialog");
     }
 
 

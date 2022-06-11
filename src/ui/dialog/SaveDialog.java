@@ -171,6 +171,9 @@ public class SaveDialog extends JDialog implements ActionListener, PropertyChang
                 // Saves the maze to the database.
                 try {
                     new DatabaseConnection().save(maze);
+                    // maze has been saved successfully
+                    JOptionPane.showMessageDialog(null,
+                            "Maze has been saved successfully");
                 } catch (SQLException ex) {
                     DatabaseErrorHandler.handle(ex, false);
                 } finally {
