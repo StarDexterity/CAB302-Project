@@ -4,9 +4,17 @@ import database.DatabaseConnection;
 import maze.data.Maze;
 
 import maze.data.MazeData;
+import maze.data.MazeImage;
+import maze.data.Position;
+import org.javatuples.Triplet;
 import org.junit.jupiter.api.*;
 
 import javax.xml.crypto.Data;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,6 +45,16 @@ public class TestDatabase {
         himsMaze.setData("Him Jogan")
                 .title("Him's Cloud Maze")
                 .description("It's stored exclusively in the cloud");
+
+        // Image
+        Position topLeft = new Position(2,2);
+        Position bottomRight = new Position(3,3);
+
+        File file = new File("src/tests/TestImage.jpg");
+
+        MazeImage mazeImage = new MazeImage(topLeft, bottomRight, file);
+        himsMaze.placeImage(mazeImage);
+
         try {
             connection.save(himsMaze);
         } catch (SQLException e) {
@@ -63,7 +81,8 @@ public class TestDatabase {
 
     @BeforeAll
     public static void PopulateDatabase () throws SQLException {
-        DatabaseConnection.instantiateTestDatabase();
+
+        DatabaseConnection.instantiate();
 
         connection = new DatabaseConnection();
 

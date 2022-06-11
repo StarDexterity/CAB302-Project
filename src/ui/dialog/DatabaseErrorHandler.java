@@ -6,6 +6,9 @@ import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.SQLNonTransientConnectionException;
 
 public class DatabaseErrorHandler {
+
+    private static boolean isErrorIgnored = false;
+
     private static String formatErrorMessage(Exception e) {
         return "\n--------\nError Message: \"" + e.getMessage() + "\"";
     }
@@ -15,7 +18,9 @@ public class DatabaseErrorHandler {
     public static void handle(SQLException inputError, boolean isInstantiation) {
         int choice = 0;
         try {
-            throw inputError;
+            if (!isErrorIgnored) {
+                throw inputError;
+            }
         } catch (
             SQLInvalidAuthorizationSpecException e) {
                 choice = JOptionPane.showOptionDialog(new JFrame(),
@@ -32,6 +37,9 @@ public class DatabaseErrorHandler {
                         "Unknown error connecting to maze database.\nPlease contact system administrator." + formatErrorMessage(e),
                         "Database " + (isInstantiation ? "Instantiation" : "Connection") + " Error", JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[0]);
             } finally {
+            if (choice == 0) {
+                isErrorIgnored = true;
+            }
             if (choice == 1) {
                 System.exit(-105);
             }
