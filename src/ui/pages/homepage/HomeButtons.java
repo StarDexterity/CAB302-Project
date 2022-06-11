@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Console;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 
 public class HomeButtons extends JPanel {
@@ -95,26 +96,17 @@ public class HomeButtons extends JPanel {
         deleteSelected.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int[] row = table.getSelectedRows();
-                if (row.length != 0) {
-                    int mazeID = (int) table.getModel().getValueAt(row[row.length - 1], 0);
+                int[] rows = table.getSelectedRows();
+
+                for (int i = 0; i < rows.length; i++) {
+                    int mazeID = (int) table.getModel().getValueAt(rows[i], 0);
                     try {
                         new DatabaseConnection().delete(mazeID);
                     } catch (SQLException f) {
                         DatabaseErrorHandler.handle(f, false);
                     }
-
-                    for (int i = row.length - 1; i >= 1; i--) {
-                        mazeID = (int) table.getModel().getValueAt(row[i - 1], 0);
-                        try {
-                            System.out.println("hellp");
-                            new DatabaseConnection().delete(mazeID);
-                        } catch (SQLException f) {
-                            DatabaseErrorHandler.handle(f, false);
-                        }
-                    }
-                    homePage.updateTable();
                 }
+                homePage.updateTable();
             }
         });
     }
