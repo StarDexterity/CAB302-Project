@@ -108,64 +108,6 @@ public final class MazeSolver {
         return solution;
     }
 
-    //TODO: Delete
-    /**
-     * Recursive depth first search solving algorithm, using black magic
-     * @param pos
-     * @param maze
-     * @return
-     */
-    private static boolean solveDFS(Position pos, Maze maze) {
-        int[][] mazeGrid = maze.getMazeGrid();
-        int nRows = maze.getRows();
-        int nCols = maze.getCols();
-        LinkedList<Position> solution = maze.getSolution();
-
-        int x = pos.getX();
-        int y = pos.getY();
-
-        // set this cell as visited
-        mazeGrid[y][x] |= 16;
-
-        if (x == nCols - 1 && y == nRows - 1) return true;
-
-
-        // Directions in order of search (N, S, E, W)
-        for (Direction dir : Direction.values()) {
-            // next x pos is x plus dx
-            int nx = x + dir.dx;
-            // next y pos is y plus dy
-            int ny = y + dir.dy;
-
-            // If the next cell is within bounds of maze,
-            // is connected to this cell
-            // and hasn't been visited, visit it
-            if (maze.withinBounds(nx, ny)
-                    && (mazeGrid[y][x] & dir.bit) != 0
-                    && !maze.isVisited(nx, ny)) {
-
-                // condensing coordinate
-                Position newPos = new Position(nx, ny);
-
-                solution.add(newPos);
-
-                // if maze is solved, halt and return true
-                if (MazeSolver.solveDFS(newPos, maze))
-                    return true;
-
-
-                // backtracks from current cell to the last one
-                solution.removeLast();
-            }
-        }
-        // All cells have been visited and a solution hasn't been found
-        return false;
-    }
-
-
-
-
-
     /**
      * For a given maze, finds the total cells with dead ends
      * @param maze The maze to check

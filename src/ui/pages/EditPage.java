@@ -1,7 +1,6 @@
 package ui.pages;
 
 import maze.data.Maze;
-import ui.App;
 import ui.dialog.SaveDialog;
 import ui.pages.editpage.MazeDisplay;
 import ui.pages.editpage.OptionsPanel;

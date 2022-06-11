@@ -24,9 +24,9 @@ public class Export {
     private static String path;
 
 
-    static int cellSize = 25;
-    static int margin = 25;
-    static LinkedList<Position> solution;
+    static int cellSize = 25;   //TODO: Unused?
+    static int margin = 25;    //TODO: Unused?
+    static LinkedList<Position> solution;    //TODO: Unused?
 
     static MazeDisplayOptions displayOptions = new MazeDisplayOptions();
 
