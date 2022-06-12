@@ -66,31 +66,21 @@ public class MazeData {
         return author;
     }
 
-    public void setAuthor(String author) {}
-
     public String getTitle() {
         return title;
     }
-
-    public void setTitle(String title) {}
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {}
-
     public Instant getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Instant creationDate) {}
-
     public Instant getLastEditDate() {
         return lastEditDate;
     }
-
-    public void setLastEditDate(Instant lastEditDate) {}
 
     /**
      * Setter based of the Builder design pattern.

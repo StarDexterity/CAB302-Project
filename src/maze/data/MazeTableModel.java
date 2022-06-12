@@ -148,16 +148,5 @@ public class MazeTableModel extends AbstractTableModel {
      * Don't need to implement this method unless your table's
      * data can change.
      */
-    public void setValueAt(Object value, int row, int col) {
-        MazeData record = data.get(row);
-
-        switch(TableHeaders.getById(col)) {
-            case ID -> record.setId((int) value);
-            case TITLE -> record.setTitle((String) value);
-            case AUTHOR -> record.setAuthor((String) value);
-            case LAST_EDITED -> record.setLastEditDate((Instant) value);
-            case CREATED -> record.setCreationDate((Instant) value);
-        }
-        fireTableCellUpdated(row, col);
-    }
+    public void setValueAt(Object value, int row, int col) {}
 }
