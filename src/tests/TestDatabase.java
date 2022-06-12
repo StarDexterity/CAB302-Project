@@ -142,6 +142,48 @@ public class TestDatabase {
     }
 
     @Test
+    public void TestUpdate() throws SQLException {
+        Maze updatableMaze = new Maze(4, 4, false);
+        updatableMaze.setMazeGrid(DummyMazes.fullCoverage);
+        updatableMaze.setData("Alice");
+        try {
+            connection.save(updatableMaze);
+        } catch (SQLException e) {
+            handle(e, false);
+        }
+
+        int mazeId = updatableMaze.mazeData.getId();
+
+        Maze retrievedMaze = connection.retrieveMaze(mazeId);
+        retrievedMaze.setData("Bob");
+        connection.save(retrievedMaze);
+
+        Maze updatedMaze = connection.retrieveMaze(mazeId);
+        assertEquals("Bob", updatedMaze.mazeData.getAuthor());
+    }
+
+    @Test
+    public void TestDelete() throws SQLException {
+        Maze expendableMaze = new Maze(4, 4, false);
+        expendableMaze.setMazeGrid(DummyMazes.empty);
+        try {
+            connection.save(expendableMaze);
+        } catch (SQLException e) {
+            handle(e, false);
+        }
+
+        int mazeId = expendableMaze.mazeData.getId();
+
+        assertDoesNotThrow(() -> {
+            connection.retrieveMaze(mazeId);
+        });
+        connection.delete(mazeId);
+        assertThrows(SQLException.class, () -> {
+            connection.retrieveMaze(mazeId);
+        });
+    }
+
+    @Test
     public void ViewRetrieveMazeCatalog() throws SQLException {
         ArrayList<MazeData> mazes = connection.retrieveMazeCatalogue();
         for (MazeData m : mazes) {
