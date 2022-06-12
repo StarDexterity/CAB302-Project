@@ -1,0 +1,54 @@
+<project name="CAB302 Project" default="all">
+    <property name="build.dir" location="target/classes" />
+    <path id="junit.class.path">
+        <pathelement location="lib/apiguardian-api-1.0.0.jar" />
+        <pathelement location="lib/junit-jupiter-5.4.2.jar" />
+        <pathelement location="lib/junit-jupiter-api-5.4.2.jar" />
+        <pathelement location="lib/junit-jupiter-engine-5.4.2.jar" />
+        <pathelement location="lib/junit-jupiter-params-5.4.2.jar" />
+        <pathelement location="lib/junit-platform-commons-1.4.2.jar" />
+        <pathelement location="lib/junit-platform-engine-1.4.2.jar" />
+        <pathelement location="lib/opentest4j-1.1.1.jar" />
+
+        <pathelement location="lib/mariadb-java-client-2.7.5.jar" />
+        <pathelement location="lib/javatuples-3.0.jar"/>
+
+        <pathelement location="${build.dir}" />
+    </path>
+
+    <target name="compile">
+        <mkdir dir="${build.dir}" />
+        <javac srcdir="src" destdir="${build.dir}"
+               includeantruntime="false" />
+    </target>
+
+    <target name="jar" depends="compile" >
+        <jar jarfile="target/lec11.jar" basedir="${build.dir}"
+             manifest="jar-manifest.txt"/>
+    </target>
+
+    <target name="all" depends="compile, test, jar" />
+
+    <target name="clean">
+        <delete dir="target" quiet="true" />
+    </target>
+
+    <target name="test" depends="compile">
+        <mkdir dir="target/test-classes" />
+        <javac includeantruntime="false" srcdir="test" destdir="target/testclasses">
+            <classpath refid="junit.class.path" />
+            <classpath location="target/classes" />
+        </javac>
+        <mkdir dir="target/test-results" />
+        <junitlauncher printsummary="true" failureproperty="junit.failure">
+            <classpath refid="junit.class.path" />
+            <classpath location="target/test-classes" />
+            <classpath location="target/classes" />
+            <testclasses outputdir="target/test-results">
+                <fileset dir="target/test-classes" includes="**/*.class" />
+                <listener type="legacy-plain" />
+            </testclasses>
+        </junitlauncher>
+        <fail if="junit.failure" message="junit tests failed - aborting" />
+    </target>
+</project>
