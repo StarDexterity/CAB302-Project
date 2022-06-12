@@ -13,6 +13,14 @@ import java.util.LinkedList;
  * Maze drawer class draws a maze to a buffered image
  */
 public class MazeDrawer {
+
+    /**
+     * Generates a buffered image with the supplied maze data
+     * @param maze The maze generation data (nCols, nRows, Grid)
+     * @param displayOptions Stores the configurable display options for drawing a maze
+     * @param selection Gets the cell position, cell type and if applicable the image inserted
+     * @return
+     */
     public static BufferedImage drawMaze(Maze maze, MazeDisplayOptions displayOptions, Selection selection) {
 
         // gets important maze data for rendering
