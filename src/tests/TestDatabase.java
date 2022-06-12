@@ -79,7 +79,7 @@ public class TestDatabase {
 
         Connection testConnection = DriverManager.getConnection("jdbc:mariadb://localhost:3307", "root", "secret");
         Statement reset = testConnection.createStatement();
-        reset.execute("DROP DATABASE testmazeco");
+        reset.execute("DROP DATABASE IF EXISTS testmazeco");
         reset.close();
         testConnection.close();
 
