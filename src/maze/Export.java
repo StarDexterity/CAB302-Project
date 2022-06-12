@@ -14,23 +14,27 @@ import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+/**
+ * Handles the export feature of the program and will export the selected mazes to JPG or PNG
+ */
+
 public class Export {
-    private static int nRows;
-    private static int nCols;
-    private static int[][] mazeGrid;
-    private static boolean solved = false;
-    private static boolean grid = false;
-    static private String title = "mazeImage";
+
     private static String path;
-
-
-    static int cellSize = 25;   //TODO: Unused?
-    static int margin = 25;    //TODO: Unused?
-    static LinkedList<Position> solution;    //TODO: Unused?
 
     static MazeDisplayOptions displayOptions = new MazeDisplayOptions();
 
-    //placeholder export (will replace with maze display)
+    /**
+     * Draws the maze being exported to a users device
+     * @param maze Maze data
+     * @param pathCheck If file directory has been selected by the user
+     * @param ifSolution If user selected for the solution to be displayed
+     * @param ifGrid If user selected for the grid to be displayed
+     * @param Imagetype The image type selected by the user (JPG or PNG)
+     * @param fileName The name written for it when exporting
+     * @param colour The colour for the solution line
+
+     */
     public static void exportMaze(Maze maze, boolean pathCheck, boolean ifSolution, boolean ifGrid, String Imagetype, String fileName, Color colour) throws IOException {
 
         displayOptions.setSolution(ifSolution);
