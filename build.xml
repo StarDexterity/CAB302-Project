@@ -1,5 +1,13 @@
-<project name="CAB302 Project" default="all">
-    <property name="build.dir" location="target/classes" />
+<project name="CAB302 Project" basedir=".">
+    <property name="src.dir" location="src"/>
+    <property name="build.dir" location="build/classes"/>
+    <property name="dist.dir" location="dist"/>
+    <property name="jar.dir" location="${dist.dir}/CAB302 Project.jar"/>
+    <property name="jar.classpath" value=""/>
+
+    <property name="lib.dir" value="lib"/>
+    <property name="target.jar" value="target/CAB302 Project.jar" />
+
     <path id="junit.class.path">
         <pathelement location="lib/apiguardian-api-1.0.0.jar" />
         <pathelement location="lib/junit-jupiter-5.4.2.jar" />
@@ -10,45 +18,77 @@
         <pathelement location="lib/junit-platform-engine-1.4.2.jar" />
         <pathelement location="lib/opentest4j-1.1.1.jar" />
 
-        <pathelement location="lib/mariadb-java-client-2.7.5.jar" />
-        <pathelement location="lib/javatuples-3.0.jar"/>
-
         <pathelement location="${build.dir}" />
     </path>
 
-    <target name="compile">
-        <mkdir dir="${build.dir}" />
-        <javac srcdir="src" destdir="${build.dir}"
-               includeantruntime="false" />
-    </target>
+    <path id="class.path">
+        <fileset dir="lib">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
 
     <target name="jar" depends="compile" >
-        <jar jarfile="target/lec11.jar" basedir="${build.dir}"
-             manifest="jar-manifest.txt"/>
+        <mkdir dir="${dist.dir}" />
+
+        <manifestclasspath property="jar.classpath" jarfile="${jar.dir}">
+            <classpath>
+                <fileset dir="${dist.dir}/lib" includes="*.jar"/>
+            </classpath>
+        </manifestclasspath>
+
+        <jar jarfile="${dist.dir}/CAB302 Project.jar" basedir="${build.dir}">
+            <manifest>
+                <!-- Who is building this jar? -->
+                <attribute name="Built-By" value="${user.name}"/>
+                <!-- Information about the program itself -->
+                <attribute name="Implementation-Vendor" value="QUT"/>
+                <attribute name="Implementation-Title" value="CAB302 Project"/>
+                <attribute name="Implementation-Version" value="1.0.0"/>
+                <!-- The application entry point -->
+
+                <attribute name="Main-Class" value="ui.App"/>
+                <attribute name="Class-Path" value="${jar.classpath}" />
+             </manifest>
+        </jar>
     </target>
 
-    <target name="all" depends="compile, test, jar" />
+    <target name="prepare">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <target name="compile" depends="prepare, clean">
+        <mkdir dir="${build.dir}" />
+        <javac srcdir="${src.dir}" destdir="${build.dir}"
+               includeantruntime="false" >
+            <classpath refid="class.path" />
+
+            <include name="ui/*.java"/>
+            <include name="ui/dialog/*.java" />
+            <include name="ui/helper/*.java" />
+            <include name="ui/pages/*.java" />
+            <include name="ui/pages/editpage/*.java" />
+            <include name="ui/pages/editpage/options/*.java" />
+            <include name="ui/pages/editpage/options/cell/*.java" />
+
+            <include name="ui/pages/homepage/*.java" />
+
+            <include name="maze/data/*.java"/>
+            <include name="maze/enums/*.java"/>
+            <include name="maze/helper/*.java"/>
+            <include name="maze/interfaces/*.java"/>
+            <include name="maze/*.java"/>
+            <include name="database/*.java"/>
+        </javac>
+    </target>
+
+    <target name="run" depends="compile">
+        <java classpath="." classname="ui.App" />
+    </target>
+
 
     <target name="clean">
-        <delete dir="target" quiet="true" />
-    </target>
-
-    <target name="test" depends="compile">
-        <mkdir dir="target/test-classes" />
-        <javac includeantruntime="false" srcdir="test" destdir="target/testclasses">
-            <classpath refid="junit.class.path" />
-            <classpath location="target/classes" />
-        </javac>
-        <mkdir dir="target/test-results" />
-        <junitlauncher printsummary="true" failureproperty="junit.failure">
-            <classpath refid="junit.class.path" />
-            <classpath location="target/test-classes" />
-            <classpath location="target/classes" />
-            <testclasses outputdir="target/test-results">
-                <fileset dir="target/test-classes" includes="**/*.class" />
-                <listener type="legacy-plain" />
-            </testclasses>
-        </junitlauncher>
-        <fail if="junit.failure" message="junit tests failed - aborting" />
+        <delete dir="${build.dir}" quiet="true" />
+        <delete dir="${dist.dir}" quiet="true" />
     </target>
 </project>
