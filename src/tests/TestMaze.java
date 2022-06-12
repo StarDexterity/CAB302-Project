@@ -5,7 +5,6 @@ import maze.data.MazeImage;
 import maze.data.Position;
 import maze.enums.Direction;
 import maze.helper.MazeSolver;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -13,8 +12,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static tests.DummyMazes.*;
 
 public class TestMaze {
 
@@ -71,5 +71,72 @@ public class TestMaze {
         maze.setCellEnabled(3,3,false);
         assertEquals(maze.isEnabled(3,3), false);
 
+    }
+
+    private Maze createAndPopulate(int nCols, int nRows, int[][] mazeGrid) {
+        Maze maze = new Maze(nCols, nRows, false);
+        maze.setMazeGrid(mazeGrid);
+        return maze;
+    }
+
+    // Testing setMazeGrid
+
+    @Test
+    public void SetRandom() {
+        Maze maze = new Maze(4, 4, false);
+        assertDoesNotThrow(() -> {
+            maze.setMazeGrid(random);
+        });
+    }
+
+    @Test
+    public void DoesNotSetIncorrectDimensions() {
+        Maze maze = new Maze(99, 99, false);
+        assertThrows(Exception.class, () -> {
+            maze.setMazeGrid(random);
+        });
+    }
+
+    // Testing getSolutions
+
+    @Test
+    public void ReturnsSolutionWhenSolved() {
+        Maze maze = new Maze(4, 4, true);
+        MazeSolver.solve(maze);
+        assertNotEquals(maze.getSolution().size(), 0);
+    }
+
+    // Testing withinBounds
+
+    @Test
+    public void AlwaysOutOfBounds() {
+        Maze maze = new Maze(4, 4, true);
+        assertFalse(maze.withinBounds(999, 999));
+    }
+
+    @Test
+    public void AlwaysInBounds() {
+        Maze maze = new Maze(4, 4, true);
+        assertTrue(maze.withinBounds(1, 1));
+    }
+
+    @Test
+    public void InScaledBounds() {
+        Maze maze = new Maze(5, 5, true);
+        assertTrue(maze.withinBounds(4, 4));
+    }
+
+    @Test
+    public void OutOfScaledInBounds() {
+        Maze maze = new Maze(4, 4, true);
+        assertFalse(maze.withinBounds(4, 4));
+    }
+
+    // Testing isWall
+
+    @Test
+    public void AlwaysIsPathFalse() {
+        Maze maze = new Maze(4, 4, true);
+        assertFalse(maze.isPath(0, 0, Direction.W));
     }
 }
