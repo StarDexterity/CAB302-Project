@@ -19,7 +19,7 @@ public class MazeDrawer {
      * @param maze The maze generation data (nCols, nRows, Grid)
      * @param displayOptions Stores the configurable display options for drawing a maze
      * @param selection Gets the cell position, cell type and if applicable the image inserted
-     * @return
+     * @return A BufferedImage with the maze applied to it
      */
     public static BufferedImage drawMaze(Maze maze, MazeDisplayOptions displayOptions, Selection selection) {
 

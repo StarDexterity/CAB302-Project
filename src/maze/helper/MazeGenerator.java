@@ -23,7 +23,8 @@ public final class MazeGenerator {
      * @param nCols The number of columns the maze will have
      * @param nRows The number of rows the maze will have
      * @param option The generation style for the maze
-     * @return
+     * @return The maze stored as a 2-D array of integers, each representing their own cell and the value being composed
+     * of bit flags
      */
     public static int[][] generateMaze(int nCols, int nRows, GenerationOption option) {
         // initialise mazeGrid array with given column and row size

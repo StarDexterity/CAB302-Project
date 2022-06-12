@@ -84,7 +84,7 @@ public class MazeImage {
      * Checking if the selected cell is within the bounds of the Maze
      * @param x The x co-ordinate of the selected cell
      * @param y The y co-ordinate of the selected cell
-     * @return a boolean
+     * @return a boolean value stating whether or not the selected area is within the bounds of the maze
      */
     public boolean withinBounds(int x, int y) {
         return (x >= topLeft.getX() && x <= bottomRight.getX())
@@ -94,7 +94,7 @@ public class MazeImage {
     /**
      * Checking if the selected cell is within the bounds of the Maze
      * @param pos The Position of the selected cell
-     * @return a boolean
+     * @return a boolean value stating whether or not the selected area is within the bounds of the maze
      */
     public boolean withinBounds(Position pos) {
         int x = pos.getX();
