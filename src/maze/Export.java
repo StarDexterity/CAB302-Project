@@ -15,18 +15,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Export {
-    private static int nRows;
-    private static int nCols;
-    private static int[][] mazeGrid;
-    private static boolean solved = false;
-    private static boolean grid = false;
-    static private String title = "mazeImage";
+
     private static String path;
-
-
-    static int cellSize = 25;   //TODO: Unused?
-    static int margin = 25;    //TODO: Unused?
-    static LinkedList<Position> solution;    //TODO: Unused?
 
     static MazeDisplayOptions displayOptions = new MazeDisplayOptions();
 
