@@ -94,6 +94,13 @@ public final class MazeSolver {
     }
 
     //TODO: JavaDoc - what is this function?
+
+    /**
+     * This function goes back through the the path the solving algorithm
+     * took, and reconstructs the path that takes you to the end
+     * @param endPosition
+     * @return A LinkedList holding the solution to the maze
+     */
     private static LinkedList<Position> reconstructPath(Position endPosition) {
         // init solution and add first position
         LinkedList<Position> solution = new LinkedList<>();
