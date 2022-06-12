@@ -171,9 +171,9 @@ public class Maze {
 
     /**
      * Is the supplied x and y position of a vertex within the bounds of the maze
-     * @param x
-     * @param y
-     * @return
+     * @param x The coordinate in the x (horizontal) direction
+     * @param y The coordinate in the y (vertical) direction
+     * @return A boolean value stating whether the supplied location is within the bounds of the maze
      */
     public boolean withinBounds(int x, int y) {
         return (x >= 0 && x < nCols) && (y >= 0 && y < nRows);
