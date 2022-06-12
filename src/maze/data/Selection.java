@@ -11,7 +11,7 @@ public class Selection {
      * Sets the enum variables
      * @param selectedCell The currently selected cell
      * @param selectedImage The currently selected image
-     * @param selectionType Whether nothing, an image, or a cell is selcted
+     * @param selectionType Whether nothing, an image, or a cell is selected
      */
     public Selection(Position selectedCell, MazeImage selectedImage, SelectionType selectionType) {
         this.selectedCell = selectedCell;
