@@ -144,7 +144,7 @@ public class TestDatabase {
     @Test
     public void TestUpdate() throws SQLException {
         Maze updatableMaze = new Maze(4, 4, false);
-        updatableMaze.setMazeGrid(DummyMazes.fullCoverage);
+        updatableMaze.setMazeGrid(DummyMazes.empty);
         updatableMaze.setData("Alice");
         try {
             connection.save(updatableMaze);
@@ -165,7 +165,7 @@ public class TestDatabase {
     @Test
     public void TestDelete() throws SQLException {
         Maze expendableMaze = new Maze(4, 4, false);
-        expendableMaze.setMazeGrid(DummyMazes.empty);
+        expendableMaze.setMazeGrid(DummyMazes.fullCoverage);
         try {
             connection.save(expendableMaze);
         } catch (SQLException e) {
