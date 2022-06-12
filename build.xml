@@ -1,6 +1,6 @@
 <project name="CAB302 Project" basedir=".">
     <property name="src.dir" location="src"/>
-    <property name="build.dir" location="build/classes"/>
+    <property name="build.dir" location="build"/>
     <property name="dist.dir" location="dist"/>
     <property name="jar.dir" location="${dist.dir}/CAB302 Project.jar"/>
     <property name="jar.classpath" value=""/>
@@ -84,6 +84,25 @@
 
     <target name="run" depends="compile">
         <java classpath="." classname="ui.App" />
+    </target>
+
+    <target name="test" depends="compile">
+        <mkdir dir="${build.dir}/test-classes" />
+        <javac includeantruntime="false" srcdir="src/tests" destdir="${build.dir}/test-classes">
+            <classpath refid="junit.class.path" />
+            <classpath location="${build.dir}" />
+        </javac>
+        <mkdir dir="${build.dir}/test-results" />
+        <junitlauncher printsummary="true" failureproperty="junit.failure">
+            <classpath refid="junit.class.path" />
+            <classpath location="${build.dir}/test-classes" />
+            <classpath location="${build.dir}" />
+            <testclasses outputdir="${build.dir}/test-results">
+                <fileset dir="${build.dir}/test-classes" includes="**/*.class" />
+                <listener type="legacy-plain" />
+            </testclasses>
+        </junitlauncher>
+        <fail if="junit.failure" message="junit tests failed - aborting" />
     </target>
 
 
