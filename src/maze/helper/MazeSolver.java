@@ -20,7 +20,7 @@ public final class MazeSolver {
     /**
      * For a given maze, validates if the maze has a solution
      * @param maze A @{@link Maze} object. The solution to the maze is stored within this object
-     * @return A bool value indicating whether the maze was successfully solved.
+     * @return A boolean value indicating whether the maze was successfully solved.
      */
     public static boolean solve(Maze maze) {
         maze.setAllUnvisited();
@@ -35,7 +35,7 @@ public final class MazeSolver {
     /**
      * Solves a supplied maze through the use of a breadth first search, as this will find the most optimal solution if there is more than one
      * @param maze The maze the method is trying to solve
-     * @return True if the maze is solvable
+     * @return A boolean value stating whether the maze is solvable
      */
     private static boolean solveBFS(Maze maze) {
         // get start and end positions
@@ -143,7 +143,7 @@ public final class MazeSolver {
     /**
      * For a given maze, finds the total cells required to pass through, for the optimal solution
      * @param maze The maze to check
-     * @returnA Double value to represent as a percentage
+     * @return A Double value to represent as a percentage
      */
     public static double TotalPassThrough(Maze maze) {
         double count = maze.getSolution().size();

@@ -181,8 +181,8 @@ public class Maze {
 
     /**
      * Is the given cartesian coordinate within the bounds of the maze.
-     * @param pos
-     * @return
+     * @param pos A Position to be checked
+     * @return A boolean value stating whether or not the location is within the bounds of the maze
      */
     public boolean withinBounds(Position pos) {
         int x = pos.getX();
@@ -191,6 +191,14 @@ public class Maze {
         return withinBounds(x, y);
     }
 
+    /**
+     * A copy of the withinBounds function, that takes an x and a y value for the coordinate
+     * @param x The position in the x (horizontal) direction
+     * @param y The position in the y (vertical) direction
+     * @param nCols The number of columns in a maze
+     * @param nRows The number of rows in a maze
+     * @return A boolean value stating whether or not the location is within the bounds of the maze
+     */
     public static boolean withinBounds(int x, int y, int nCols, int nRows) {
         return (x >= 0 && x < nCols) && (y >= 0 && y < nRows);
     }
@@ -201,7 +209,7 @@ public class Maze {
      * @param x The X component of the coordinate
      * @param y The Y component of the coordinate
      * @param dir The direction bit to check
-     * @return
+     * @return A boolean value stating whether the cell can be passed through in the given direction
      */
     public boolean isPath(int x, int y, Direction dir) {
         return ((mazeGrid[y][x] & dir.bit) != 0);
@@ -211,7 +219,7 @@ public class Maze {
      * Predicate function checks whether a cell at the given (x, y) coordinate in the grid can pass in the given direction
      * @param pos The position of the cell within the grid
      * @param dir The direction bit to check
-     * @return
+     * @return A boolean value stating whether the cell can be passed through in the given direction
      */
     public boolean isPath(Position pos, Direction dir) {
         int x = pos.getX();
@@ -224,7 +232,7 @@ public class Maze {
      * This information is used only by the solving algorithm and wiped before and after the solving algorithm
      * @param x The X component of the coordinate
      * @param y The Y component of the coordinate
-     * @return
+     * @return A boolean value stating whether or not that certain position has been visited by the solving algorithm
      */
     public boolean isVisited(int x, int y) {
         return ((mazeGrid[y][x] & (1 << 4)) != 0);
@@ -234,7 +242,7 @@ public class Maze {
      * Is the cell at grid coordinate (x, y) in the mazeGrid, visited by the BFS solver algorithm.
      * This information is used only by the solving algorithm and wiped before and after the solving algorithm
      * @param pos The position of the cell within the mazeGrid
-     * @return
+     * @return A boolean value stating whether or not that certain position has been visited by the solving algorithm
      */
     public boolean isVisited(Position pos) {
         int x = pos.getX();
@@ -243,19 +251,21 @@ public class Maze {
     }
 
     /**
-     * Is the enabled flag of the cell at grid position (x, y) in the mazeGrid on or off
-     * @param x
-     * @param y
-     * @return
+     * A function to check if the bit of a cell in a maze that is used as a flag to state whether or not the solution can
+     * pass through it has been set
+     * @param x The coordinate in the x (horizontal) direction
+     * @param y The coordinate in the y (vertical) direction
+     * @return A boolean stating whether or not that bit is set
      */
     public boolean isEnabled(int x, int y) {
         return (mazeGrid[y][x] & (1 << 5)) == 0;
     }
 
     /**
-     * Is the enabled flag of the cell at grid coordinate (x, y) in the mazeGrid on or off
-     * @param pos
-     * @return
+     * A function to check if the bit of a cell in a maze that is used as a flag to state whether or not the solution can
+     * pass through it has been set
+     * @param pos A Position value for the cell being checked
+     * @return A boolean stating whether or not that bit is set
      */
     public boolean isEnabled(Position pos) {
         int x = pos.getX();
@@ -303,10 +313,10 @@ public class Maze {
     /**
      * If isPath is true, sets a path in the given direction between the cell at grid position (x, y) and the neighboring cell in the given direction,
      * else clear the path.
-     * @param x
-     * @param y
-     * @param dir
-     * @param isPath
+     * @param x The X component of the grid coordinate within mazeGrid
+     * @param y The Y component of the grid coordinate within mazeGrid
+     * @param dir The direction in which to set/clear the path
+     * @param isPath A boolean value stating whether or not there is currently a path there or not
      */
     public void setPath(int x, int y, Direction dir, boolean isPath) {
         // next x and y coordinates
@@ -415,7 +425,7 @@ public class Maze {
     // Image methods
     /**
      * Places an Image in the maze. This operation is only successful if the given Image is well contained within the maze.
-     * //@param The given image to place
+     * @param image The given image to be placed in the maze
      */
     public void placeImage(MazeImage image) {
         if (!validateImage(image))  return;
@@ -474,7 +484,7 @@ public class Maze {
 
     /**
      * A function to add listeners to the list of maze listeners
-     * @param ml
+     * @param ml The listener to be added to the list
      */
     public void addListener(MazeListener ml) {
         listeners.add(ml);
@@ -514,7 +524,7 @@ public class Maze {
     /**
      * Validates whether the requested image can be legally placed within the maze.
      * @param image An @{@link MazeImage} object
-     * @return
+     * @return A boolean value stating whether or not the image can be placed
      */
     private boolean validateImage(MazeImage image) {
         return (withinBounds(image.getTopLeft())
